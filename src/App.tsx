@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { useRoutes, Routes, Route } from "react-router-dom";
-import Home from "./components/home";
+import Home from "./components/MobileOptimizedHome";
 import routes from "tempo-routes";
 
 function App() {
