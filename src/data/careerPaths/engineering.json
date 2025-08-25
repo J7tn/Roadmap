@@ -1,0 +1,260 @@
+{
+  "id": "engineering-careers",
+  "n": "Engineering Career Path",
+  "cat": "engineering",
+  "nodes": [
+    {
+      "id": "engineering-intern",
+      "t": "Engineering Intern",
+      "l": "E",
+      "s": ["Technical Support", "Data Analysis", "Documentation", "Team Collaboration", "Problem Solving"],
+      "c": ["Engineering Internship", "Technical Skills"],
+      "sr": "$25,000 - $35,000",
+      "te": "0-1 years",
+      "d": "Entry-level position providing support to engineering teams and gaining practical experience.",
+      "jt": ["Engineering Assistant", "Technical Intern", "Engineering Trainee"],
+      "r": {
+        "e": ["Engineering Degree", "Technical Degree", "In Progress"],
+        "exp": "0-1 years",
+        "sk": ["Basic Engineering", "Technical Skills", "Problem Solving"]
+      }
+    },
+    {
+      "id": "junior-engineer",
+      "t": "Junior Engineer",
+      "l": "E",
+      "s": ["Technical Design", "CAD Software", "Project Support", "Testing", "Documentation"],
+      "c": ["Engineering Degree", "CAD Certification"],
+      "sr": "$45,000 - $65,000",
+      "te": "0-3 years",
+      "d": "Entry-level engineering position working on technical projects under supervision.",
+      "jt": ["Graduate Engineer", "Associate Engineer", "Engineering Technician"],
+      "r": {
+        "e": ["Engineering Degree", "Technical Degree"],
+        "exp": "0-3 years",
+        "sk": ["Technical Design", "CAD Software", "Project Support"]
+      }
+    },
+    {
+      "id": "mechanical-engineer",
+      "t": "Mechanical Engineer",
+      "l": "I",
+      "s": ["Mechanical Design", "CAD/CAM", "Thermal Analysis", "Manufacturing", "Project Management"],
+      "c": ["Professional Engineer", "SolidWorks", "AutoCAD"],
+      "sr": "$60,000 - $85,000",
+      "te": "3-6 years",
+      "d": "Designs and develops mechanical systems, products, and machinery for various industries.",
+      "jt": ["Mechanical Design Engineer", "Product Engineer", "Manufacturing Engineer"],
+      "r": {
+        "e": ["Mechanical Engineering", "Engineering"],
+        "exp": "3-6 years",
+        "sk": ["Mechanical Design", "CAD/CAM", "Thermal Analysis"]
+      }
+    },
+    {
+      "id": "electrical-engineer",
+      "t": "Electrical Engineer",
+      "l": "I",
+      "s": ["Circuit Design", "Power Systems", "Control Systems", "PCB Design", "Testing"],
+      "c": ["Professional Engineer", "Electrical Design", "PCB Design"],
+      "sr": "$65,000 - $90,000",
+      "te": "3-6 years",
+      "d": "Designs electrical systems, circuits, and power distribution networks for various applications.",
+      "jt": ["Electrical Design Engineer", "Power Engineer", "Control Systems Engineer"],
+      "r": {
+        "e": ["Electrical Engineering", "Engineering"],
+        "exp": "3-6 years",
+        "sk": ["Circuit Design", "Power Systems", "Control Systems"]
+      }
+    },
+    {
+      "id": "civil-engineer",
+      "t": "Civil Engineer",
+      "l": "I",
+      "s": ["Structural Design", "Construction Management", "Site Planning", "CAD", "Project Coordination"],
+      "c": ["Professional Engineer", "Structural Engineering", "AutoCAD Civil 3D"],
+      "sr": "$60,000 - $85,000",
+      "te": "3-6 years",
+      "d": "Designs and oversees construction of infrastructure projects including buildings, roads, and bridges.",
+      "jt": ["Structural Engineer", "Construction Engineer", "Infrastructure Engineer"],
+      "r": {
+        "e": ["Civil Engineering", "Engineering"],
+        "exp": "3-6 years",
+        "sk": ["Structural Design", "Construction Management", "Site Planning"]
+      }
+    },
+    {
+      "id": "software-engineer",
+      "t": "Software Engineer",
+      "l": "I",
+      "s": ["Programming", "Software Design", "System Architecture", "Testing", "Problem Solving"],
+      "c": ["Software Engineering", "Programming Languages", "Agile"],
+      "sr": "$70,000 - $100,000",
+      "te": "3-6 years",
+      "d": "Develops software applications, systems, and solutions for various platforms and industries.",
+      "jt": ["Software Developer", "Application Engineer", "Systems Engineer"],
+      "r": {
+        "e": ["Computer Science", "Software Engineering", "Engineering"],
+        "exp": "3-6 years",
+        "sk": ["Programming", "Software Design", "System Architecture"]
+      }
+    },
+    {
+      "id": "chemical-engineer",
+      "t": "Chemical Engineer",
+      "l": "I",
+      "s": ["Process Design", "Chemical Analysis", "Safety Protocols", "Equipment Design", "Quality Control"],
+      "c": ["Professional Engineer", "Chemical Process Design", "Safety Certification"],
+      "sr": "$65,000 - $90,000",
+      "te": "3-6 years",
+      "d": "Designs and optimizes chemical processes for manufacturing, pharmaceuticals, and industrial applications.",
+      "jt": ["Process Engineer", "Chemical Process Engineer", "Manufacturing Engineer"],
+      "r": {
+        "e": ["Chemical Engineering", "Engineering"],
+        "exp": "3-6 years",
+        "sk": ["Process Design", "Chemical Analysis", "Safety Protocols"]
+      }
+    },
+    {
+      "id": "biomedical-engineer",
+      "t": "Biomedical Engineer",
+      "l": "I",
+      "s": ["Medical Device Design", "Biomechanics", "Regulatory Compliance", "Testing", "Clinical Applications"],
+      "c": ["Biomedical Engineering", "Medical Device Design", "FDA Regulations"],
+      "sr": "$70,000 - $95,000",
+      "te": "3-6 years",
+      "d": "Designs and develops medical devices, equipment, and technologies for healthcare applications.",
+      "jt": ["Medical Device Engineer", "Biomechanical Engineer", "Clinical Engineer"],
+      "r": {
+        "e": ["Biomedical Engineering", "Engineering", "Biology"],
+        "exp": "3-6 years",
+        "sk": ["Medical Device Design", "Biomechanics", "Regulatory Compliance"]
+      }
+    },
+    {
+      "id": "senior-engineer",
+      "t": "Senior Engineer",
+      "l": "A",
+      "s": ["Technical Leadership", "Project Management", "Mentoring", "Complex Problem Solving", "Innovation"],
+      "c": ["Senior Engineering", "Project Management", "Technical Leadership"],
+      "sr": "$85,000 - $120,000",
+      "te": "6-10 years",
+      "d": "Leads complex engineering projects and mentors junior engineers while driving technical innovation.",
+      "jt": ["Lead Engineer", "Principal Engineer", "Technical Lead"],
+      "r": {
+        "e": ["Engineering", "Advanced Degree"],
+        "exp": "6-10 years",
+        "sk": ["Technical Leadership", "Project Management", "Complex Problem Solving"]
+      }
+    },
+    {
+      "id": "engineering-manager",
+      "t": "Engineering Manager",
+      "l": "A",
+      "s": ["Team Leadership", "Project Management", "Budget Management", "Strategic Planning", "Technical Oversight"],
+      "c": ["Engineering Management", "Project Management", "Leadership"],
+      "sr": "$90,000 - $130,000",
+      "te": "8-12 years",
+      "d": "Manages engineering teams and projects, ensuring technical excellence and project delivery.",
+      "jt": ["Engineering Director", "Technical Manager", "Project Manager"],
+      "r": {
+        "e": ["Engineering", "Management", "MBA"],
+        "exp": "8-12 years",
+        "sk": ["Team Leadership", "Project Management", "Budget Management"]
+      }
+    },
+    {
+      "id": "chief-engineer",
+      "t": "Chief Engineer",
+      "l": "X",
+      "s": ["Technical Strategy", "Innovation Leadership", "Team Management", "Business Development", "Technical Vision"],
+      "c": ["Chief Engineering", "Technical Leadership", "Innovation"],
+      "sr": "$120,000 - $180,000",
+      "te": "12+ years",
+      "d": "Leads technical strategy and innovation for organizations, overseeing all engineering activities.",
+      "jt": ["VP of Engineering", "Chief Technical Officer", "Engineering Executive"],
+      "r": {
+        "e": ["Engineering", "Advanced Degree", "Leadership"],
+        "exp": "12+ years",
+        "sk": ["Technical Strategy", "Innovation Leadership", "Business Development"]
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "engineering-intern",
+      "t": "junior-engineer",
+      "req": ["Engineering degree", "Technical skills", "Problem solving"]
+    },
+    {
+      "s": "junior-engineer",
+      "t": "mechanical-engineer",
+      "req": ["Mechanical engineering", "CAD skills", "Design experience"]
+    },
+    {
+      "s": "junior-engineer",
+      "t": "electrical-engineer",
+      "req": ["Electrical engineering", "Circuit design", "Power systems"]
+    },
+    {
+      "s": "junior-engineer",
+      "t": "civil-engineer",
+      "req": ["Civil engineering", "Structural design", "Construction knowledge"]
+    },
+    {
+      "s": "junior-engineer",
+      "t": "software-engineer",
+      "req": ["Programming skills", "Software design", "System architecture"]
+    },
+    {
+      "s": "junior-engineer",
+      "t": "chemical-engineer",
+      "req": ["Chemical engineering", "Process design", "Safety protocols"]
+    },
+    {
+      "s": "junior-engineer",
+      "t": "biomedical-engineer",
+      "req": ["Biomedical engineering", "Medical device design", "Regulatory knowledge"]
+    },
+    {
+      "s": "mechanical-engineer",
+      "t": "senior-engineer",
+      "req": ["Technical leadership", "Project management", "Mentoring skills"]
+    },
+    {
+      "s": "electrical-engineer",
+      "t": "senior-engineer",
+      "req": ["Technical leadership", "Complex problem solving", "Innovation"]
+    },
+    {
+      "s": "civil-engineer",
+      "t": "senior-engineer",
+      "req": ["Technical leadership", "Project management", "Complex design"]
+    },
+    {
+      "s": "software-engineer",
+      "t": "senior-engineer",
+      "req": ["Technical leadership", "System architecture", "Innovation"]
+    },
+    {
+      "s": "chemical-engineer",
+      "t": "senior-engineer",
+      "req": ["Technical leadership", "Process optimization", "Innovation"]
+    },
+    {
+      "s": "biomedical-engineer",
+      "t": "senior-engineer",
+      "req": ["Technical leadership", "Medical innovation", "Regulatory expertise"]
+    },
+    {
+      "s": "senior-engineer",
+      "t": "engineering-manager",
+      "req": ["Team leadership", "Project management", "Budget management"]
+    },
+    {
+      "s": "engineering-manager",
+      "t": "chief-engineer",
+      "req": ["Technical strategy", "Innovation leadership", "Business development"]
+    }
+  ]
+}

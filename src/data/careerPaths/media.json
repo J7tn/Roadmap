@@ -1,0 +1,208 @@
+{
+  "id": "media-careers",
+  "n": "Media & Entertainment Career Path",
+  "cat": "media",
+  "nodes": [
+    {
+      "id": "production-assistant",
+      "t": "Production Assistant",
+      "l": "E",
+      "s": ["Production Support", "Equipment Setup", "Administrative Tasks", "Communication", "Organization"],
+      "c": ["Production Training", "Media Production"],
+      "sr": "$25,000 - $35,000",
+      "te": "0-2 years",
+      "d": "Entry-level position supporting media production teams with administrative and technical tasks.",
+      "jt": ["PA", "Production Helper", "Media Assistant"],
+      "r": {
+        "e": ["Media Studies", "Film", "Communications"],
+        "exp": "0-2 years",
+        "sk": ["Production Support", "Equipment Setup", "Administrative Tasks"]
+      }
+    },
+    {
+      "id": "journalist",
+      "t": "Journalist",
+      "l": "I",
+      "s": ["News Writing", "Research", "Interviewing", "Fact-Checking", "Deadline Management"],
+      "c": ["Journalism", "Media Ethics"],
+      "sr": "$35,000 - $55,000",
+      "te": "2-5 years",
+      "d": "Researches, writes, and reports news stories for various media outlets and platforms.",
+      "jt": ["Reporter", "News Writer", "Media Correspondent"],
+      "r": {
+        "e": ["Journalism", "Communications", "English"],
+        "exp": "2-5 years",
+        "sk": ["News Writing", "Research", "Interviewing"]
+      }
+    },
+    {
+      "id": "video-editor",
+      "t": "Video Editor",
+      "l": "I",
+      "s": ["Video Editing", "Post-Production", "Color Grading", "Sound Design", "Storytelling"],
+      "c": ["Video Editing", "Post-Production"],
+      "sr": "$40,000 - $65,000",
+      "te": "2-5 years",
+      "d": "Edits and produces video content for various media platforms and entertainment projects.",
+      "jt": ["Film Editor", "Post-Production Editor", "Video Producer"],
+      "r": {
+        "e": ["Film", "Video Production", "Media Studies"],
+        "exp": "2-5 years",
+        "sk": ["Video Editing", "Post-Production", "Color Grading"]
+      }
+    },
+    {
+      "id": "photographer",
+      "t": "Photographer",
+      "l": "I",
+      "s": ["Photography", "Lighting", "Composition", "Post-Processing", "Client Relations"],
+      "c": ["Professional Photography", "Digital Imaging"],
+      "sr": "$35,000 - $60,000",
+      "te": "2-5 years",
+      "d": "Captures images for various purposes including news, events, portraits, and commercial work.",
+      "jt": ["Photojournalist", "Portrait Photographer", "Commercial Photographer"],
+      "r": {
+        "e": ["Photography", "Visual Arts", "Media Studies"],
+        "exp": "2-5 years",
+        "sk": ["Photography", "Lighting", "Composition"]
+      }
+    },
+    {
+      "id": "content-creator",
+      "t": "Content Creator",
+      "l": "I",
+      "s": ["Content Creation", "Social Media", "Storytelling", "Audience Engagement", "Trend Analysis"],
+      "c": ["Content Creation", "Social Media Marketing"],
+      "sr": "$35,000 - $60,000",
+      "te": "2-5 years",
+      "d": "Creates engaging content for digital platforms, including social media, blogs, and websites.",
+      "jt": ["Digital Creator", "Social Media Influencer", "Content Producer"],
+      "r": {
+        "e": ["Communications", "Media Studies", "Digital Media"],
+        "exp": "2-5 years",
+        "sk": ["Content Creation", "Social Media", "Storytelling"]
+      }
+    },
+    {
+      "id": "broadcast-technician",
+      "t": "Broadcast Technician",
+      "l": "I",
+      "s": ["Broadcast Equipment", "Technical Operations", "Live Production", "Troubleshooting", "Quality Control"],
+      "c": ["Broadcast Technology", "Technical Operations"],
+      "sr": "$40,000 - $65,000",
+      "te": "3-6 years",
+      "d": "Operates and maintains broadcast equipment for television, radio, and live streaming.",
+      "jt": ["Broadcast Engineer", "Technical Director", "Studio Technician"],
+      "r": {
+        "e": ["Broadcast Technology", "Engineering", "Media Technology"],
+        "exp": "3-6 years",
+        "sk": ["Broadcast Equipment", "Technical Operations", "Live Production"]
+      }
+    },
+    {
+      "id": "producer",
+      "t": "Producer",
+      "l": "A",
+      "s": ["Project Management", "Creative Direction", "Budget Management", "Team Leadership", "Client Relations"],
+      "c": ["Production Management", "Creative Leadership"],
+      "sr": "$50,000 - $80,000",
+      "te": "5-8 years",
+      "d": "Manages media production projects from concept to completion, overseeing creative and technical teams.",
+      "jt": ["Executive Producer", "Production Manager", "Creative Producer"],
+      "r": {
+        "e": ["Media Production", "Film", "Communications"],
+        "exp": "5-8 years",
+        "sk": ["Project Management", "Creative Direction", "Budget Management"]
+      }
+    },
+    {
+      "id": "editor-in-chief",
+      "t": "Editor-in-Chief",
+      "l": "A",
+      "s": ["Editorial Leadership", "Content Strategy", "Team Management", "Quality Control", "Strategic Planning"],
+      "c": ["Editorial Leadership", "Content Strategy"],
+      "sr": "$60,000 - $90,000",
+      "te": "6-10 years",
+      "d": "Leads editorial teams and develops content strategies for media publications and platforms.",
+      "jt": ["Editorial Director", "Content Director", "Managing Editor"],
+      "r": {
+        "e": ["Journalism", "Communications", "Leadership"],
+        "exp": "6-10 years",
+        "sk": ["Editorial Leadership", "Content Strategy", "Team Management"]
+      }
+    },
+    {
+      "id": "media-director",
+      "t": "Media Director",
+      "l": "X",
+      "s": ["Strategic Leadership", "Business Development", "Team Management", "Market Analysis", "Innovation"],
+      "c": ["Media Leadership", "Business Management"],
+      "sr": "$80,000 - $150,000",
+      "te": "8-12 years",
+      "d": "Leads media organizations, developing strategies and managing operations for content creation and distribution.",
+      "jt": ["VP of Media", "Media Executive", "Content Director"],
+      "r": {
+        "e": ["Media Management", "Business Administration", "Leadership"],
+        "exp": "8-12 years",
+        "sk": ["Strategic Leadership", "Business Development", "Team Management"]
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "production-assistant",
+      "t": "video-editor",
+      "req": ["Video editing skills", "Post-production", "Technical knowledge"]
+    },
+    {
+      "s": "production-assistant",
+      "t": "photographer",
+      "req": ["Photography skills", "Lighting", "Composition"]
+    },
+    {
+      "s": "production-assistant",
+      "t": "broadcast-technician",
+      "req": ["Technical skills", "Broadcast equipment", "Live production"]
+    },
+    {
+      "s": "journalist",
+      "t": "content-creator",
+      "req": ["Content creation", "Storytelling", "Audience engagement"]
+    },
+    {
+      "s": "video-editor",
+      "t": "producer",
+      "req": ["Project management", "Creative direction", "Team leadership"]
+    },
+    {
+      "s": "photographer",
+      "t": "producer",
+      "req": ["Project management", "Creative direction", "Client relations"]
+    },
+    {
+      "s": "content-creator",
+      "t": "producer",
+      "req": ["Project management", "Content strategy", "Team leadership"]
+    },
+    {
+      "s": "broadcast-technician",
+      "t": "producer",
+      "req": ["Project management", "Technical leadership", "Team coordination"]
+    },
+    {
+      "s": "journalist",
+      "t": "editor-in-chief",
+      "req": ["Editorial leadership", "Content strategy", "Team management"]
+    },
+    {
+      "s": "producer",
+      "t": "media-director",
+      "req": ["Strategic leadership", "Business development", "Team management"]
+    },
+    {
+      "s": "editor-in-chief",
+      "t": "media-director",
+      "req": ["Strategic leadership", "Business development", "Content strategy"]
+    }
+  ]
+}

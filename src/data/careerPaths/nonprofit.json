@@ -1,0 +1,140 @@
+{
+  "id": "nonprofit-careers",
+  "n": "Nonprofit Career Path",
+  "cat": "nonprofit",
+  "nodes": [
+    {
+      "id": "volunteer-coordinator",
+      "t": "Volunteer Coordinator",
+      "l": "E",
+      "s": ["Volunteer Management", "Recruitment", "Training", "Scheduling", "Communication"],
+      "c": ["Volunteer Management", "Nonprofit Administration"],
+      "sr": "$30,000 - $45,000",
+      "te": "0-2 years",
+      "d": "Manages volunteer programs, recruits and coordinates volunteers for nonprofit organizations.",
+      "jt": ["Volunteer Manager", "Community Coordinator", "Volunteer Specialist"],
+      "r": {
+        "e": ["Nonprofit Management", "Social Work", "Communications"],
+        "exp": "0-2 years",
+        "sk": ["Volunteer Management", "Recruitment", "Training"]
+      }
+    },
+    {
+      "id": "program-coordinator",
+      "t": "Program Coordinator",
+      "l": "I",
+      "s": ["Program Management", "Event Planning", "Community Outreach", "Partnership Development", "Evaluation"],
+      "c": ["Program Management", "Nonprofit Leadership"],
+      "sr": "$40,000 - $60,000",
+      "te": "2-5 years",
+      "d": "Coordinates nonprofit programs and initiatives, managing implementation and community engagement.",
+      "jt": ["Program Manager", "Initiative Coordinator", "Community Program Manager"],
+      "r": {
+        "e": ["Nonprofit Management", "Social Work", "Public Administration"],
+        "exp": "2-5 years",
+        "sk": ["Program Management", "Event Planning", "Community Outreach"]
+      }
+    },
+    {
+      "id": "fundraising-coordinator",
+      "t": "Fundraising Coordinator",
+      "l": "I",
+      "s": ["Fundraising", "Donor Relations", "Grant Writing", "Event Planning", "Database Management"],
+      "c": ["Fundraising", "Grant Writing"],
+      "sr": "$45,000 - $65,000",
+      "te": "2-5 years",
+      "d": "Develops and implements fundraising strategies to support nonprofit organizations and programs.",
+      "jt": ["Development Coordinator", "Fundraising Manager", "Donor Relations Specialist"],
+      "r": {
+        "e": ["Nonprofit Management", "Communications", "Business"],
+        "exp": "2-5 years",
+        "sk": ["Fundraising", "Donor Relations", "Grant Writing"]
+      }
+    },
+    {
+      "id": "social-worker",
+      "t": "Social Worker",
+      "l": "I",
+      "s": ["Case Management", "Client Advocacy", "Crisis Intervention", "Resource Coordination", "Documentation"],
+      "c": ["Social Work License", "Case Management"],
+      "sr": "$45,000 - $70,000",
+      "te": "3-6 years",
+      "d": "Provides direct services to clients, advocating for their needs and connecting them with resources.",
+      "jt": ["Case Manager", "Client Advocate", "Social Services Specialist"],
+      "r": {
+        "e": ["Social Work", "Psychology", "Human Services"],
+        "exp": "3-6 years",
+        "sk": ["Case Management", "Client Advocacy", "Crisis Intervention"]
+      }
+    },
+    {
+      "id": "program-director",
+      "t": "Program Director",
+      "l": "A",
+      "s": ["Program Leadership", "Strategic Planning", "Team Management", "Budget Oversight", "Partnership Development"],
+      "c": ["Program Leadership", "Nonprofit Management"],
+      "sr": "$60,000 - $90,000",
+      "te": "5-8 years",
+      "d": "Leads nonprofit programs and initiatives, managing teams and ensuring program effectiveness.",
+      "jt": ["Program Manager", "Initiative Director", "Program Lead"],
+      "r": {
+        "e": ["Nonprofit Management", "Social Work", "Leadership"],
+        "exp": "5-8 years",
+        "sk": ["Program Leadership", "Strategic Planning", "Team Management"]
+      }
+    },
+    {
+      "id": "executive-director",
+      "t": "Executive Director",
+      "l": "X",
+      "s": ["Organizational Leadership", "Strategic Vision", "Board Relations", "Fundraising", "Community Relations"],
+      "c": ["Nonprofit Leadership", "Executive Management"],
+      "sr": "$80,000 - $150,000",
+      "te": "8-12 years",
+      "d": "Leads nonprofit organizations, developing strategic vision and managing overall operations.",
+      "jt": ["CEO", "Executive Director", "Nonprofit Leader"],
+      "r": {
+        "e": ["Nonprofit Management", "Leadership", "Business"],
+        "exp": "8-12 years",
+        "sk": ["Organizational Leadership", "Strategic Vision", "Board Relations"]
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "volunteer-coordinator",
+      "t": "program-coordinator",
+      "req": ["Program management", "Community outreach", "Event planning"]
+    },
+    {
+      "s": "volunteer-coordinator",
+      "t": "fundraising-coordinator",
+      "req": ["Fundraising skills", "Donor relations", "Event planning"]
+    },
+    {
+      "s": "program-coordinator",
+      "t": "social-worker",
+      "req": ["Case management", "Client advocacy", "Social work license"]
+    },
+    {
+      "s": "fundraising-coordinator",
+      "t": "program-director",
+      "req": ["Program leadership", "Strategic planning", "Team management"]
+    },
+    {
+      "s": "program-coordinator",
+      "t": "program-director",
+      "req": ["Program leadership", "Strategic planning", "Team management"]
+    },
+    {
+      "s": "social-worker",
+      "t": "program-director",
+      "req": ["Program leadership", "Client advocacy", "Team management"]
+    },
+    {
+      "s": "program-director",
+      "t": "executive-director",
+      "req": ["Organizational leadership", "Strategic vision", "Board relations"]
+    }
+  ]
+}

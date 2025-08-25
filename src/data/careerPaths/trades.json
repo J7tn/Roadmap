@@ -1,0 +1,239 @@
+{
+  "id": "trades-careers",
+  "n": "Skilled Trades Career Path",
+  "cat": "trades",
+  "nodes": [
+    {
+      "id": "apprentice",
+      "t": "Trade Apprentice",
+      "l": "E",
+      "s": ["Basic Skills", "Safety Protocols", "Tool Operation", "Learning", "Teamwork"],
+      "c": ["Apprenticeship Program", "Safety Training"],
+      "sr": "$25,000 - $35,000",
+      "te": "0-2 years",
+      "d": "Entry-level position learning trade skills through hands-on training and classroom instruction.",
+      "jt": ["Trade Trainee", "Skilled Labor Apprentice", "Trade Helper"],
+      "r": {
+        "e": ["High School Diploma", "Apprenticeship Program", "Trade School"],
+        "exp": "0-2 years",
+        "sk": ["Basic Skills", "Safety Protocols", "Tool Operation"]
+      }
+    },
+    {
+      "id": "electrician",
+      "t": "Electrician",
+      "l": "I",
+      "s": ["Electrical Systems", "Wiring", "Safety Protocols", "Troubleshooting", "Code Compliance"],
+      "c": ["Electrician License", "Electrical Safety"],
+      "sr": "$40,000 - $70,000",
+      "te": "3-5 years",
+      "d": "Installs, maintains, and repairs electrical systems in residential, commercial, and industrial settings.",
+      "jt": ["Electrical Technician", "Wireman", "Electrical Installer"],
+      "r": {
+        "e": ["Electrician Apprenticeship", "Trade School", "Licensing"],
+        "exp": "3-5 years",
+        "sk": ["Electrical Systems", "Wiring", "Safety Protocols"]
+      }
+    },
+    {
+      "id": "plumber",
+      "t": "Plumber",
+      "l": "I",
+      "s": ["Plumbing Systems", "Pipe Installation", "Repair", "Code Compliance", "Customer Service"],
+      "c": ["Plumbing License", "Plumbing Safety"],
+      "sr": "$40,000 - $70,000",
+      "te": "3-5 years",
+      "d": "Installs and repairs plumbing systems, including pipes, fixtures, and appliances.",
+      "jt": ["Plumbing Technician", "Pipefitter", "Plumbing Installer"],
+      "r": {
+        "e": ["Plumbing Apprenticeship", "Trade School", "Licensing"],
+        "exp": "3-5 years",
+        "sk": ["Plumbing Systems", "Pipe Installation", "Repair"]
+      }
+    },
+    {
+      "id": "carpenter",
+      "t": "Carpenter",
+      "l": "I",
+      "s": ["Woodworking", "Construction", "Blueprint Reading", "Tool Operation", "Safety Protocols"],
+      "c": ["Carpentry Certification", "Construction Safety"],
+      "sr": "$35,000 - $60,000",
+      "te": "3-5 years",
+      "d": "Builds and repairs wooden structures, furniture, and fixtures for construction projects.",
+      "jt": ["Woodworker", "Construction Carpenter", "Finish Carpenter"],
+      "r": {
+        "e": ["Carpentry Apprenticeship", "Trade School", "Construction Experience"],
+        "exp": "3-5 years",
+        "sk": ["Woodworking", "Construction", "Blueprint Reading"]
+      }
+    },
+    {
+      "id": "hvac-technician",
+      "t": "HVAC Technician",
+      "l": "I",
+      "s": ["HVAC Systems", "Installation", "Repair", "Maintenance", "Customer Service"],
+      "c": ["HVAC Certification", "Refrigeration License"],
+      "sr": "$40,000 - $70,000",
+      "te": "3-5 years",
+      "d": "Installs, maintains, and repairs heating, ventilation, and air conditioning systems.",
+      "jt": ["HVAC Installer", "Refrigeration Technician", "Climate Control Specialist"],
+      "r": {
+        "e": ["HVAC Training", "Trade School", "Certification"],
+        "exp": "3-5 years",
+        "sk": ["HVAC Systems", "Installation", "Repair"]
+      }
+    },
+    {
+      "id": "welder",
+      "t": "Welder",
+      "l": "I",
+      "s": ["Welding Techniques", "Metal Fabrication", "Blueprint Reading", "Safety Protocols", "Quality Control"],
+      "c": ["Welding Certification", "Safety Training"],
+      "sr": "$35,000 - $65,000",
+      "te": "3-5 years",
+      "d": "Joins metal parts using various welding techniques for construction and manufacturing projects.",
+      "jt": ["Metal Fabricator", "Welding Technician", "Ironworker"],
+      "r": {
+        "e": ["Welding Training", "Trade School", "Certification"],
+        "exp": "3-5 years",
+        "sk": ["Welding Techniques", "Metal Fabrication", "Blueprint Reading"]
+      }
+    },
+    {
+      "id": "machinist",
+      "t": "Machinist",
+      "l": "I",
+      "s": ["Machine Operation", "Precision Manufacturing", "Blueprint Reading", "Quality Control", "Tool Setup"],
+      "c": ["Machinist Certification", "CNC Training"],
+      "sr": "$40,000 - $70,000",
+      "te": "3-6 years",
+      "d": "Operates machine tools to create precision parts and components for manufacturing.",
+      "jt": ["CNC Operator", "Precision Machinist", "Tool Maker"],
+      "r": {
+        "e": ["Machinist Training", "Trade School", "Manufacturing Experience"],
+        "exp": "3-6 years",
+        "sk": ["Machine Operation", "Precision Manufacturing", "Blueprint Reading"]
+      }
+    },
+    {
+      "id": "foreman",
+      "t": "Construction Foreman",
+      "l": "A",
+      "s": ["Team Leadership", "Project Management", "Safety Oversight", "Quality Control", "Scheduling"],
+      "c": ["Supervision Training", "Safety Management"],
+      "sr": "$50,000 - $80,000",
+      "te": "5-8 years",
+      "d": "Supervises construction crews and manages project execution on job sites.",
+      "jt": ["Site Supervisor", "Crew Leader", "Construction Manager"],
+      "r": {
+        "e": ["Trade Experience", "Leadership Training", "Safety Certification"],
+        "exp": "5-8 years",
+        "sk": ["Team Leadership", "Project Management", "Safety Oversight"]
+      }
+    },
+    {
+      "id": "contractor",
+      "t": "General Contractor",
+      "l": "A",
+      "s": ["Project Management", "Business Operations", "Client Relations", "Budget Management", "Team Leadership"],
+      "c": ["Contractor License", "Business Management"],
+      "sr": "$60,000 - $100,000",
+      "te": "6-10 years",
+      "d": "Manages construction projects from start to finish, coordinating subcontractors and ensuring quality.",
+      "jt": ["Construction Manager", "Project Manager", "Building Contractor"],
+      "r": {
+        "e": ["Trade Experience", "Business License", "Management Skills"],
+        "exp": "6-10 years",
+        "sk": ["Project Management", "Business Operations", "Client Relations"]
+      }
+    },
+    {
+      "id": "business-owner",
+      "t": "Trade Business Owner",
+      "l": "X",
+      "s": ["Business Leadership", "Strategic Planning", "Financial Management", "Team Building", "Market Development"],
+      "c": ["Business Ownership", "Leadership Training"],
+      "sr": "$80,000 - $200,000+",
+      "te": "8-12 years",
+      "d": "Owns and operates a successful trade business, managing operations and growing the company.",
+      "jt": ["Business Owner", "Company President", "Trade Entrepreneur"],
+      "r": {
+        "e": ["Trade Experience", "Business Management", "Entrepreneurship"],
+        "exp": "8-12 years",
+        "sk": ["Business Leadership", "Strategic Planning", "Financial Management"]
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "apprentice",
+      "t": "electrician",
+      "req": ["Electrical training", "Licensing", "Safety protocols"]
+    },
+    {
+      "s": "apprentice",
+      "t": "plumber",
+      "req": ["Plumbing training", "Licensing", "Safety protocols"]
+    },
+    {
+      "s": "apprentice",
+      "t": "carpenter",
+      "req": ["Carpentry training", "Construction skills", "Safety protocols"]
+    },
+    {
+      "s": "apprentice",
+      "t": "hvac-technician",
+      "req": ["HVAC training", "Certification", "Safety protocols"]
+    },
+    {
+      "s": "apprentice",
+      "t": "welder",
+      "req": ["Welding training", "Certification", "Safety protocols"]
+    },
+    {
+      "s": "apprentice",
+      "t": "machinist",
+      "req": ["Machinist training", "Precision skills", "Safety protocols"]
+    },
+    {
+      "s": "electrician",
+      "t": "foreman",
+      "req": ["Leadership skills", "Project management", "Safety oversight"]
+    },
+    {
+      "s": "plumber",
+      "t": "foreman",
+      "req": ["Leadership skills", "Project management", "Safety oversight"]
+    },
+    {
+      "s": "carpenter",
+      "t": "foreman",
+      "req": ["Leadership skills", "Project management", "Safety oversight"]
+    },
+    {
+      "s": "hvac-technician",
+      "t": "foreman",
+      "req": ["Leadership skills", "Project management", "Safety oversight"]
+    },
+    {
+      "s": "welder",
+      "t": "foreman",
+      "req": ["Leadership skills", "Project management", "Safety oversight"]
+    },
+    {
+      "s": "machinist",
+      "t": "foreman",
+      "req": ["Leadership skills", "Project management", "Safety oversight"]
+    },
+    {
+      "s": "foreman",
+      "t": "contractor",
+      "req": ["Business operations", "Client relations", "Budget management"]
+    },
+    {
+      "s": "contractor",
+      "t": "business-owner",
+      "req": ["Business leadership", "Strategic planning", "Financial management"]
+    }
+  ]
+}

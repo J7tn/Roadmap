@@ -1,0 +1,282 @@
+{
+  "id": "education-careers",
+  "n": "Education Career Path",
+  "cat": "education",
+  "nodes": [
+    {
+      "id": "teaching-assistant",
+      "t": "Teaching Assistant",
+      "l": "E",
+      "s": ["Classroom Support", "Student Assistance", "Basic Instruction", "Organization", "Communication"],
+      "c": ["Teaching Assistant Certification", "First Aid"],
+      "sr": "$25,000 - $35,000",
+      "te": "0-2 years",
+      "d": "Entry-level position supporting teachers and students in classroom activities.",
+      "jt": ["Paraeducator", "Instructional Aide", "Classroom Helper"],
+      "r": {
+        "e": ["High School Diploma", "Associate's Degree", "Education"],
+        "exp": "0-2 years",
+        "sk": ["Basic Teaching Skills", "Classroom Management", "Student Support"]
+      }
+    },
+    {
+      "id": "substitute-teacher",
+      "t": "Substitute Teacher",
+      "l": "E",
+      "s": ["Lesson Planning", "Classroom Management", "Student Engagement", "Flexibility", "Communication"],
+      "c": ["Substitute Teaching License", "Teaching Certification"],
+      "sr": "$30,000 - $45,000",
+      "te": "0-2 years",
+      "d": "Temporary teaching position covering for absent teachers across different subjects and grade levels.",
+      "jt": ["Guest Teacher", "Relief Teacher", "Temporary Teacher"],
+      "r": {
+        "e": ["Bachelor's Degree", "Teaching Certification", "Education"],
+        "exp": "0-2 years",
+        "sk": ["Classroom Management", "Lesson Planning", "Student Engagement"]
+      }
+    },
+    {
+      "id": "elementary-teacher",
+      "t": "Elementary Teacher",
+      "l": "I",
+      "s": ["Curriculum Development", "Classroom Management", "Student Assessment", "Parent Communication", "Differentiated Instruction"],
+      "c": ["Teaching License", "Elementary Education Certification"],
+      "sr": "$40,000 - $60,000",
+      "te": "2-5 years",
+      "d": "Teaches multiple subjects to elementary school students, typically grades K-5.",
+      "jt": ["Primary Teacher", "Grade School Teacher", "Elementary Educator"],
+      "r": {
+        "e": ["Bachelor's in Education", "Elementary Education", "Teaching Certification"],
+        "exp": "2-5 years",
+        "sk": ["Curriculum Development", "Classroom Management", "Student Assessment"]
+      }
+    },
+    {
+      "id": "secondary-teacher",
+      "t": "Secondary Teacher",
+      "l": "I",
+      "s": ["Subject Expertise", "Lesson Planning", "Student Assessment", "Classroom Management", "Curriculum Development"],
+      "c": ["Teaching License", "Subject Area Certification"],
+      "sr": "$45,000 - $65,000",
+      "te": "2-5 years",
+      "d": "Teaches specific subjects to middle and high school students, typically grades 6-12.",
+      "jt": ["High School Teacher", "Middle School Teacher", "Subject Teacher"],
+      "r": {
+        "e": ["Bachelor's in Subject Area", "Teaching Certification", "Education"],
+        "exp": "2-5 years",
+        "sk": ["Subject Expertise", "Lesson Planning", "Student Assessment"]
+      }
+    },
+    {
+      "id": "special-education-teacher",
+      "t": "Special Education Teacher",
+      "l": "I",
+      "s": ["Individualized Education Plans", "Special Needs Support", "Assessment", "Collaboration", "Adaptive Teaching"],
+      "c": ["Special Education Certification", "Teaching License"],
+      "sr": "$45,000 - $70,000",
+      "te": "2-5 years",
+      "d": "Works with students who have special needs, creating individualized learning plans and providing specialized instruction.",
+      "jt": ["SPED Teacher", "Special Needs Educator", "Inclusive Education Teacher"],
+      "r": {
+        "e": ["Special Education", "Teaching Certification", "Education"],
+        "exp": "2-5 years",
+        "sk": ["Special Education", "IEP Development", "Adaptive Teaching"]
+      }
+    },
+    {
+      "id": "esl-teacher",
+      "t": "ESL Teacher",
+      "l": "I",
+      "s": ["Language Instruction", "Cultural Sensitivity", "Assessment", "Curriculum Development", "Student Support"],
+      "c": ["TESOL Certification", "Teaching License"],
+      "sr": "$40,000 - $65,000",
+      "te": "2-5 years",
+      "d": "Teaches English as a Second Language to non-native speakers of all ages.",
+      "jt": ["English Language Teacher", "ESOL Teacher", "Language Instructor"],
+      "r": {
+        "e": ["TESOL", "Linguistics", "Teaching Certification"],
+        "exp": "2-5 years",
+        "sk": ["Language Teaching", "Cultural Sensitivity", "Assessment"]
+      }
+    },
+    {
+      "id": "curriculum-developer",
+      "t": "Curriculum Developer",
+      "l": "I",
+      "s": ["Curriculum Design", "Educational Standards", "Assessment Design", "Content Creation", "Research"],
+      "c": ["Curriculum Development", "Educational Design"],
+      "sr": "$55,000 - $80,000",
+      "te": "3-6 years",
+      "d": "Designs and develops educational curricula, lesson plans, and learning materials for various subjects and grade levels.",
+      "jt": ["Instructional Designer", "Curriculum Specialist", "Educational Content Creator"],
+      "r": {
+        "e": ["Education", "Curriculum Development", "Subject Area"],
+        "exp": "3-6 years",
+        "sk": ["Curriculum Design", "Educational Standards", "Assessment Design"]
+      }
+    },
+    {
+      "id": "educational-technology-specialist",
+      "t": "Educational Technology Specialist",
+      "l": "I",
+      "s": ["Technology Integration", "Digital Learning", "Training", "Technical Support", "Educational Software"],
+      "c": ["Educational Technology", "Google Certified Educator"],
+      "sr": "$50,000 - $75,000",
+      "te": "3-6 years",
+      "d": "Integrates technology into educational settings and provides training and support for teachers and students.",
+      "jt": ["EdTech Specialist", "Technology Integration Specialist", "Digital Learning Coordinator"],
+      "r": {
+        "e": ["Educational Technology", "Computer Science", "Education"],
+        "exp": "3-6 years",
+        "sk": ["Technology Integration", "Digital Learning", "Training"]
+      }
+    },
+    {
+      "id": "school-counselor",
+      "t": "School Counselor",
+      "l": "I",
+      "s": ["Student Counseling", "Career Guidance", "Academic Planning", "Crisis Intervention", "Parent Communication"],
+      "c": ["School Counseling Certification", "Licensed Professional Counselor"],
+      "sr": "$50,000 - $75,000",
+      "te": "3-6 years",
+      "d": "Provides academic, career, and personal counseling to students in educational settings.",
+      "jt": ["Guidance Counselor", "Student Counselor", "Academic Advisor"],
+      "r": {
+        "e": ["School Counseling", "Psychology", "Education"],
+        "exp": "3-6 years",
+        "sk": ["Student Counseling", "Career Guidance", "Crisis Intervention"]
+      }
+    },
+    {
+      "id": "department-head",
+      "t": "Department Head",
+      "l": "A",
+      "s": ["Department Leadership", "Curriculum Oversight", "Teacher Supervision", "Budget Management", "Strategic Planning"],
+      "c": ["Educational Leadership", "Administrative Certification"],
+      "sr": "$65,000 - $90,000",
+      "te": "6-10 years",
+      "d": "Leads a specific department within a school, overseeing curriculum, teachers, and department operations.",
+      "jt": ["Department Chair", "Subject Coordinator", "Academic Department Head"],
+      "r": {
+        "e": ["Education", "Educational Leadership", "Subject Area"],
+        "exp": "6-10 years",
+        "sk": ["Department Leadership", "Teacher Supervision", "Curriculum Oversight"]
+      }
+    },
+    {
+      "id": "assistant-principal",
+      "t": "Assistant Principal",
+      "l": "A",
+      "s": ["School Administration", "Student Discipline", "Teacher Evaluation", "Parent Relations", "Operations Management"],
+      "c": ["Educational Leadership", "Administrative Certification"],
+      "sr": "$70,000 - $100,000",
+      "te": "6-10 years",
+      "d": "Assists the principal in managing school operations, student discipline, and administrative tasks.",
+      "jt": ["Vice Principal", "Deputy Principal", "School Administrator"],
+      "r": {
+        "e": ["Educational Leadership", "Education", "Administration"],
+        "exp": "6-10 years",
+        "sk": ["School Administration", "Student Discipline", "Teacher Evaluation"]
+      }
+    },
+    {
+      "id": "principal",
+      "t": "Principal",
+      "l": "X",
+      "s": ["School Leadership", "Strategic Planning", "Budget Management", "Community Relations", "Educational Policy"],
+      "c": ["Educational Leadership", "Principal Certification"],
+      "sr": "$80,000 - $120,000",
+      "te": "8-12 years",
+      "d": "Leads an entire school, responsible for academic performance, staff management, and school operations.",
+      "jt": ["School Principal", "Head of School", "School Director"],
+      "r": {
+        "e": ["Educational Leadership", "Education", "Administration"],
+        "exp": "8-12 years",
+        "sk": ["School Leadership", "Strategic Planning", "Budget Management"]
+      }
+    },
+    {
+      "id": "superintendent",
+      "t": "Superintendent",
+      "l": "X",
+      "s": ["District Leadership", "Educational Policy", "Budget Planning", "Community Relations", "Strategic Vision"],
+      "c": ["Superintendent Certification", "Educational Leadership"],
+      "sr": "$120,000 - $200,000+",
+      "te": "12+ years",
+      "d": "Leads an entire school district, responsible for district-wide policies, budgets, and educational outcomes.",
+      "jt": ["School District Superintendent", "District Administrator", "Chief Education Officer"],
+      "r": {
+        "e": ["Educational Leadership", "Education", "Administration"],
+        "exp": "12+ years",
+        "sk": ["District Leadership", "Educational Policy", "Strategic Vision"]
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "teaching-assistant",
+      "t": "substitute-teacher",
+      "req": ["Teaching certification", "Classroom experience", "Flexibility"]
+    },
+    {
+      "s": "substitute-teacher",
+      "t": "elementary-teacher",
+      "req": ["Elementary certification", "Curriculum knowledge", "Classroom management"]
+    },
+    {
+      "s": "substitute-teacher",
+      "t": "secondary-teacher",
+      "req": ["Subject certification", "Lesson planning", "Student assessment"]
+    },
+    {
+      "s": "elementary-teacher",
+      "t": "special-education-teacher",
+      "req": ["Special education certification", "Individualized instruction", "Assessment skills"]
+    },
+    {
+      "s": "secondary-teacher",
+      "t": "curriculum-developer",
+      "req": ["Curriculum design", "Educational standards", "Content creation"]
+    },
+    {
+      "s": "elementary-teacher",
+      "t": "curriculum-developer",
+      "req": ["Curriculum design", "Educational standards", "Assessment design"]
+    },
+    {
+      "s": "curriculum-developer",
+      "t": "educational-technology-specialist",
+      "req": ["Technology integration", "Digital learning", "Training skills"]
+    },
+    {
+      "s": "secondary-teacher",
+      "t": "school-counselor",
+      "req": ["Counseling certification", "Student support", "Career guidance"]
+    },
+    {
+      "s": "school-counselor",
+      "t": "department-head",
+      "req": ["Leadership skills", "Department oversight", "Teacher supervision"]
+    },
+    {
+      "s": "curriculum-developer",
+      "t": "department-head",
+      "req": ["Department leadership", "Curriculum oversight", "Teacher supervision"]
+    },
+    {
+      "s": "department-head",
+      "t": "assistant-principal",
+      "req": ["Administrative skills", "School operations", "Student discipline"]
+    },
+    {
+      "s": "assistant-principal",
+      "t": "principal",
+      "req": ["School leadership", "Strategic planning", "Budget management"]
+    },
+    {
+      "s": "principal",
+      "t": "superintendent",
+      "req": ["District leadership", "Educational policy", "Strategic vision"]
+    }
+  ]
+}

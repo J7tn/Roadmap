@@ -1,0 +1,182 @@
+{
+  "id": "legal-careers",
+  "n": "Legal Career Path",
+  "cat": "legal",
+  "nodes": [
+    {
+      "id": "legal-assistant",
+      "t": "Legal Assistant",
+      "l": "E",
+      "s": ["Document Preparation", "Legal Research", "Client Communication", "File Management", "Administrative Support"],
+      "c": ["Legal Assistant Certification", "Paralegal Studies"],
+      "sr": "$35,000 - $45,000",
+      "te": "0-2 years",
+      "d": "Entry-level position supporting lawyers with administrative tasks and basic legal work.",
+      "jt": ["Legal Secretary", "Law Office Assistant", "Legal Support Specialist"],
+      "r": {
+        "e": ["Legal Studies", "Paralegal Certificate", "Associate's Degree"],
+        "exp": "0-2 years",
+        "sk": ["Document Preparation", "Legal Research", "Administrative Skills"]
+      }
+    },
+    {
+      "id": "paralegal",
+      "t": "Paralegal",
+      "l": "I",
+      "s": ["Legal Research", "Document Drafting", "Case Management", "Client Communication", "Court Procedures"],
+      "c": ["Paralegal Certification", "Legal Research"],
+      "sr": "$40,000 - $60,000",
+      "te": "2-5 years",
+      "d": "Supports lawyers by conducting legal research, preparing documents, and managing cases.",
+      "jt": ["Legal Assistant", "Case Manager", "Legal Researcher"],
+      "r": {
+        "e": ["Paralegal Studies", "Legal Studies", "Associate's Degree"],
+        "exp": "2-5 years",
+        "sk": ["Legal Research", "Document Drafting", "Case Management"]
+      }
+    },
+    {
+      "id": "legal-researcher",
+      "t": "Legal Researcher",
+      "l": "I",
+      "s": ["Legal Research", "Case Law Analysis", "Statutory Research", "Document Review", "Legal Writing"],
+      "c": ["Legal Research", "Case Law Analysis"],
+      "sr": "$45,000 - $65,000",
+      "te": "2-5 years",
+      "d": "Conducts comprehensive legal research and analysis for cases and legal matters.",
+      "jt": ["Research Attorney", "Legal Analyst", "Case Researcher"],
+      "r": {
+        "e": ["Legal Studies", "Law Degree", "Research Methods"],
+        "exp": "2-5 years",
+        "sk": ["Legal Research", "Case Law Analysis", "Legal Writing"]
+      }
+    },
+    {
+      "id": "compliance-specialist",
+      "t": "Compliance Specialist",
+      "l": "I",
+      "s": ["Regulatory Compliance", "Policy Development", "Risk Assessment", "Audit Support", "Training"],
+      "c": ["Compliance Certification", "Regulatory Affairs"],
+      "sr": "$50,000 - $75,000",
+      "te": "3-6 years",
+      "d": "Ensures organizations comply with laws, regulations, and industry standards.",
+      "jt": ["Compliance Officer", "Regulatory Specialist", "Policy Specialist"],
+      "r": {
+        "e": ["Legal Studies", "Business", "Compliance"],
+        "exp": "3-6 years",
+        "sk": ["Regulatory Compliance", "Policy Development", "Risk Assessment"]
+      }
+    },
+    {
+      "id": "contract-specialist",
+      "t": "Contract Specialist",
+      "l": "I",
+      "s": ["Contract Drafting", "Negotiation", "Legal Review", "Risk Assessment", "Compliance"],
+      "c": ["Contract Management", "Legal Review"],
+      "sr": "$55,000 - $80,000",
+      "te": "3-6 years",
+      "d": "Drafts, reviews, and negotiates contracts while ensuring legal compliance and risk management.",
+      "jt": ["Contract Manager", "Legal Contract Specialist", "Agreement Specialist"],
+      "r": {
+        "e": ["Legal Studies", "Business Law", "Contract Law"],
+        "exp": "3-6 years",
+        "sk": ["Contract Drafting", "Negotiation", "Legal Review"]
+      }
+    },
+    {
+      "id": "associate-attorney",
+      "t": "Associate Attorney",
+      "l": "I",
+      "s": ["Legal Practice", "Case Management", "Client Representation", "Legal Research", "Court Appearances"],
+      "c": ["Law Degree", "Bar Admission"],
+      "sr": "$60,000 - $90,000",
+      "te": "3-6 years",
+      "d": "Practices law under supervision, handling cases and representing clients in legal matters.",
+      "jt": ["Junior Attorney", "Law Associate", "Legal Practitioner"],
+      "r": {
+        "e": ["Law Degree", "Bar Admission"],
+        "exp": "3-6 years",
+        "sk": ["Legal Practice", "Case Management", "Client Representation"]
+      }
+    },
+    {
+      "id": "senior-attorney",
+      "t": "Senior Attorney",
+      "l": "A",
+      "s": ["Legal Expertise", "Case Strategy", "Client Relations", "Mentoring", "Business Development"],
+      "c": ["Law Degree", "Bar Admission", "Specialization"],
+      "sr": "$80,000 - $120,000",
+      "te": "6-10 years",
+      "d": "Experienced attorney handling complex cases and mentoring junior lawyers.",
+      "jt": ["Senior Associate", "Experienced Attorney", "Legal Expert"],
+      "r": {
+        "e": ["Law Degree", "Bar Admission", "Specialization"],
+        "exp": "6-10 years",
+        "sk": ["Legal Expertise", "Case Strategy", "Client Relations"]
+      }
+    },
+    {
+      "id": "partner",
+      "t": "Law Firm Partner",
+      "l": "X",
+      "s": ["Business Leadership", "Client Development", "Practice Management", "Strategic Planning", "Team Leadership"],
+      "c": ["Law Degree", "Bar Admission", "Business Leadership"],
+      "sr": "$120,000 - $300,000+",
+      "te": "8-12 years",
+      "d": "Senior partner in a law firm, responsible for business development and firm management.",
+      "jt": ["Senior Partner", "Managing Partner", "Law Firm Executive"],
+      "r": {
+        "e": ["Law Degree", "Bar Admission", "Business Experience"],
+        "exp": "8-12 years",
+        "sk": ["Business Leadership", "Client Development", "Practice Management"]
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "legal-assistant",
+      "t": "paralegal",
+      "req": ["Legal knowledge", "Research skills", "Document preparation"]
+    },
+    {
+      "s": "paralegal",
+      "t": "legal-researcher",
+      "req": ["Advanced research skills", "Legal analysis", "Writing skills"]
+    },
+    {
+      "s": "paralegal",
+      "t": "compliance-specialist",
+      "req": ["Regulatory knowledge", "Policy understanding", "Risk assessment"]
+    },
+    {
+      "s": "legal-researcher",
+      "t": "contract-specialist",
+      "req": ["Contract law", "Drafting skills", "Negotiation"]
+    },
+    {
+      "s": "compliance-specialist",
+      "t": "contract-specialist",
+      "req": ["Contract compliance", "Legal review", "Risk management"]
+    },
+    {
+      "s": "legal-researcher",
+      "t": "associate-attorney",
+      "req": ["Law degree", "Bar admission", "Legal practice"]
+    },
+    {
+      "s": "contract-specialist",
+      "t": "associate-attorney",
+      "req": ["Law degree", "Bar admission", "Legal practice"]
+    },
+    {
+      "s": "associate-attorney",
+      "t": "senior-attorney",
+      "req": ["Legal expertise", "Case strategy", "Client relations"]
+    },
+    {
+      "s": "senior-attorney",
+      "t": "partner",
+      "req": ["Business leadership", "Client development", "Practice management"]
+    }
+  ]
+}

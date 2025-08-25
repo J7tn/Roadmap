@@ -5,6 +5,17 @@ import techSoftwareDev from '@/data/careerPaths/tech.json';
 import healthcareNursing from '@/data/careerPaths/healthcare.json';
 import businessManagement from '@/data/careerPaths/business.json';
 import financeAnalyst from '@/data/careerPaths/finance.json';
+import marketingCareers from '@/data/careerPaths/marketing.json';
+import educationCareers from '@/data/careerPaths/education.json';
+import creativeCareers from '@/data/careerPaths/creative.json';
+import engineeringCareers from '@/data/careerPaths/engineering.json';
+import scienceCareers from '@/data/careerPaths/science.json';
+import legalCareers from '@/data/careerPaths/legal.json';
+import governmentCareers from '@/data/careerPaths/government.json';
+import nonprofitCareers from '@/data/careerPaths/nonprofit.json';
+import tradesCareers from '@/data/careerPaths/trades.json';
+import hospitalityCareers from '@/data/careerPaths/hospitality.json';
+import mediaCareers from '@/data/careerPaths/media.json';
 
 // Data mapping for efficient loading
 const CAREER_PATH_DATA: Record<string, ICareerPath> = {
@@ -12,6 +23,17 @@ const CAREER_PATH_DATA: Record<string, ICareerPath> = {
   'nursing-career-path': healthcareNursing as ICareerPath,
   'business-management-path': businessManagement as ICareerPath,
   'finance-analyst-path': financeAnalyst as ICareerPath,
+  'marketing-careers': marketingCareers as ICareerPath,
+  'education-careers': educationCareers as ICareerPath,
+  'creative-careers': creativeCareers as ICareerPath,
+  'engineering-careers': engineeringCareers as ICareerPath,
+  'science-careers': scienceCareers as ICareerPath,
+  'legal-careers': legalCareers as ICareerPath,
+  'government-careers': governmentCareers as ICareerPath,
+  'nonprofit-careers': nonprofitCareers as ICareerPath,
+  'trades-careers': tradesCareers as ICareerPath,
+  'hospitality-careers': hospitalityCareers as ICareerPath,
+  'media-careers': mediaCareers as ICareerPath,
 };
 
 // Industry to career paths mapping
@@ -20,17 +42,17 @@ const INDUSTRY_CAREER_PATHS: Record<IndustryCategory, string[]> = {
   healthcare: ['nursing-career-path'],
   business: ['business-management-path'],
   finance: ['finance-analyst-path'],
-  marketing: [],
-  education: [],
-  creative: [],
-  engineering: [],
-  science: [],
-  legal: [],
-  government: [],
-  nonprofit: [],
-  trades: [],
-  hospitality: [],
-  media: [],
+  marketing: ['marketing-careers'],
+  education: ['education-careers'],
+  creative: ['creative-careers'],
+  engineering: ['engineering-careers'],
+  science: ['science-careers'],
+  legal: ['legal-careers'],
+  government: ['government-careers'],
+  nonprofit: ['nonprofit-careers'],
+  trades: ['trades-careers'],
+  hospitality: ['hospitality-careers'],
+  media: ['media-careers'],
 };
 
 // Cache for loaded data

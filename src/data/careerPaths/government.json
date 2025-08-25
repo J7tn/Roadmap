@@ -1,0 +1,114 @@
+{
+  "id": "government-careers",
+  "n": "Government Career Path",
+  "cat": "government",
+  "nodes": [
+    {
+      "id": "government-clerk",
+      "t": "Government Clerk",
+      "l": "E",
+      "s": ["Administrative Support", "Document Processing", "Customer Service", "Record Keeping", "Office Procedures"],
+      "c": ["Government Administration", "Office Management"],
+      "sr": "$30,000 - $40,000",
+      "te": "0-2 years",
+      "d": "Entry-level position providing administrative support in government offices and departments.",
+      "jt": ["Administrative Assistant", "Office Clerk", "Government Assistant"],
+      "r": {
+        "e": ["High School Diploma", "Associate's Degree", "Administrative Studies"],
+        "exp": "0-2 years",
+        "sk": ["Administrative Support", "Document Processing", "Customer Service"]
+      }
+    },
+    {
+      "id": "policy-analyst",
+      "t": "Policy Analyst",
+      "l": "I",
+      "s": ["Policy Research", "Data Analysis", "Report Writing", "Stakeholder Engagement", "Legislative Review"],
+      "c": ["Policy Analysis", "Public Administration"],
+      "sr": "$45,000 - $70,000",
+      "te": "2-5 years",
+      "d": "Analyzes government policies and programs, providing recommendations for improvement and implementation.",
+      "jt": ["Policy Researcher", "Program Analyst", "Legislative Analyst"],
+      "r": {
+        "e": ["Public Policy", "Public Administration", "Political Science"],
+        "exp": "2-5 years",
+        "sk": ["Policy Research", "Data Analysis", "Report Writing"]
+      }
+    },
+    {
+      "id": "budget-analyst",
+      "t": "Budget Analyst",
+      "l": "I",
+      "s": ["Budget Planning", "Financial Analysis", "Cost Estimation", "Budget Monitoring", "Financial Reporting"],
+      "c": ["Budget Analysis", "Financial Management"],
+      "sr": "$50,000 - $75,000",
+      "te": "3-6 years",
+      "d": "Develops and manages government budgets, analyzing financial data and ensuring fiscal responsibility.",
+      "jt": ["Financial Analyst", "Budget Manager", "Fiscal Analyst"],
+      "r": {
+        "e": ["Finance", "Accounting", "Public Administration"],
+        "exp": "3-6 years",
+        "sk": ["Budget Planning", "Financial Analysis", "Cost Estimation"]
+      }
+    },
+    {
+      "id": "program-manager",
+      "t": "Program Manager",
+      "l": "A",
+      "s": ["Program Management", "Team Leadership", "Strategic Planning", "Performance Monitoring", "Stakeholder Relations"],
+      "c": ["Program Management", "Public Administration"],
+      "sr": "$70,000 - $100,000",
+      "te": "5-8 years",
+      "d": "Manages government programs and initiatives, ensuring effective implementation and outcomes.",
+      "jt": ["Program Director", "Project Manager", "Initiative Manager"],
+      "r": {
+        "e": ["Public Administration", "Management", "Policy"],
+        "exp": "5-8 years",
+        "sk": ["Program Management", "Team Leadership", "Strategic Planning"]
+      }
+    },
+    {
+      "id": "department-director",
+      "t": "Department Director",
+      "l": "X",
+      "s": ["Department Leadership", "Strategic Planning", "Budget Management", "Policy Development", "Stakeholder Relations"],
+      "c": ["Public Administration", "Leadership"],
+      "sr": "$90,000 - $150,000",
+      "te": "8-12 years",
+      "d": "Leads government departments, developing policies and managing operations for public service delivery.",
+      "jt": ["Department Head", "Agency Director", "Government Executive"],
+      "r": {
+        "e": ["Public Administration", "Leadership", "Policy"],
+        "exp": "8-12 years",
+        "sk": ["Department Leadership", "Strategic Planning", "Budget Management"]
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "government-clerk",
+      "t": "policy-analyst",
+      "req": ["Policy knowledge", "Research skills", "Analytical thinking"]
+    },
+    {
+      "s": "government-clerk",
+      "t": "budget-analyst",
+      "req": ["Financial skills", "Budget knowledge", "Analytical thinking"]
+    },
+    {
+      "s": "policy-analyst",
+      "t": "program-manager",
+      "req": ["Program management", "Leadership skills", "Strategic planning"]
+    },
+    {
+      "s": "budget-analyst",
+      "t": "program-manager",
+      "req": ["Program management", "Budget oversight", "Leadership skills"]
+    },
+    {
+      "s": "program-manager",
+      "t": "department-director",
+      "req": ["Department leadership", "Strategic planning", "Policy development"]
+    }
+  ]
+}

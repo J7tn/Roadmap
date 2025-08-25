@@ -1,0 +1,130 @@
+{
+  "id": "hospitality-careers",
+  "n": "Hospitality Career Path",
+  "cat": "hospitality",
+  "nodes": [
+    {
+      "id": "front-desk-agent",
+      "t": "Front Desk Agent",
+      "l": "E",
+      "s": ["Customer Service", "Reservation Management", "Check-in/Check-out", "Problem Resolution", "Communication"],
+      "c": ["Hospitality Management", "Customer Service"],
+      "sr": "$25,000 - $35,000",
+      "te": "0-2 years",
+      "d": "Entry-level position providing customer service and managing guest check-ins and check-outs.",
+      "jt": ["Hotel Clerk", "Guest Services Agent", "Receptionist"],
+      "r": {
+        "e": ["High School Diploma", "Hospitality", "Customer Service"],
+        "exp": "0-2 years",
+        "sk": ["Customer Service", "Reservation Management", "Communication"]
+      }
+    },
+    {
+      "id": "server",
+      "t": "Restaurant Server",
+      "l": "E",
+      "s": ["Customer Service", "Food Service", "Order Management", "Upselling", "Teamwork"],
+      "c": ["Food Safety", "Customer Service"],
+      "sr": "$20,000 - $40,000",
+      "te": "0-2 years",
+      "d": "Provides food and beverage service to restaurant customers, ensuring excellent dining experiences.",
+      "jt": ["Wait Staff", "Food Server", "Dining Room Attendant"],
+      "r": {
+        "e": ["High School Diploma", "Food Service", "Customer Service"],
+        "exp": "0-2 years",
+        "sk": ["Customer Service", "Food Service", "Order Management"]
+      }
+    },
+    {
+      "id": "housekeeping-supervisor",
+      "t": "Housekeeping Supervisor",
+      "l": "I",
+      "s": ["Team Management", "Quality Control", "Scheduling", "Inventory Management", "Training"],
+      "c": ["Housekeeping Management", "Supervision"],
+      "sr": "$30,000 - $45,000",
+      "te": "2-4 years",
+      "d": "Supervises housekeeping staff and ensures cleanliness standards are maintained in hospitality facilities.",
+      "jt": ["Housekeeping Manager", "Cleaning Supervisor", "Facility Manager"],
+      "r": {
+        "e": ["Hospitality Management", "Supervision", "Housekeeping"],
+        "exp": "2-4 years",
+        "sk": ["Team Management", "Quality Control", "Scheduling"]
+      }
+    },
+    {
+      "id": "restaurant-manager",
+      "t": "Restaurant Manager",
+      "l": "I",
+      "s": ["Restaurant Operations", "Staff Management", "Customer Service", "Financial Management", "Food Safety"],
+      "c": ["Restaurant Management", "Food Safety"],
+      "sr": "$40,000 - $60,000",
+      "te": "3-6 years",
+      "d": "Manages restaurant operations, including staff, customer service, and financial performance.",
+      "jt": ["Dining Manager", "Food Service Manager", "Restaurant Operations Manager"],
+      "r": {
+        "e": ["Hospitality Management", "Restaurant Management", "Business"],
+        "exp": "3-6 years",
+        "sk": ["Restaurant Operations", "Staff Management", "Customer Service"]
+      }
+    },
+    {
+      "id": "hotel-manager",
+      "t": "Hotel Manager",
+      "l": "A",
+      "s": ["Hotel Operations", "Staff Management", "Customer Service", "Financial Management", "Marketing"],
+      "c": ["Hotel Management", "Hospitality Leadership"],
+      "sr": "$50,000 - $80,000",
+      "te": "5-8 years",
+      "d": "Manages hotel operations, ensuring guest satisfaction and financial performance.",
+      "jt": ["General Manager", "Hotel Operations Manager", "Lodging Manager"],
+      "r": {
+        "e": ["Hospitality Management", "Business Administration", "Management"],
+        "exp": "5-8 years",
+        "sk": ["Hotel Operations", "Staff Management", "Customer Service"]
+      }
+    },
+    {
+      "id": "hospitality-director",
+      "t": "Hospitality Director",
+      "l": "X",
+      "s": ["Strategic Planning", "Business Development", "Team Leadership", "Financial Management", "Market Analysis"],
+      "c": ["Hospitality Leadership", "Business Management"],
+      "sr": "$70,000 - $120,000",
+      "te": "8-12 years",
+      "d": "Leads hospitality organizations, developing strategies and managing multiple properties.",
+      "jt": ["Hospitality VP", "Operations Director", "Hospitality Executive"],
+      "r": {
+        "e": ["Hospitality Management", "Business Administration", "Leadership"],
+        "exp": "8-12 years",
+        "sk": ["Strategic Planning", "Business Development", "Team Leadership"]
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "front-desk-agent",
+      "t": "housekeeping-supervisor",
+      "req": ["Supervision skills", "Quality control", "Team management"]
+    },
+    {
+      "s": "server",
+      "t": "restaurant-manager",
+      "req": ["Restaurant operations", "Staff management", "Customer service"]
+    },
+    {
+      "s": "housekeeping-supervisor",
+      "t": "hotel-manager",
+      "req": ["Hotel operations", "Staff management", "Financial management"]
+    },
+    {
+      "s": "restaurant-manager",
+      "t": "hotel-manager",
+      "req": ["Hotel operations", "Staff management", "Financial management"]
+    },
+    {
+      "s": "hotel-manager",
+      "t": "hospitality-director",
+      "req": ["Strategic planning", "Business development", "Team leadership"]
+    }
+  ]
+}
