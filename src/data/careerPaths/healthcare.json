@@ -1,0 +1,88 @@
+{
+  "id": "nursing-career-path",
+  "n": "Nursing Career Path",
+  "cat": "healthcare",
+  "nodes": [
+    {
+      "id": "cna",
+      "t": "Certified Nursing Assistant",
+      "l": "E",
+      "s": ["Patient Care", "Vital Signs", "Basic Medical Procedures", "Communication", "Infection Control"],
+      "c": ["CNA Certification", "CPR Certification", "First Aid"],
+      "sr": "$25,000 - $35,000",
+      "te": "0-1 years",
+      "d": "Entry-level position providing basic patient care and support under nursing supervision.",
+      "jt": ["Nursing Assistant", "Patient Care Technician", "Healthcare Aide"],
+      "r": {
+        "e": ["High School Diploma", "CNA Training Program"],
+        "exp": "0-1 years",
+        "sk": ["Patient Care", "Medical Terminology", "Basic Procedures"]
+      }
+    },
+    {
+      "id": "lpn",
+      "t": "Licensed Practical Nurse",
+      "l": "I",
+      "s": ["Medication Administration", "Wound Care", "Patient Assessment", "IV Therapy", "Documentation"],
+      "c": ["LPN License", "IV Certification", "Specialty Certifications"],
+      "sr": "$40,000 - $55,000",
+      "te": "1-2 years",
+      "d": "Provides direct patient care under the supervision of registered nurses and physicians.",
+      "jt": ["LPN", "LVN", "Practical Nurse"],
+      "r": {
+        "e": ["LPN Program", "State License"],
+        "exp": "1-2 years",
+        "sk": ["Nursing Procedures", "Patient Assessment", "Medication Management"]
+      }
+    },
+    {
+      "id": "rn",
+      "t": "Registered Nurse",
+      "l": "A",
+      "s": ["Patient Care Planning", "Critical Thinking", "Leadership", "Advanced Assessment", "Care Coordination"],
+      "c": ["RN License", "BSN Degree", "Specialty Certifications"],
+      "sr": "$60,000 - $85,000",
+      "te": "2-4 years",
+      "d": "Leads patient care teams and makes clinical decisions for patient treatment plans.",
+      "jt": ["Registered Nurse", "Staff Nurse", "Clinical Nurse"],
+      "r": {
+        "e": ["BSN Degree", "RN License"],
+        "exp": "2-4 years",
+        "sk": ["Clinical Judgment", "Patient Care", "Team Leadership"]
+      }
+    },
+    {
+      "id": "nurse-manager",
+      "t": "Nurse Manager",
+      "l": "X",
+      "s": ["Team Management", "Budget Planning", "Quality Improvement", "Policy Development", "Strategic Planning"],
+      "c": ["MSN Degree", "Nurse Executive Certification", "Leadership Training"],
+      "sr": "$80,000 - $120,000",
+      "te": "5+ years",
+      "d": "Manages nursing units and oversees patient care delivery across multiple teams.",
+      "jt": ["Nurse Manager", "Unit Manager", "Nursing Supervisor"],
+      "r": {
+        "e": ["MSN Degree", "Management Experience"],
+        "exp": "5+ years",
+        "sk": ["Leadership", "Management", "Healthcare Administration"]
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "cna",
+      "t": "lpn",
+      "req": ["1+ years experience", "LPN program completion", "State licensing"]
+    },
+    {
+      "s": "lpn",
+      "t": "rn",
+      "req": ["2+ years experience", "BSN degree", "RN licensing exam"]
+    },
+    {
+      "s": "rn",
+      "t": "nurse-manager",
+      "req": ["5+ years experience", "MSN degree", "Leadership experience"]
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "id": "software-development",
+  "n": "Software Development",
+  "cat": "tech",
+  "nodes": [
+    {
+      "id": "junior-dev",
+      "t": "Junior Developer",
+      "l": "E",
+      "s": ["JavaScript", "HTML/CSS", "Git", "Basic Algorithms", "SQL"],
+      "c": ["AWS Certified Cloud Practitioner", "Scrum Foundation"],
+      "sr": "$50,000 - $70,000",
+      "te": "0-2 years",
+      "d": "Entry-level position focused on building and maintaining websites under supervision.",
+      "jt": ["Junior Software Engineer", "Associate Developer", "Code Apprentice"],
+      "r": {
+        "e": ["Bachelor's in Computer Science", "Bootcamp Certificate"],
+        "exp": "0-2 years",
+        "sk": ["Programming Fundamentals", "Version Control", "Basic Testing"]
+      }
+    },
+    {
+      "id": "mid-dev",
+      "t": "Mid-Level Developer",
+      "l": "I",
+      "s": ["React/Vue/Angular", "Node.js", "API Integration", "Testing", "Database Design"],
+      "c": ["AWS Certified Developer", "Microsoft Certified: JavaScript Developer"],
+      "sr": "$70,000 - $100,000",
+      "te": "2-5 years",
+      "d": "Builds complex web applications and mentors junior developers.",
+      "jt": ["Software Engineer", "Full Stack Developer", "Web Developer"],
+      "r": {
+        "e": ["Bachelor's Degree", "Relevant Certifications"],
+        "exp": "2-5 years",
+        "sk": ["Framework Expertise", "API Development", "Testing", "Mentorship"]
+      }
+    },
+    {
+      "id": "senior-dev",
+      "t": "Senior Developer",
+      "l": "A",
+      "s": ["System Architecture", "Performance Optimization", "Team Leadership", "DevOps", "Code Review"],
+      "c": ["Google Professional Cloud Developer", "AWS Solutions Architect"],
+      "sr": "$100,000 - $150,000",
+      "te": "5+ years",
+      "d": "Leads development teams and makes high-level architectural decisions.",
+      "jt": ["Senior Software Engineer", "Lead Developer", "Technical Lead"],
+      "r": {
+        "e": ["Bachelor's Degree", "Advanced Certifications"],
+        "exp": "5+ years",
+        "sk": ["Architecture Design", "Performance Optimization", "Team Leadership"]
+      }
+    },
+    {
+      "id": "tech-lead",
+      "t": "Technical Lead",
+      "l": "X",
+      "s": ["Project Management", "System Design", "Mentorship", "Business Strategy", "Technical Vision"],
+      "c": ["PMP", "AWS DevOps Engineer"],
+      "sr": "$130,000 - $180,000",
+      "te": "8+ years",
+      "d": "Oversees multiple projects and teams while bridging technical and business requirements.",
+      "jt": ["Technical Lead", "Engineering Manager", "Development Manager"],
+      "r": {
+        "e": ["Bachelor's Degree", "MBA Preferred"],
+        "exp": "8+ years",
+        "sk": ["Project Management", "System Design", "Business Acumen"]
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "junior-dev",
+      "t": "mid-dev",
+      "req": ["2+ years experience", "Framework proficiency", "Testing skills"]
+    },
+    {
+      "s": "mid-dev",
+      "t": "senior-dev",
+      "req": ["5+ years experience", "Architecture skills", "Leadership experience"]
+    },
+    {
+      "s": "senior-dev",
+      "t": "tech-lead",
+      "req": ["8+ years experience", "Project management", "Business understanding"]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -18,99 +18,38 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import CareerRoadmap from "./CareerRoadmap";
 import CategorySelector from "./CategorySelector";
 import CareerDetails from "./CareerDetails";
+import { IndustryCategory, ICareerNode } from "@/types/career";
+import { useIndustryBrowser } from "@/hooks/useCareerData";
 
 const HomePage = () => {
-  const [selectedCategory, setSelectedCategory] = React.useState("technology");
-  const [selectedCareer, setSelectedCareer] = React.useState<string | null>(
-    null,
-  );
-  const [showCareerDetails, setShowCareerDetails] = React.useState(false);
+  const [selectedCareer, setSelectedCareer] = useState<ICareerNode | null>(null);
+  const [showCareerDetails, setShowCareerDetails] = useState(false);
 
-  // Mock categories for the CategorySelector
-  const categories = [
-    { id: "technology", name: "Technology", icon: "computer" },
-    { id: "healthcare", name: "Healthcare", icon: "heart" },
-    { id: "finance", name: "Finance", icon: "dollar" },
-    { id: "education", name: "Education", icon: "book" },
-    { id: "design", name: "Design", icon: "pen" },
-    { id: "marketing", name: "Marketing", icon: "megaphone" },
-  ];
+  // Use the optimized industry browser hook
+  const {
+    selectedIndustry,
+    changeIndustry,
+    data: careerData,
+    loading,
+    error,
+    total
+  } = useIndustryBrowser();
 
-  // Mock career data for the selected category
-  const careerData = {
-    nodes: [
-      {
-        id: "junior-dev",
-        title: "Junior Developer",
-        level: "Entry",
-        salary: "$60,000 - $80,000",
-      },
-      {
-        id: "mid-dev",
-        title: "Mid-Level Developer",
-        level: "Mid",
-        salary: "$80,000 - $110,000",
-      },
-      {
-        id: "senior-dev",
-        title: "Senior Developer",
-        level: "Senior",
-        salary: "$110,000 - $150,000",
-      },
-      {
-        id: "lead-dev",
-        title: "Lead Developer",
-        level: "Lead",
-        salary: "$130,000 - $180,000",
-      },
-      {
-        id: "architect",
-        title: "Software Architect",
-        level: "Expert",
-        salary: "$150,000 - $200,000",
-      },
-    ],
-    paths: [
-      { source: "junior-dev", target: "mid-dev" },
-      { source: "mid-dev", target: "senior-dev" },
-      { source: "senior-dev", target: "lead-dev" },
-      { source: "lead-dev", target: "architect" },
-    ],
-  };
-
-  // Mock career details
-  const careerDetails = {
-    "junior-dev": {
-      title: "Junior Developer",
-      description:
-        "Entry-level software development role focused on implementing features under supervision.",
-      skills: ["JavaScript", "HTML/CSS", "Git", "Basic Algorithms"],
-      certifications: ["AWS Certified Cloud Practitioner", "Scrum Foundation"],
-      timeEstimate: "1-2 years",
-      salary: "$60,000 - $80,000",
-      jobTitles: [
-        "Junior Software Engineer",
-        "Associate Developer",
-        "Code Apprentice",
-      ],
-    },
-    // Other career details would be defined here
-  };
-
-  const handleCategorySelect = (categoryId: string) => {
-    setSelectedCategory(categoryId);
+  const handleCategorySelect = useCallback((category: IndustryCategory) => {
+    changeIndustry(category);
     setSelectedCareer(null);
     setShowCareerDetails(false);
-  };
+  }, [changeIndustry]);
 
-  const handleCareerSelect = (careerId: string) => {
-    setSelectedCareer(careerId);
+  const handleCareerSelect = useCallback((career: ICareerNode) => {
+    setSelectedCareer(career);
     setShowCareerDetails(true);
-  };
+  }, []);
 
-  const handleCloseCareerDetails = () => {
+  const handleCloseCareerDetails = useCallback(() => {
     setShowCareerDetails(false);
-  };
+    setSelectedCareer(null);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -166,7 +105,7 @@ const HomePage = () => {
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
               Explore interactive roadmaps to navigate your professional journey
-              from entry-level to expert positions.
+              from entry-level to expert positions across {total} career paths.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-md mx-auto">
               <Button size="lg" className="gap-2">
@@ -197,9 +136,9 @@ const HomePage = () => {
                 Browse Career Categories
               </h2>
               <CategorySelector
-                categories={categories}
-                selectedCategory={selectedCategory}
+                selectedCategory={selectedIndustry}
                 onSelectCategory={handleCategorySelect}
+                showStats={true}
               />
             </div>
 
@@ -207,8 +146,8 @@ const HomePage = () => {
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-6">
                   <h3 className="text-xl font-semibold">
-                    {selectedCategory.charAt(0).toUpperCase() +
-                      selectedCategory.slice(1)}{" "}
+                    {selectedIndustry.charAt(0).toUpperCase() +
+                      selectedIndustry.slice(1)}{" "}
                     Career Path
                   </h3>
                   <Button variant="outline" size="sm" className="gap-1">
@@ -219,21 +158,17 @@ const HomePage = () => {
 
                 <div className="relative">
                   <CareerRoadmap
-                    data={careerData}
-                    onSelectCareer={handleCareerSelect}
+                    selectedCategory={selectedIndustry}
+                    onNodeClick={handleCareerSelect}
+                    pathId="software-development"
                   />
 
                   {showCareerDetails && selectedCareer && (
-                    <div className="absolute top-0 right-0 h-full w-full md:w-1/3 bg-background/95 border rounded-lg shadow-lg">
-                      <CareerDetails
-                        career={
-                          careerDetails[
-                            selectedCareer as keyof typeof careerDetails
-                          ]
-                        }
-                        onClose={handleCloseCareerDetails}
-                      />
-                    </div>
+                    <CareerDetails
+                      isOpen={showCareerDetails}
+                      onClose={handleCloseCareerDetails}
+                      career={selectedCareer}
+                    />
                   )}
                 </div>
               </CardContent>

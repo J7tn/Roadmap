@@ -1,159 +1,154 @@
-import React, { useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
+import React, { memo, useMemo } from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  Code,
-  Stethoscope,
-  Briefcase,
-  Landmark,
-  Wrench,
-  Palette,
-  Microscope,
-  Utensils,
-  Leaf,
-  Globe,
+import { 
+  Computer, 
+  Heart, 
+  Briefcase, 
+  DollarSign, 
+  Megaphone, 
+  BookOpen, 
+  Palette, 
+  Settings, 
+  Flask, 
+  Scale, 
+  Building, 
+  HeartHandshake, 
+  Wrench, 
+  Utensils, 
+  Video 
 } from "lucide-react";
-
-interface Category {
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-  description: string;
-}
+import { IIndustryCategory, IndustryCategory } from "@/types/career";
+import { INDUSTRY_CATEGORIES } from "@/data/industries";
 
 interface CategorySelectorProps {
-  onCategorySelect?: (categoryId: string) => void;
-  selectedCategory?: string;
+  selectedCategory: IndustryCategory;
+  onSelectCategory: (category: IndustryCategory) => void;
+  showStats?: boolean;
 }
 
-const CategorySelector = ({
-  onCategorySelect = () => {},
-  selectedCategory = "",
-}: CategorySelectorProps) => {
-  const [selected, setSelected] = useState<string>(selectedCategory);
+// Icon mapping for industry categories
+const iconMap = {
+  tech: Computer,
+  healthcare: Heart,
+  business: Briefcase,
+  finance: DollarSign,
+  marketing: Megaphone,
+  education: BookOpen,
+  creative: Palette,
+  engineering: Settings,
+  science: Flask,
+  legal: Scale,
+  government: Building,
+  nonprofit: HeartHandshake,
+  trades: Wrench,
+  hospitality: Utensils,
+  media: Video,
+};
 
-  const categories: Category[] = [
-    {
-      id: "technology",
-      name: "Technology",
-      icon: <Code size={24} />,
-      description:
-        "Software development, IT, cybersecurity, and data science careers",
-    },
-    {
-      id: "healthcare",
-      name: "Healthcare",
-      icon: <Stethoscope size={24} />,
-      description:
-        "Medical, nursing, therapy, and healthcare administration roles",
-    },
-    {
-      id: "business",
-      name: "Business",
-      icon: <Briefcase size={24} />,
-      description: "Management, marketing, HR, and entrepreneurship paths",
-    },
-    {
-      id: "finance",
-      name: "Finance",
-      icon: <Landmark size={24} />,
-      description:
-        "Banking, accounting, financial analysis, and investment careers",
-    },
-    {
-      id: "trades",
-      name: "Skilled Trades",
-      icon: <Wrench size={24} />,
-      description:
-        "Electrician, plumbing, carpentry, and other skilled trade professions",
-    },
-    {
-      id: "creative",
-      name: "Creative Arts",
-      icon: <Palette size={24} />,
-      description: "Design, writing, music, film, and other creative careers",
-    },
-    {
-      id: "science",
-      name: "Science",
-      icon: <Microscope size={24} />,
-      description: "Research, laboratory, engineering, and scientific roles",
-    },
-    {
-      id: "hospitality",
-      name: "Hospitality",
-      icon: <Utensils size={24} />,
-      description:
-        "Food service, hotel management, tourism, and event planning",
-    },
-    {
-      id: "agriculture",
-      name: "Agriculture",
-      icon: <Leaf size={24} />,
-      description:
-        "Farming, forestry, environmental science, and sustainability careers",
-    },
-    {
-      id: "education",
-      name: "Education",
-      icon: <Globe size={24} />,
-      description:
-        "Teaching, administration, counseling, and educational technology",
-    },
-  ];
+const CategorySelector: React.FC<CategorySelectorProps> = memo(({
+  selectedCategory,
+  onSelectCategory,
+  showStats = true,
+}) => {
+  // Memoize the sorted industries for performance
+  const sortedIndustries = useMemo(() => {
+    return [...INDUSTRY_CATEGORIES].sort((a, b) => {
+      // Sort by growth rate first (High > Medium > Low)
+      const growthOrder = { High: 3, Medium: 2, Low: 1 };
+      const aGrowth = growthOrder[a.growthRate as keyof typeof growthOrder] || 0;
+      const bGrowth = growthOrder[b.growthRate as keyof typeof growthOrder] || 0;
+      
+      if (aGrowth !== bGrowth) {
+        return bGrowth - aGrowth;
+      }
+      
+      // Then sort by job count
+      return b.jobCount - a.jobCount;
+    });
+  }, []);
 
-  const handleCategoryClick = (categoryId: string) => {
-    setSelected(categoryId);
-    onCategorySelect(categoryId);
+  // Memoize the total job count
+  const totalJobs = useMemo(() => {
+    return sortedIndustries.reduce((total, industry) => total + industry.jobCount, 0);
+  }, [sortedIndustries]);
+
+  const handleCategoryClick = (category: IndustryCategory) => {
+    onSelectCategory(category);
   };
 
   return (
-    <div className="w-full bg-background border-b border-border py-4">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-semibold">Explore Career Categories</h2>
-          {selected && (
-            <Badge variant="outline" className="ml-2">
-              {categories.find((cat) => cat.id === selected)?.name ||
-                "All Categories"}
-            </Badge>
-          )}
+    <div className="space-y-4">
+      {showStats && (
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <span>Browse {totalJobs} career paths across {sortedIndustries.length} industries</span>
+          <Badge variant="secondary">
+            {sortedIndustries.filter(i => i.growthRate === 'High').length} High Growth
+          </Badge>
         </div>
-
-        <ScrollArea className="w-full">
-          <div className="flex space-x-3 pb-2">
-            <TooltipProvider>
-              {categories.map((category) => (
-                <Tooltip key={category.id}>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={selected === category.id ? "default" : "outline"}
-                      size="lg"
-                      className={`flex flex-col items-center justify-center h-20 w-28 gap-2 transition-all ${selected === category.id ? "ring-2 ring-primary" : ""}`}
-                      onClick={() => handleCategoryClick(category.id)}
-                    >
-                      {category.icon}
-                      <span className="text-xs">{category.name}</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{category.description}</p>
-                  </TooltipContent>
-                </Tooltip>
-              ))}
-            </TooltipProvider>
-          </div>
-        </ScrollArea>
+      )}
+      
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {sortedIndustries.map((industry) => {
+          const IconComponent = iconMap[industry.id];
+          const isSelected = selectedCategory === industry.id;
+          
+          return (
+            <motion.div
+              key={industry.id}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Card
+                className={`cursor-pointer transition-all duration-200 ${
+                  isSelected
+                    ? "ring-2 ring-primary bg-primary/5 border-primary"
+                    : "hover:border-primary/50 hover:shadow-md"
+                }`}
+                onClick={() => handleCategoryClick(industry.id)}
+              >
+                <CardContent className="p-4">
+                  <div className="flex flex-col items-center text-center space-y-3">
+                    <div className={`p-3 rounded-full ${
+                      isSelected 
+                        ? "bg-primary text-primary-foreground" 
+                        : "bg-muted text-muted-foreground"
+                    }`}>
+                      <IconComponent className="h-6 w-6" />
+                    </div>
+                    
+                    <div className="space-y-1">
+                      <h3 className="font-semibold text-sm">{industry.name}</h3>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {industry.description}
+                      </p>
+                    </div>
+                    
+                    <div className="flex flex-col items-center space-y-1">
+                      <Badge 
+                        variant={industry.growthRate === 'High' ? 'default' : 'secondary'}
+                        className="text-xs"
+                      >
+                        {industry.growthRate} Growth
+                      </Badge>
+                      
+                      <div className="text-xs text-muted-foreground">
+                        <div>{industry.jobCount} careers</div>
+                        <div>{industry.avgSalary} avg</div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );
-};
+});
+
+CategorySelector.displayName = "CategorySelector";
 
 export default CategorySelector;

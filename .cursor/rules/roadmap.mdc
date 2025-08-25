@@ -1,0 +1,159 @@
+# Career Atlas Development Rules
+
+You are an expert in React, TypeScript, and scalable web application development for career roadmap applications.
+
+## Critical Rules (Always Follow)
+
+1. **Don't use deprecated or obsolete APIs.** Always use the latest React, TypeScript, and library APIs. Replace deprecated methods immediately when found.
+2. **Always write down component names/interface names** so that new components don't re-use names that are already in use.
+3. **Always organize code into logical modules** to make development faster and improve maintainability.
+4. **Always hide sensitive information** by updating environment variables and .gitignore to prevent committing any sensitive data.
+5. **Always use a phased initialization system** for data loading and component mounting to prevent dependency errors.
+6. **Always use the latest React patterns** - prefer hooks over class components, use modern state management patterns.
+7. **Always ensure proper type safety** - use TypeScript interfaces and types consistently throughout the application.
+
+## Key Principles
+
+* Write clear, technical responses with precise React and TypeScript examples.
+* Use React's built-in features and hooks wherever possible to leverage its full capabilities.
+* Prioritize readability and maintainability; follow React coding conventions and TypeScript best practices.
+* Use descriptive variable and function names; adhere to naming conventions (e.g., PascalCase for components, camelCase for variables).
+* Structure your project in a modular way using React's component-based architecture to promote reusability and separation of concerns.
+
+## React/TypeScript Guidelines
+
+* Use functional components with hooks for all new components; prefer custom hooks for reusable logic.
+* Leverage React's state management patterns (useState, useContext, useReducer) appropriately for different use cases.
+* Use TypeScript interfaces for all props, state, and API responses to ensure type safety.
+* Utilize React Router for navigation and routing across the application.
+* Follow the Component pattern strictly for clear separation of concerns and modularity.
+* Use React.memo and useMemo for performance optimization when appropriate.
+
+## Error Handling and Debugging
+
+* Implement error boundaries for React components to catch and handle errors gracefully.
+* Use proper error handling for API calls with try-catch blocks and error states.
+* Utilize React DevTools and browser developer tools for debugging component state and props.
+* Implement custom error messages and loading states to improve user experience.
+* Use TypeScript's strict mode to catch type errors during development.
+
+## Dependencies
+
+* React 18+ with hooks
+* TypeScript 5+
+* Vite for build tooling
+* Tailwind CSS for styling
+* Radix UI for accessible components
+* Framer Motion for animations
+* React Router for navigation
+* Supabase for backend services
+
+## React-Specific Guidelines
+
+* Use JSX for component templates and keep them readable and well-structured.
+* Keep components focused on a single responsibility; split large components into smaller ones.
+* Utilize React's lifecycle methods and hooks appropriately (useEffect, useLayoutEffect, etc.).
+* Apply proper prop drilling prevention using Context API or state management libraries.
+* Use React's built-in testing utilities (React Testing Library) for component testing.
+* Leverage React's Suspense and lazy loading for code splitting and performance optimization.
+* Use React's key prop correctly for list rendering to optimize re-renders.
+
+## Performance Optimization
+
+* Use React.memo for components that receive the same props frequently.
+* Implement useMemo and useCallback for expensive calculations and function references.
+* Optimize re-renders by properly structuring component hierarchies and state.
+* Use code splitting with React.lazy and Suspense for route-based splitting.
+* Implement virtual scrolling for large lists using libraries like react-window.
+* Optimize bundle size by analyzing and removing unused dependencies.
+
+## Code Organization Rules
+
+**Component Structure**: Create separate folders for different types of components (pages, features, shared, ui)
+**Interface Definitions**: Always define TypeScript interfaces in separate files or at the top of component files
+**File Organization**: Keep related components together in logical folders
+**Documentation**: Add JSDoc comments to complex functions and components
+**Naming Conventions**:
+  * Components: PascalCase (e.g., `CareerRoadmap.tsx`)
+  * Files: PascalCase for components, camelCase for utilities (e.g., `careerUtils.ts`)
+  * Folders: kebab-case (e.g., `career-roadmap/`)
+  * Interfaces: PascalCase with 'I' prefix (e.g., `ICareerNode`)
+
+## Data Management Rules
+
+* **Phased Data Loading**: All data fetching must use a phased loading system to prevent dependency errors.
+* **Loading States**: Always implement proper loading states for async operations.
+* **Error States**: Handle error states gracefully with user-friendly messages.
+* **Caching Strategy**: Implement appropriate caching for API responses using React Query or similar.
+* **State Validation**: Always validate data before updating state.
+* **Type Safety**: Use TypeScript interfaces for all API responses and state objects.
+* **Error Boundaries**: Implement error boundaries for data fetching components.
+
+## Component Design Rules
+
+* Keep components small - one main responsibility only.
+* Use clear props interfaces, avoid complex prop drilling.
+* If a component is more than 200-300 lines, consider splitting it.
+* Use early returns for conditional rendering to avoid deeply nested JSX.
+* Prefer composition over inheritance for component reuse.
+
+## API Usage Rules
+
+* **Never use deprecated React APIs**: Always check for and use the latest React patterns.
+* **Replace deprecated methods immediately**: When React marks an API as obsolete, update all usages.
+* **Use modern hooks**: Prefer hooks over class components and lifecycle methods.
+* **Implement proper error handling**: Always handle API errors and loading states.
+* **Check React documentation regularly**: Stay updated with the latest React patterns.
+* **Test with latest React versions**: Ensure compatibility with current React releases.
+
+## Project Structure Guidelines
+
+* **Modular Architecture**: Organize code into logical modules (components, hooks, utils, types, etc.).
+* **Clear Separation of Concerns**: Each module should have a specific responsibility.
+* **Scalable Design**: Structure should support project growth and feature additions.
+* **Consistent Naming**: Use consistent naming conventions across the entire project.
+* **Documentation**: Maintain up-to-date documentation for all major components and features.
+
+## Version Control Best Practices
+
+* **Meaningful Commits**: Write clear, descriptive commit messages.
+* **Feature Branches**: Use feature branches for new development.
+* **Code Review**: Review code before merging to main branch.
+* **Asset Management**: Use .gitignore to exclude generated files and sensitive data.
+* **Backup Strategy**: Regular backups of project files and assets.
+
+## Testing and Quality Assurance
+
+* **Unit Testing**: Write unit tests for critical business logic and utilities.
+* **Component Testing**: Test React components using React Testing Library.
+* **Integration Testing**: Test component interactions and data flow.
+* **Performance Testing**: Monitor bundle size and component render performance.
+* **Accessibility Testing**: Ensure components meet WCAG guidelines.
+* **Cross-browser Testing**: Test on target browsers regularly.
+
+## Career Roadmap Specific Rules
+
+* **Data Structure**: Use consistent interfaces for career nodes, paths, and categories as defined in `docs/DESIGN.md`.
+* **Visualization**: Implement responsive and accessible career path visualizations following the design specifications.
+* **User Experience**: Focus on intuitive navigation and clear information hierarchy as outlined in the design document.
+* **Performance**: Optimize for large datasets of career information with proper caching and pagination.
+* **Accessibility**: Ensure career roadmaps are accessible to users with disabilities (WCAG 2.1 AA compliance).
+* **Internationalization**: Plan for multi-language support in career content.
+* **Design Reference**: Always refer to `docs/DESIGN.md` for feature specifications, data models, and implementation guidelines.
+
+## Key Conventions
+
+1. Follow React's component-based architecture for modular and reusable UI elements.
+2. Prioritize performance optimization and bundle size management in every stage of development.
+3. Maintain a clear and logical project structure to enhance readability and asset management.
+4. Use TypeScript for type safety and better developer experience.
+5. Document all major components with JSDoc comments.
+6. Use a phased data loading system for all async operations to prevent dependency issues.
+7. Implement proper error handling and loading states in all components.
+8. Always use the latest React patterns and avoid deprecated methods.
+9. Ensure proper type safety when using external APIs and data.
+10. Follow consistent naming conventions and coding standards throughout the project.
+
+Refer to React documentation, TypeScript guides, and modern web development best practices for optimal application architecture, component design, and performance optimization.
+alwaysApply: true
+---

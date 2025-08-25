@@ -1,0 +1,88 @@
+{
+  "id": "finance-analyst-path",
+  "n": "Finance Analyst Path",
+  "cat": "finance",
+  "nodes": [
+    {
+      "id": "financial-analyst",
+      "t": "Financial Analyst",
+      "l": "E",
+      "s": ["Financial Modeling", "Excel", "Financial Analysis", "Accounting", "Data Analysis"],
+      "c": ["CFA Level 1", "Excel Certification", "Financial Modeling Course"],
+      "sr": "$55,000 - $75,000",
+      "te": "0-2 years",
+      "d": "Entry-level position analyzing financial data and creating reports for business decisions.",
+      "jt": ["Financial Analyst", "Business Analyst", "Data Analyst"],
+      "r": {
+        "e": ["Bachelor's in Finance/Accounting", "Financial Analysis Training"],
+        "exp": "0-2 years",
+        "sk": ["Financial Analysis", "Excel", "Accounting Principles"]
+      }
+    },
+    {
+      "id": "senior-analyst",
+      "t": "Senior Financial Analyst",
+      "l": "I",
+      "s": ["Advanced Financial Modeling", "Valuation", "Budgeting", "Forecasting", "Mentorship"],
+      "c": ["CFA Level 2", "CPA", "Advanced Excel"],
+      "sr": "$75,000 - $100,000",
+      "te": "2-5 years",
+      "d": "Performs complex financial analysis and mentors junior analysts.",
+      "jt": ["Senior Analyst", "Lead Analyst", "Financial Specialist"],
+      "r": {
+        "e": ["Bachelor's Degree", "CFA/CPA Progress"],
+        "exp": "2-5 years",
+        "sk": ["Advanced Modeling", "Valuation", "Leadership"]
+      }
+    },
+    {
+      "id": "finance-manager",
+      "t": "Finance Manager",
+      "l": "A",
+      "s": ["Team Leadership", "Strategic Planning", "Financial Strategy", "Risk Management", "Stakeholder Communication"],
+      "c": ["CFA", "MBA", "Leadership Training"],
+      "sr": "$100,000 - $140,000",
+      "te": "5-8 years",
+      "d": "Leads finance teams and develops financial strategies for the organization.",
+      "jt": ["Finance Manager", "Financial Controller", "Treasury Manager"],
+      "r": {
+        "e": ["MBA Preferred", "CFA/CPA"],
+        "exp": "5-8 years",
+        "sk": ["Leadership", "Strategic Planning", "Financial Management"]
+      }
+    },
+    {
+      "id": "finance-director",
+      "t": "Finance Director",
+      "l": "X",
+      "s": ["Executive Leadership", "Financial Strategy", "Board Communication", "M&A", "Corporate Finance"],
+      "c": ["CFA", "MBA", "Executive Leadership Program"],
+      "sr": "$140,000 - $200,000",
+      "te": "8+ years",
+      "d": "Leads finance function and drives financial strategy at the executive level.",
+      "jt": ["Finance Director", "VP Finance", "CFO"],
+      "r": {
+        "e": ["MBA", "CFA/CPA", "Executive Experience"],
+        "exp": "8+ years",
+        "sk": ["Executive Leadership", "Financial Strategy", "Corporate Finance"]
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "financial-analyst",
+      "t": "senior-analyst",
+      "req": ["2+ years experience", "Advanced modeling skills", "CFA progress"]
+    },
+    {
+      "s": "senior-analyst",
+      "t": "finance-manager",
+      "req": ["5+ years experience", "Leadership skills", "CFA/CPA"]
+    },
+    {
+      "s": "finance-manager",
+      "t": "finance-director",
+      "req": ["8+ years experience", "Executive leadership", "Strategic planning"]
+    }
+  ]
+}

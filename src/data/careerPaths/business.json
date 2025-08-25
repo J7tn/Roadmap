@@ -1,0 +1,88 @@
+{
+  "id": "business-management-path",
+  "n": "Business Management Path",
+  "cat": "business",
+  "nodes": [
+    {
+      "id": "business-analyst",
+      "t": "Business Analyst",
+      "l": "E",
+      "s": ["Data Analysis", "Process Documentation", "Requirements Gathering", "Excel", "SQL"],
+      "c": ["CBAP Certification", "Six Sigma Green Belt", "Agile Certification"],
+      "sr": "$50,000 - $70,000",
+      "te": "0-2 years",
+      "d": "Entry-level position analyzing business processes and gathering requirements for projects.",
+      "jt": ["Business Analyst", "Process Analyst", "Requirements Analyst"],
+      "r": {
+        "e": ["Bachelor's Degree", "Business Analysis Training"],
+        "exp": "0-2 years",
+        "sk": ["Analytical Thinking", "Documentation", "Process Analysis"]
+      }
+    },
+    {
+      "id": "project-manager",
+      "t": "Project Manager",
+      "l": "I",
+      "s": ["Project Planning", "Team Leadership", "Risk Management", "Stakeholder Communication", "Budget Management"],
+      "c": ["PMP Certification", "PRINCE2", "Scrum Master"],
+      "sr": "$70,000 - $100,000",
+      "te": "2-5 years",
+      "d": "Leads project teams and ensures successful delivery of business initiatives.",
+      "jt": ["Project Manager", "Program Manager", "Delivery Manager"],
+      "r": {
+        "e": ["Bachelor's Degree", "PMP Certification"],
+        "exp": "2-5 years",
+        "sk": ["Project Management", "Leadership", "Communication"]
+      }
+    },
+    {
+      "id": "senior-manager",
+      "t": "Senior Manager",
+      "l": "A",
+      "s": ["Strategic Planning", "Team Management", "Budget Oversight", "Process Improvement", "Change Management"],
+      "c": ["MBA", "Senior Management Training", "Leadership Certifications"],
+      "sr": "$90,000 - $130,000",
+      "te": "5-8 years",
+      "d": "Manages multiple teams and drives strategic initiatives for business growth.",
+      "jt": ["Senior Manager", "Department Manager", "Operations Manager"],
+      "r": {
+        "e": ["MBA Preferred", "Management Experience"],
+        "exp": "5-8 years",
+        "sk": ["Strategic Thinking", "Leadership", "Business Acumen"]
+      }
+    },
+    {
+      "id": "director",
+      "t": "Director",
+      "l": "X",
+      "s": ["Strategic Leadership", "Executive Communication", "Business Strategy", "Organizational Development", "Financial Planning"],
+      "c": ["MBA", "Executive Leadership Program", "Board Certification"],
+      "sr": "$120,000 - $180,000",
+      "te": "8+ years",
+      "d": "Leads business units and drives organizational strategy and growth.",
+      "jt": ["Director", "VP", "Business Unit Leader"],
+      "r": {
+        "e": ["MBA", "Executive Experience"],
+        "exp": "8+ years",
+        "sk": ["Executive Leadership", "Strategic Planning", "Business Strategy"]
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "business-analyst",
+      "t": "project-manager",
+      "req": ["2+ years experience", "Project management skills", "PMP certification"]
+    },
+    {
+      "s": "project-manager",
+      "t": "senior-manager",
+      "req": ["5+ years experience", "Team leadership", "Strategic thinking"]
+    },
+    {
+      "s": "senior-manager",
+      "t": "director",
+      "req": ["8+ years experience", "Executive leadership", "Business strategy"]
+    }
+  ]
+}
