@@ -141,6 +141,16 @@ You are an expert in React, TypeScript, and scalable web application development
 * **Internationalization**: Plan for multi-language support in career content.
 * **Design Reference**: Always refer to `docs/DESIGN.md` for feature specifications, data models, and implementation guidelines.
 
+## Build and Deployment Rules
+
+* **Always Build and Run After Major Updates**: After implementing significant features, UI changes, or adding new pages/components, ALWAYS run the complete build and deployment process:
+  1. `npm run build` - Build the web assets
+  2. `npx cap sync` - Sync with Android project  
+  3. `npx cap open android` - Open in Android Studio for testing
+* **Android Testing**: Test all major changes on Android device/emulator to ensure mobile compatibility
+* **Cross-Platform Validation**: Verify that web and mobile versions work consistently
+* **Performance Monitoring**: Check bundle size and loading performance after major updates
+
 ## Key Conventions
 
 1. Follow React's component-based architecture for modular and reusable UI elements.
@@ -153,6 +163,7 @@ You are an expert in React, TypeScript, and scalable web application development
 8. Always use the latest React patterns and avoid deprecated methods.
 9. Ensure proper type safety when using external APIs and data.
 10. Follow consistent naming conventions and coding standards throughout the project.
+11. **ALWAYS build and run on Android after major updates** - This ensures mobile compatibility and catches platform-specific issues early.
 
 Refer to React documentation, TypeScript guides, and modern web development best practices for optimal application architecture, component design, and performance optimization.
 alwaysApply: true

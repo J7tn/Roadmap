@@ -7,6 +7,22 @@ export type IndustryCategory =
   | 'finance' | 'marketing' | 'engineering' | 'science' | 'legal'
   | 'government' | 'nonprofit' | 'trades' | 'hospitality' | 'media';
 
+// Global career data interfaces
+export type CountryCode = 
+  | 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'NL' | 'SE' | 'CH' 
+  | 'AU' | 'NZ' | 'JP' | 'SG' | 'KR' | 'AE' | 'IL';
+
+export interface ICountryInfo {
+  code: CountryCode;
+  name: string;
+  currency: string;
+  avgCostOfLiving: number; // Index relative to US (100)
+  safetyRating: number; // 1-10 scale
+  visaDifficulty: 'easy' | 'medium' | 'hard';
+  remoteWorkFriendly: boolean;
+  techHub: boolean;
+}
+
 // Optimized career node interface (minimized field names)
 export interface ICareerNode {
   id: string;           // Unique identifier
@@ -23,6 +39,16 @@ export interface ICareerNode {
     exp: string;       // experience
     sk: string[];      // skills
   };
+  // Optional: Global data for countries that support this role
+  global?: {
+    [countryCode in CountryCode]?: {
+      salaryRange: string;
+      demand: 'high' | 'medium' | 'low';
+      visaInfo: string;
+      companies: string[];
+      requirements: string[];
+    };
+  };
 }
 
 // Optimized career path interface
@@ -36,6 +62,12 @@ export interface ICareerPath {
     t: string;         // target
     req: string[];     // requirements
   }>;
+  // Optional: Global availability
+  global?: {
+    availableCountries: CountryCode[];
+    remoteFriendly: boolean;
+    visaFriendlyCountries: CountryCode[];
+  };
 }
 
 // Industry category interface
@@ -47,6 +79,8 @@ export interface IIndustryCategory {
   jobCount: number;
   avgSalary: string;
   growthRate: string; // "High", "Medium", "Low"
+  globalDemand: 'high' | 'medium' | 'low';
+  topCountries: CountryCode[];
 }
 
 // User profile interface for personalization
@@ -126,6 +160,9 @@ export interface ICareerFilters {
   remoteFriendly?: boolean;
   educationLevel?: string[];
   skills?: string[];
+  countries?: CountryCode[];
+  visaFriendly?: boolean;
+  remoteOnly?: boolean;
 }
 
 // Career recommendation interface

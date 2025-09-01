@@ -1,4 +1,4 @@
-import { IIndustryCategory, IndustryCategory } from '@/types/career';
+import { IIndustryCategory, IndustryCategory, CountryCode } from '@/types/career';
 
 // Industry categories for major job markets
 // Covers ~400-600 job titles across 15 major industries
@@ -10,7 +10,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Software development, IT, cybersecurity, and emerging tech',
     jobCount: 85,
     avgSalary: '$95,000',
-    growthRate: 'High'
+    growthRate: 'High',
+    globalDemand: 'high',
+    topCountries: ['US', 'CA', 'UK', 'DE', 'NL', 'SG', 'AU']
   },
   {
     id: 'healthcare',
@@ -19,7 +21,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Medical, nursing, allied health, and healthcare administration',
     jobCount: 75,
     avgSalary: '$75,000',
-    growthRate: 'High'
+    growthRate: 'High',
+    globalDemand: 'high',
+    topCountries: ['US', 'CA', 'UK', 'DE', 'AU', 'NZ', 'CH']
   },
   {
     id: 'business',
@@ -28,7 +32,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Management, operations, consulting, and business development',
     jobCount: 65,
     avgSalary: '$80,000',
-    growthRate: 'Medium'
+    growthRate: 'Medium',
+    globalDemand: 'high',
+    topCountries: ['US', 'UK', 'DE', 'FR', 'SG', 'AE', 'CH']
   },
   {
     id: 'finance',
@@ -37,7 +43,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Banking, investment, accounting, and financial services',
     jobCount: 45,
     avgSalary: '$85,000',
-    growthRate: 'Medium'
+    growthRate: 'Medium',
+    globalDemand: 'high',
+    topCountries: ['US', 'UK', 'CH', 'SG', 'AE', 'DE', 'FR']
   },
   {
     id: 'marketing',
@@ -46,7 +54,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Digital marketing, advertising, PR, and brand management',
     jobCount: 40,
     avgSalary: '$70,000',
-    growthRate: 'High'
+    growthRate: 'High',
+    globalDemand: 'high',
+    topCountries: ['US', 'UK', 'DE', 'NL', 'AU', 'SG', 'CA']
   },
   {
     id: 'education',
@@ -55,7 +65,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Teaching, administration, training, and educational technology',
     jobCount: 35,
     avgSalary: '$60,000',
-    growthRate: 'Medium'
+    growthRate: 'Medium',
+    globalDemand: 'medium',
+    topCountries: ['US', 'CA', 'UK', 'AU', 'NZ', 'DE', 'NL']
   },
   {
     id: 'creative',
@@ -64,7 +76,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Design, writing, photography, and creative production',
     jobCount: 30,
     avgSalary: '$65,000',
-    growthRate: 'Medium'
+    growthRate: 'Medium',
+    globalDemand: 'medium',
+    topCountries: ['US', 'UK', 'DE', 'NL', 'AU', 'CA', 'SE']
   },
   {
     id: 'engineering',
@@ -73,7 +87,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Mechanical, electrical, civil, and industrial engineering',
     jobCount: 35,
     avgSalary: '$90,000',
-    growthRate: 'Medium'
+    growthRate: 'Medium',
+    globalDemand: 'high',
+    topCountries: ['US', 'DE', 'CH', 'SE', 'AU', 'CA', 'UK']
   },
   {
     id: 'science',
@@ -82,7 +98,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Research, laboratory work, and scientific analysis',
     jobCount: 25,
     avgSalary: '$75,000',
-    growthRate: 'Medium'
+    growthRate: 'Medium',
+    globalDemand: 'medium',
+    topCountries: ['US', 'DE', 'CH', 'SE', 'AU', 'CA', 'UK']
   },
   {
     id: 'legal',
@@ -91,7 +109,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Law, paralegal, compliance, and legal services',
     jobCount: 20,
     avgSalary: '$85,000',
-    growthRate: 'Low'
+    growthRate: 'Low',
+    globalDemand: 'medium',
+    topCountries: ['US', 'UK', 'CH', 'DE', 'AU', 'CA', 'SG']
   },
   {
     id: 'government',
@@ -100,7 +120,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Public service, policy, and government administration',
     jobCount: 15,
     avgSalary: '$70,000',
-    growthRate: 'Low'
+    growthRate: 'Low',
+    globalDemand: 'low',
+    topCountries: ['US', 'CA', 'UK', 'AU', 'DE', 'NL', 'SE']
   },
   {
     id: 'nonprofit',
@@ -109,7 +131,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Social work, advocacy, and non-profit management',
     jobCount: 15,
     avgSalary: '$55,000',
-    growthRate: 'Medium'
+    growthRate: 'Medium',
+    globalDemand: 'medium',
+    topCountries: ['US', 'CA', 'UK', 'DE', 'NL', 'AU', 'SE']
   },
   {
     id: 'trades',
@@ -118,7 +142,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Construction, manufacturing, and technical trades',
     jobCount: 20,
     avgSalary: '$65,000',
-    growthRate: 'Medium'
+    growthRate: 'Medium',
+    globalDemand: 'medium',
+    topCountries: ['US', 'CA', 'AU', 'DE', 'CH', 'UK', 'NL']
   },
   {
     id: 'hospitality',
@@ -127,7 +153,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Food service, tourism, and hospitality management',
     jobCount: 15,
     avgSalary: '$50,000',
-    growthRate: 'Medium'
+    growthRate: 'Medium',
+    globalDemand: 'medium',
+    topCountries: ['US', 'CA', 'AU', 'UK', 'DE', 'FR', 'SG']
   },
   {
     id: 'media',
@@ -136,7 +164,9 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     description: 'Journalism, broadcasting, and entertainment production',
     jobCount: 20,
     avgSalary: '$60,000',
-    growthRate: 'Low'
+    growthRate: 'Low',
+    globalDemand: 'medium',
+    topCountries: ['US', 'UK', 'CA', 'AU', 'DE', 'NL', 'SE']
   }
 ];
 

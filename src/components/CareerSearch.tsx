@@ -1,93 +1,320 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { Search, Filter, X, MapPin, DollarSign, Clock, TrendingUp } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { ICareerPath, ICareerFilters, IndustryCategory, CareerLevel } from '@/types/career';
-import { useCareerData } from '@/hooks/useCareerData';
+import React, { useState, useCallback, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, Filter, X, MapPin, Briefcase, DollarSign, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ICareerPath, ICareerNode, CareerLevel, IndustryCategory } from "@/types/career";
+import { useCareerData } from "@/hooks/useCareerData";
+import { INDUSTRY_CATEGORIES } from "@/data/industries";
 
 interface CareerSearchProps {
-  onCareerSelect?: (career: ICareerPath) => void;
-  showFilters?: boolean;
-  placeholder?: string;
+  onCareerSelect?: (career: ICareerNode) => void;
+  onClose?: () => void;
 }
 
 const CareerSearch: React.FC<CareerSearchProps> = ({
-  onCareerSelect = () => {},
-  showFilters = true,
-  placeholder = "Search careers, skills, or industries..."
+  onCareerSelect,
+  onClose
 }) => {
-  const [query, setQuery] = useState('');
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
-  const [filters, setFilters] = useState<ICareerFilters>({});
-  const [salaryRange, setSalaryRange] = useState<[number, number]>([30000, 200000]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedIndustry, setSelectedIndustry] = useState<string>("all");
+  const [selectedLevel, setSelectedLevel] = useState<string>("all");
+  const [showFilters, setShowFilters] = useState(false);
+  const [activeTab, setActiveTab] = useState("search");
 
   const { useOptimizedSearch } = useCareerData();
-  const { data: searchResults, loading, error } = useOptimizedSearch(query, filters);
+  
+  const filters = useMemo(() => ({
+    industry: selectedIndustry !== "all" ? [selectedIndustry as IndustryCategory] : undefined,
+    level: selectedLevel !== "all" ? [selectedLevel] : undefined
+  }), [selectedIndustry, selectedLevel]);
 
-  // Memoized filter options
-  const industryOptions = useMemo(() => [
-    { value: 'tech', label: 'Technology' },
-    { value: 'healthcare', label: 'Healthcare' },
-    { value: 'business', label: 'Business' },
-    { value: 'finance', label: 'Finance' },
-    { value: 'marketing', label: 'Marketing' },
-    { value: 'education', label: 'Education' },
-    { value: 'creative', label: 'Creative Arts' },
-    { value: 'engineering', label: 'Engineering' },
-    { value: 'science', label: 'Science' },
-    { value: 'legal', label: 'Legal' },
-  ], []);
+  const { data: searchResults, loading, error } = useOptimizedSearch(searchQuery, filters);
 
-  const levelOptions = useMemo(() => [
-    { value: 'E', label: 'Entry Level' },
-    { value: 'I', label: 'Intermediate' },
-    { value: 'A', label: 'Advanced' },
-    { value: 'X', label: 'Expert' },
-  ], []);
-
-  const handleSearch = useCallback((searchQuery: string) => {
-    setQuery(searchQuery);
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
   }, []);
 
-  const handleFilterChange = useCallback((key: keyof ICareerFilters, value: any) => {
-    setFilters(prev => ({
-      ...prev,
-      [key]: value
-    }));
-  }, []);
-
-  const handleSalaryRangeChange = useCallback((range: [number, number]) => {
-    setSalaryRange(range);
-    setFilters(prev => ({
-      ...prev,
-      salaryMin: range[0],
-      salaryMax: range[1]
-    }));
-  }, []);
-
-  const clearFilters = useCallback(() => {
-    setFilters({});
-    setSalaryRange([30000, 200000]);
-  }, []);
-
-  const handleCareerClick = useCallback((career: ICareerPath) => {
-    onCareerSelect(career);
+  const handleCareerClick = useCallback((career: ICareerNode) => {
+    onCareerSelect?.(career);
   }, [onCareerSelect]);
+
+  const handleClearFilters = useCallback(() => {
+    setSelectedIndustry("all");
+    setSelectedLevel("all");
+  }, []);
 
   const getLevelBadgeColor = useCallback((level: CareerLevel): string => {
     switch (level) {
-      case 'E': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-      case 'I': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
-      case 'A': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
-      case 'X': return 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
+      case 'E': return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
+      case 'I': return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
+      case 'A': return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300";
+      case 'X': return "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300";
+      default: return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300";
+    }
+  }, []);
+
+  const getLevelDisplayName = useCallback((level: CareerLevel): string => {
+    switch (level) {
+      case 'E': return 'Entry';
+      case 'I': return 'Intermediate';
+      case 'A': return 'Advanced';
+      case 'X': return 'Expert';
+      default: return 'Unknown';
+    }
+  }, []);
+
+  const allCareers = useMemo(() => {
+    if (!searchResults?.careers) return [];
+    
+    const careers: Array<{ node: ICareerNode; path: ICareerPath }> = [];
+    searchResults.careers.forEach(path => {
+      path.nodes.forEach(node => {
+        careers.push({ node, path });
+      });
+    });
+    
+    return careers;
+  }, [searchResults]);
+
+  return (
+    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex justify-end">
+      <motion.div
+        className="w-full max-w-2xl bg-background border-l h-full overflow-y-auto"
+        initial={{ x: "100%", opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: "100%", opacity: 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
+        <div className="p-6">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-bold">Career Search</h2>
+              <p className="text-muted-foreground">Find your perfect career path</p>
+            </div>
+            <Button variant="ghost" size="icon" onClick={onClose}>
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+
+          {/* Search Tabs */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="search">Search</TabsTrigger>
+              <TabsTrigger value="browse">Browse All</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="search" className="space-y-4">
+              {/* Search Input */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder="Search for careers, skills, or job titles..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+
+              {/* Filters */}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="gap-2"
+                >
+                  <Filter className="h-4 w-4" />
+                  Filters
+                </Button>
+                {(selectedIndustry !== "all" || selectedLevel !== "all") && (
+                  <Button variant="ghost" size="sm" onClick={handleClearFilters}>
+                    Clear
+                  </Button>
+                )}
+              </div>
+
+              {/* Filter Options */}
+              <AnimatePresence>
+                {showFilters && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="space-y-4 p-4 border rounded-lg"
+                  >
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Industry</label>
+                        <Select value={selectedIndustry} onValueChange={setSelectedIndustry}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="All Industries" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Industries</SelectItem>
+                            {INDUSTRY_CATEGORIES.map((industry) => (
+                              <SelectItem key={industry.id} value={industry.id}>
+                                {industry.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Experience Level</label>
+                        <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="All Levels" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Levels</SelectItem>
+                            <SelectItem value="E">Entry Level</SelectItem>
+                            <SelectItem value="I">Intermediate</SelectItem>
+                            <SelectItem value="A">Advanced</SelectItem>
+                            <SelectItem value="X">Expert</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Search Results */}
+              <div className="space-y-4">
+                {loading && (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                    <p className="text-muted-foreground mt-2">Searching careers...</p>
+                  </div>
+                )}
+
+                {error && (
+                  <div className="text-center py-8">
+                    <p className="text-destructive">Failed to search careers</p>
+                    <Button variant="outline" size="sm" className="mt-2">
+                      Try Again
+                    </Button>
+                  </div>
+                )}
+
+                {!loading && !error && searchQuery && (
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold">
+                        {allCareers.length} career{allCareers.length !== 1 ? 's' : ''} found
+                      </h3>
+                      {searchResults?.suggestions && searchResults.suggestions.length > 0 && (
+                        <div className="text-sm text-muted-foreground">
+                          Suggestions: {searchResults.suggestions.join(', ')}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-3">
+                      {allCareers.map(({ node, path }) => (
+                        <motion.div
+                          key={`${path.id}-${node.id}`}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          whileHover={{ scale: 1.02 }}
+                        >
+                          <Card 
+                            className="cursor-pointer hover:border-primary transition-colors"
+                            onClick={() => handleCareerClick(node)}
+                          >
+                            <CardContent className="p-4">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <h4 className="font-semibold">{node.t}</h4>
+                                    <Badge 
+                                      variant="secondary" 
+                                      className={`text-xs ${getLevelBadgeColor(node.l)}`}
+                                    >
+                                      {getLevelDisplayName(node.l)}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                                    {node.d}
+                                  </p>
+                                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                    <div className="flex items-center gap-1">
+                                      <DollarSign className="h-3 w-3" />
+                                      <span>{node.sr}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <Clock className="h-3 w-3" />
+                                      <span>{node.te}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <MapPin className="h-3 w-3" />
+                                      <span>{path.cat}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <Briefcase className="h-5 w-5 text-muted-foreground" />
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {allCareers.length === 0 && searchQuery && (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground">No careers found for "{searchQuery}"</p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Try different keywords or adjust your filters
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="browse" className="space-y-4">
+              <BrowseAllCareers onCareerSelect={handleCareerClick} />
+            </TabsContent>
+          </Tabs>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
+// Browse All Careers Component
+const BrowseAllCareers: React.FC<{ onCareerSelect: (career: ICareerNode) => void }> = ({ onCareerSelect }) => {
+  const [selectedIndustry, setSelectedIndustry] = useState<string>("all");
+  const { useCareerPathsByIndustry } = useCareerData();
+  const { data: industryData, loading } = useCareerPathsByIndustry(selectedIndustry as IndustryCategory);
+
+  const allCareers = useMemo(() => {
+    if (!industryData?.careers) return [];
+    
+    const careers: Array<{ node: ICareerNode; path: ICareerPath }> = [];
+    industryData.careers.forEach(path => {
+      path.nodes.forEach(node => {
+        careers.push({ node, path });
+      });
+    });
+    
+    return careers;
+  }, [industryData]);
+
+  const getLevelBadgeColor = useCallback((level: CareerLevel): string => {
+    switch (level) {
+      case 'E': return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
+      case 'I': return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
+      case 'A': return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300";
+      case 'X': return "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300";
+      default: return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300";
     }
   }, []);
 
@@ -102,241 +329,79 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
   }, []);
 
   return (
-    <div className="space-y-6">
-      {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder={placeholder}
-          value={query}
-          onChange={(e) => handleSearch(e.target.value)}
-          className="pl-10 pr-4"
-        />
-        {query && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
-            onClick={() => setQuery('')}
-          >
-            <X className="h-3 w-3" />
-          </Button>
-        )}
+    <div className="space-y-4">
+      <div>
+        <label className="text-sm font-medium mb-2 block">Filter by Industry</label>
+        <Select value={selectedIndustry} onValueChange={setSelectedIndustry}>
+          <SelectTrigger>
+            <SelectValue placeholder="All Industries" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Industries</SelectItem>
+            {INDUSTRY_CATEGORIES.map((industry) => (
+              <SelectItem key={industry.id} value={industry.id}>
+                {industry.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* Filters */}
-      {showFilters && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-              className="flex items-center gap-2"
-            >
-              <Filter className="h-4 w-4" />
-              {showAdvancedFilters ? 'Hide' : 'Show'} Filters
-            </Button>
-            {Object.keys(filters).length > 0 && (
-              <Button variant="ghost" size="sm" onClick={clearFilters}>
-                Clear All
-              </Button>
-            )}
-          </div>
-
-          {showAdvancedFilters && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="space-y-4 p-4 border rounded-lg bg-muted/50"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Industry Filter */}
-                <div className="space-y-2">
-                  <Label>Industry</Label>
-                  <Select
-                    value={filters.industry?.[0] || ''}
-                    onValueChange={(value) => handleFilterChange('industry', value ? [value as IndustryCategory] : undefined)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select industry" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">All Industries</SelectItem>
-                      {industryOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Level Filter */}
-                <div className="space-y-2">
-                  <Label>Experience Level</Label>
-                  <Select
-                    value={filters.level?.[0] || ''}
-                    onValueChange={(value) => handleFilterChange('level', value ? [value as CareerLevel] : undefined)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">All Levels</SelectItem>
-                      {levelOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Remote Work Filter */}
-                <div className="space-y-2">
-                  <Label>Remote Work</Label>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="remote"
-                      checked={filters.remoteFriendly || false}
-                      onCheckedChange={(checked) => handleFilterChange('remoteFriendly', checked)}
-                    />
-                    <Label htmlFor="remote">Remote-friendly positions</Label>
-                  </div>
-                </div>
-              </div>
-
-              {/* Salary Range */}
-              <div className="space-y-2">
-                <Label>Salary Range: ${salaryRange[0].toLocaleString()} - ${salaryRange[1].toLocaleString()}</Label>
-                <Slider
-                  value={salaryRange}
-                  onValueChange={handleSalaryRangeChange}
-                  max={300000}
-                  min={20000}
-                  step={5000}
-                  className="w-full"
-                />
-              </div>
-            </motion.div>
-          )}
-        </div>
-      )}
-
-      {/* Search Results */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         {loading && (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-2 text-muted-foreground">Searching careers...</p>
+            <p className="text-muted-foreground mt-2">Loading careers...</p>
           </div>
         )}
 
-        {error && (
-          <div className="text-center py-8">
-            <p className="text-destructive">Failed to load search results</p>
-            <Button variant="outline" size="sm" className="mt-2" onClick={() => window.location.reload()}>
-              Try Again
-            </Button>
-          </div>
-        )}
-
-        {!loading && !error && searchResults && (
-          <>
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
-                {searchResults.total} career paths found
-              </p>
-              {searchResults.suggestions.length > 0 && (
-                <div className="flex gap-2">
-                  {searchResults.suggestions.slice(0, 3).map((suggestion, index) => (
-                    <Badge
-                      key={index}
-                      variant="secondary"
-                      className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
-                      onClick={() => handleSearch(suggestion)}
-                    >
-                      {suggestion}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="grid gap-4">
-              {searchResults.careers.map((career) => (
-                <motion.div
-                  key={career.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Card
-                    className="cursor-pointer hover:shadow-md transition-shadow"
-                    onClick={() => handleCareerClick(career)}
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-lg font-semibold">{career.n}</h3>
-                            <Badge variant="outline" className="text-xs">
-                              {career.cat}
-                            </Badge>
-                          </div>
-                          
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            {career.nodes.map((node) => (
-                              <Badge
-                                key={node.id}
-                                variant="secondary"
-                                className={`text-xs ${getLevelBadgeColor(node.l)}`}
-                              >
-                                {getLevelDisplayName(node.l)}
-                              </Badge>
-                            ))}
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-1">
-                              <MapPin className="h-4 w-4" />
-                              <span>{career.nodes.length} career stages</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <DollarSign className="h-4 w-4" />
-                              <span>Avg: {career.nodes[0]?.sr}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <TrendingUp className="h-4 w-4" />
-                              <span>Growth potential</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col items-end gap-2">
-                          <Button variant="outline" size="sm">
-                            View Path
-                          </Button>
-                        </div>
+        {!loading && allCareers.map(({ node, path }) => (
+          <motion.div
+            key={`${path.id}-${node.id}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.02 }}
+          >
+            <Card 
+              className="cursor-pointer hover:border-primary transition-colors"
+              onClick={() => onCareerSelect(node)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h4 className="font-semibold">{node.t}</h4>
+                      <Badge 
+                        variant="secondary" 
+                        className={`text-xs ${getLevelBadgeColor(node.l)}`}
+                      >
+                        {getLevelDisplayName(node.l)}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                      {node.d}
+                    </p>
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <DollarSign className="h-3 w-3" />
+                        <span>{node.sr}</span>
                       </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-
-            {searchResults.careers.length === 0 && query && (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">No careers found matching "{query}"</p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Try adjusting your search terms or filters
-                </p>
-              </div>
-            )}
-          </>
-        )}
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        <span>{node.te}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <MapPin className="h-3 w-3" />
+                        <span>{path.cat}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Briefcase className="h-5 w-5 text-muted-foreground" />
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
       </div>
     </div>
   );

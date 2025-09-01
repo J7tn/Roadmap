@@ -9,7 +9,7 @@ import {
   IndustryCategory,
   CareerLevel
 } from '@/types/career';
-import { INDUSTRY_CATEGORIES } from '@/data/industries';
+import { INDUSTRY_CATEGORIES, getIndustryIds } from '@/data/industries';
 import { 
   loadCareerPath, 
   loadIndustryCareerPaths, 
@@ -324,13 +324,23 @@ class CareerService {
     };
   }
 
-  private async getAllCareerPaths(): Promise<ICareerPath[]> {
+  async getAllCareerPaths(): Promise<ICareerPath[]> {
     const allPaths: ICareerPath[] = [];
-    for (const industry of Object.keys(INDUSTRY_CATEGORIES)) {
-      const paths = await loadIndustryCareerPaths(industry as IndustryCategory);
+    const industries = getIndustryIds();
+    for (const industry of industries) {
+      const paths = await loadIndustryCareerPaths(industry);
       allPaths.push(...paths);
     }
     return allPaths;
+  }
+
+  async getAllCareerNodes(): Promise<Array<{ node: ICareerNode; path: ICareerPath }>> {
+    const paths = await this.getAllCareerPaths();
+    const nodes: Array<{ node: ICareerNode; path: ICareerPath }> = [];
+    paths.forEach(path => {
+      path.nodes.forEach(node => nodes.push({ node, path }));
+    });
+    return nodes;
   }
 
   private generateSearchSuggestions(query: string, results: ICareerPath[]): string[] {
@@ -399,6 +409,8 @@ export const searchCareers = (query: string, filters?: ICareerFilters, page?: nu
 export const getCareerRecommendations = (userSkills: string[], userInterests: string[], experience: number) => 
   careerService.getCareerRecommendations(userSkills, userInterests, experience);
 export const getCareerNode = (nodeId: string) => careerService.getCareerNode(nodeId);
+export const getAllCareerPaths = () => careerService.getAllCareerPaths();
+export const getAllCareerNodes = () => careerService.getAllCareerNodes();
 export const clearCareerCache = () => careerService.clearCache();
 export const getCareerCacheStats = () => careerService.getCacheStats();
 export const getCareerPathStats = () => careerService.getCareerPathStats();

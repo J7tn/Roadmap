@@ -1,0 +1,139 @@
+{
+  "id": "global-software-development",
+  "n": "Global Software Development",
+  "cat": "tech",
+  "nodes": [
+    {
+      "id": "global-junior-dev",
+      "t": "Junior Developer",
+      "l": "E",
+      "s": ["JavaScript", "HTML/CSS", "Git", "Basic Algorithms", "SQL"],
+      "c": ["AWS Certified Cloud Practitioner", "Scrum Foundation"],
+      "sr": "$50,000 - $70,000",
+      "te": "0-2 years",
+      "d": "Entry-level position focused on building and maintaining websites under supervision.",
+      "jt": ["Junior Software Engineer", "Associate Developer", "Code Apprentice"],
+      "r": {
+        "e": ["Bachelor's in Computer Science", "Bootcamp Certificate"],
+        "exp": "0-2 years",
+        "sk": ["Programming Fundamentals", "Version Control", "Basic Testing"]
+      },
+      "global": {
+        "US": {
+          "salaryRange": "$60,000 - $80,000",
+          "demand": "high",
+          "visaInfo": "H-1B visa required, competitive process",
+          "companies": ["Google", "Microsoft", "Amazon", "Meta"],
+          "requirements": ["Bachelor's degree", "Strong portfolio", "Technical interview"]
+        },
+        "CA": {
+          "salaryRange": "CAD 65,000 - 85,000",
+          "demand": "high",
+          "visaInfo": "Express Entry system, points-based",
+          "companies": ["Shopify", "Slack", "Wealthsimple"],
+          "requirements": ["Bachelor's degree", "Language proficiency", "Work experience"]
+        },
+        "UK": {
+          "salaryRange": "£35,000 - £50,000",
+          "demand": "high",
+          "visaInfo": "Skilled Worker visa, sponsorship required",
+          "companies": ["Monzo", "Revolut", "Deliveroo"],
+          "requirements": ["Bachelor's degree", "English proficiency", "Sponsorship"]
+        },
+        "DE": {
+          "salaryRange": "€45,000 - €60,000",
+          "demand": "high",
+          "visaInfo": "Blue Card EU, German language helpful",
+          "companies": ["SAP", "BMW", "Volkswagen"],
+          "requirements": ["Bachelor's degree", "German B1 level", "Work contract"]
+        },
+        "SG": {
+          "salaryRange": "SGD 4,500 - 6,500",
+          "demand": "high",
+          "visaInfo": "Employment Pass, relatively straightforward",
+          "companies": ["Grab", "Sea Group", "Razer"],
+          "requirements": ["Bachelor's degree", "Good health", "Clean record"]
+        },
+        "AU": {
+          "salaryRange": "AUD 70,000 - 90,000",
+          "demand": "high",
+          "visaInfo": "Skilled Independent visa, points-based",
+          "companies": ["Atlassian", "Canva", "Afterpay"],
+          "requirements": ["Bachelor's degree", "Age under 45", "English proficiency"]
+        }
+      }
+    },
+    {
+      "id": "global-mid-dev",
+      "t": "Mid-Level Developer",
+      "l": "I",
+      "s": ["React/Vue/Angular", "Node.js", "API Integration", "Testing", "Database Design"],
+      "c": ["AWS Certified Developer", "Microsoft Certified: JavaScript Developer"],
+      "sr": "$70,000 - $100,000",
+      "te": "2-5 years",
+      "d": "Builds complex web applications and mentors junior developers.",
+      "jt": ["Software Engineer", "Full Stack Developer", "Web Developer"],
+      "r": {
+        "e": ["Bachelor's Degree", "Relevant Certifications"],
+        "exp": "2-5 years",
+        "sk": ["Framework Expertise", "API Development", "Testing", "Mentorship"]
+      },
+      "global": {
+        "US": {
+          "salaryRange": "$90,000 - $120,000",
+          "demand": "high",
+          "visaInfo": "H-1B visa, easier with experience",
+          "companies": ["Netflix", "Airbnb", "Uber", "Stripe"],
+          "requirements": ["3+ years experience", "Strong technical skills", "Leadership potential"]
+        },
+        "CA": {
+          "salaryRange": "CAD 85,000 - 110,000",
+          "demand": "high",
+          "visaInfo": "Express Entry, higher points with experience",
+          "companies": ["Square", "Hootsuite", "Lightspeed"],
+          "requirements": ["3+ years experience", "Canadian work experience preferred"]
+        },
+        "UK": {
+          "salaryRange": "£50,000 - £70,000",
+          "demand": "high",
+          "visaInfo": "Skilled Worker visa, easier sponsorship",
+          "companies": ["TransferWise", "Darktrace", "Graphcore"],
+          "requirements": ["3+ years experience", "UK market knowledge"]
+        },
+        "DE": {
+          "salaryRange": "€60,000 - €80,000",
+          "demand": "high",
+          "visaInfo": "Blue Card EU, easier with experience",
+          "companies": ["Adidas", "Siemens", "Deutsche Bank"],
+          "requirements": ["3+ years experience", "German language skills"]
+        },
+        "NL": {
+          "salaryRange": "€55,000 - €75,000",
+          "demand": "high",
+          "visaInfo": "Highly Skilled Migrant visa, 30% ruling",
+          "companies": ["Booking.com", "Adyen", "Mollie"],
+          "requirements": ["3+ years experience", "English proficiency"]
+        },
+        "SG": {
+          "salaryRange": "SGD 6,500 - 9,000",
+          "demand": "high",
+          "visaInfo": "Employment Pass, easier renewal",
+          "companies": ["Lazada", "GoTo", "Garena"],
+          "requirements": ["3+ years experience", "Regional experience helpful"]
+        }
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "global-junior-dev",
+      "t": "global-mid-dev",
+      "req": ["2+ years experience", "Framework proficiency", "Testing skills"]
+    }
+  ],
+  "global": {
+    "availableCountries": ["US", "CA", "UK", "DE", "NL", "SG", "AU", "NZ", "CH", "SE"],
+    "remoteFriendly": true,
+    "visaFriendlyCountries": ["CA", "AU", "NL", "SG", "NZ"]
+  }
+}

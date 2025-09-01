@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -25,6 +26,7 @@ const MobileOptimizedHome = () => {
   const [selectedCareer, setSelectedCareer] = useState<ICareerNode | null>(null);
   const [showCareerDetails, setShowCareerDetails] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const navigate = useNavigate();
 
   // Use the optimized industry browser hook
   const {
@@ -52,6 +54,45 @@ const MobileOptimizedHome = () => {
     setSelectedCareer(null);
   }, []);
 
+  // Handle hero section button clicks
+  const handleExploreCareers = useCallback(() => {
+    // Scroll to the career categories section
+    const categoriesSection = document.querySelector('main');
+    if (categoriesSection) {
+      categoriesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
+
+  const handleSkillAssessment = useCallback(() => {
+    navigate('/search');
+  }, [navigate]);
+
+  // Handle mobile menu button clicks
+  const handleMobileMenuAction = useCallback((action: string) => {
+    setShowMobileMenu(false);
+    
+    switch (action) {
+      case 'home':
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        break;
+      case 'explore':
+        handleExploreCareers();
+        break;
+      case 'assessment':
+        handleSkillAssessment();
+        break;
+      case 'about':
+        navigate('/jobs');
+        break;
+      default:
+        break;
+    }
+  }, [handleExploreCareers, handleSkillAssessment, navigate]);
+
+  const handleViewAllCareers = useCallback(() => {
+    navigate('/jobs');
+  }, [navigate]);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Mobile-Optimized Navigation Header */}
@@ -63,7 +104,7 @@ const MobileOptimizedHome = () => {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" className="md:hidden">
+            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => navigate('/search')}>
               <Search className="h-5 w-5" />
             </Button>
             <Button 
@@ -86,16 +127,16 @@ const MobileOptimizedHome = () => {
             className="md:hidden border-t bg-background"
           >
             <div className="container mx-auto px-4 py-4 space-y-3">
-              <Button variant="ghost" className="w-full justify-start">
+              <Button variant="ghost" className="w-full justify-start" onClick={() => handleMobileMenuAction('home')}>
                 Home
               </Button>
-              <Button variant="ghost" className="w-full justify-start">
+              <Button variant="ghost" className="w-full justify-start" onClick={() => handleMobileMenuAction('explore')}>
                 Explore Careers
               </Button>
-              <Button variant="ghost" className="w-full justify-start">
+              <Button variant="ghost" className="w-full justify-start" onClick={() => handleMobileMenuAction('assessment')}>
                 Skills Assessment
               </Button>
-              <Button variant="ghost" className="w-full justify-start">
+              <Button variant="ghost" className="w-full justify-start" onClick={() => handleMobileMenuAction('about')}>
                 About
               </Button>
             </div>
@@ -119,11 +160,11 @@ const MobileOptimizedHome = () => {
               from entry-level to expert positions across {total} career paths.
             </p>
             <div className="flex flex-col gap-3 max-w-sm mx-auto">
-              <Button size="lg" className="gap-2">
+              <Button size="lg" className="gap-2" onClick={handleExploreCareers}>
                 <Briefcase className="h-5 w-5" />
                 Explore Careers
               </Button>
-              <Button size="lg" variant="outline" className="gap-2">
+              <Button size="lg" variant="outline" className="gap-2" onClick={handleSkillAssessment}>
                 <BookOpen className="h-5 w-5" />
                 Skill Assessment
               </Button>
@@ -159,7 +200,7 @@ const MobileOptimizedHome = () => {
                       selectedIndustry.slice(1)}{" "}
                     Career Path
                   </h3>
-                  <Button variant="outline" size="sm" className="gap-1">
+                  <Button variant="outline" size="sm" className="gap-1" onClick={handleViewAllCareers}>
                     View All
                     <ChevronRight className="h-4 w-4" />
                   </Button>
