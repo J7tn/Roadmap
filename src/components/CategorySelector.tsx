@@ -1,4 +1,5 @@
 import React, { memo, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -100,14 +101,14 @@ const CategorySelector: React.FC<CategorySelectorProps> = memo(({
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <Card
-                className={`cursor-pointer transition-all duration-200 ${
-                  isSelected
-                    ? "ring-2 ring-primary bg-primary/5 border-primary"
-                    : "hover:border-primary/50 hover:shadow-md"
-                }`}
-                onClick={() => handleCategoryClick(industry.id)}
-              >
+              <Link to={`/category/${industry.id}`}>
+                <Card
+                  className={`cursor-pointer transition-all duration-200 ${
+                    isSelected
+                      ? "ring-2 ring-primary bg-primary/5 border-primary"
+                      : "hover:border-primary/50 hover:shadow-md"
+                  }`}
+                >
                 <CardContent className="p-4">
                   <div className="flex flex-col items-center text-center space-y-3">
                     <div className={`p-3 rounded-full ${
@@ -141,6 +142,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = memo(({
                   </div>
                 </CardContent>
               </Card>
+            </Link>
             </motion.div>
           );
         })}

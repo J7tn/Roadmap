@@ -1,0 +1,467 @@
+import React, { useState, useCallback } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  Search,
+  Menu,
+  MapPin,
+  ArrowLeft,
+  TrendingUp,
+  Target,
+  Users,
+  Briefcase,
+  Code,
+  Palette,
+  Calculator,
+  Globe,
+  Heart,
+  Zap,
+  Lightbulb,
+  Award,
+  Clock,
+  ChevronRight,
+  ArrowRight,
+  Home,
+  BookOpen,
+  Star,
+  CheckCircle,
+  Circle,
+  Building,
+  GraduationCap,
+  DollarSign,
+  BarChart3,
+} from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+
+const CareerBranchingPage = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // Get user's current career from the MyCareerPathsPage data
+  const userCurrentCareer = "Software Engineer"; // This would come from user's actual data
+  const [selectedTransition, setSelectedTransition] = useState<string | null>(null);
+
+  const handleMobileMenuClose = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  const careerTransitions = {
+    "software-developer": [
+      {
+        id: "product-manager",
+        title: "Product Manager",
+        description: "Move from technical implementation to product strategy and management",
+        difficulty: "Medium",
+        timeline: "1-2 years",
+        transferableSkills: ["Problem Solving", "Technical Knowledge", "Analytical Thinking"],
+        newSkills: ["Product Strategy", "User Research", "Stakeholder Management"],
+        salaryIncrease: "+25%",
+        icon: Users,
+        color: "bg-blue-100 text-blue-600"
+      },
+      {
+        id: "data-scientist",
+        title: "Data Scientist",
+        description: "Leverage programming skills for data analysis and machine learning",
+        difficulty: "Medium",
+        timeline: "6-12 months",
+        transferableSkills: ["Programming", "Problem Solving", "Mathematics"],
+        newSkills: ["Statistics", "Machine Learning", "Data Visualization"],
+        salaryIncrease: "+30%",
+        icon: Calculator,
+        color: "bg-green-100 text-green-600"
+      },
+      {
+        id: "devops-engineer",
+        title: "DevOps Engineer",
+        description: "Focus on infrastructure, deployment, and operational excellence",
+        difficulty: "Easy",
+        timeline: "3-6 months",
+        transferableSkills: ["Programming", "System Understanding", "Problem Solving"],
+        newSkills: ["Cloud Platforms", "Infrastructure as Code", "Monitoring"],
+        salaryIncrease: "+20%",
+        icon: Zap,
+        color: "bg-orange-100 text-orange-600"
+      },
+      {
+        id: "technical-lead",
+        title: "Technical Lead",
+        description: "Advance to leadership while maintaining technical expertise",
+        difficulty: "Hard",
+        timeline: "2-3 years",
+        transferableSkills: ["Technical Skills", "Problem Solving", "Communication"],
+        newSkills: ["Team Leadership", "Architecture Design", "Mentoring"],
+        salaryIncrease: "+40%",
+        icon: Award,
+        color: "bg-purple-100 text-purple-600"
+      }
+    ],
+    "marketing-manager": [
+      {
+        id: "product-marketing",
+        title: "Product Marketing Manager",
+        description: "Specialize in product-focused marketing strategies",
+        difficulty: "Easy",
+        timeline: "6-12 months",
+        transferableSkills: ["Marketing Strategy", "Communication", "Analytics"],
+        newSkills: ["Product Knowledge", "Go-to-Market Strategy", "Customer Insights"],
+        salaryIncrease: "+15%",
+        icon: Target,
+        color: "bg-indigo-100 text-indigo-600"
+      },
+      {
+        id: "growth-hacker",
+        title: "Growth Hacker",
+        description: "Focus on rapid experimentation and data-driven growth",
+        difficulty: "Medium",
+        timeline: "1 year",
+        transferableSkills: ["Marketing", "Analytics", "Creativity"],
+        newSkills: ["A/B Testing", "Automation", "Technical Skills"],
+        salaryIncrease: "+35%",
+        icon: TrendingUp,
+        color: "bg-teal-100 text-teal-600"
+      },
+      {
+        id: "brand-manager",
+        title: "Brand Manager",
+        description: "Lead brand strategy and creative direction",
+        difficulty: "Medium",
+        timeline: "1-2 years",
+        transferableSkills: ["Marketing", "Communication", "Strategy"],
+        newSkills: ["Brand Strategy", "Creative Direction", "Stakeholder Management"],
+        salaryIncrease: "+20%",
+        icon: Palette,
+        color: "bg-pink-100 text-pink-600"
+      }
+    ],
+    "data-analyst": [
+      {
+        id: "data-scientist",
+        title: "Data Scientist",
+        description: "Advance to machine learning and predictive analytics",
+        difficulty: "Medium",
+        timeline: "1-2 years",
+        transferableSkills: ["Data Analysis", "Statistics", "Programming"],
+        newSkills: ["Machine Learning", "Deep Learning", "Model Deployment"],
+        salaryIncrease: "+40%",
+        icon: Calculator,
+        color: "bg-green-100 text-green-600"
+      },
+      {
+        id: "business-intelligence",
+        title: "BI Manager",
+        description: "Lead data strategy and business intelligence initiatives",
+        difficulty: "Medium",
+        timeline: "1-2 years",
+        transferableSkills: ["Data Analysis", "Business Acumen", "Communication"],
+        newSkills: ["Team Leadership", "Data Strategy", "Stakeholder Management"],
+        salaryIncrease: "+30%",
+        icon: BarChart3,
+        color: "bg-blue-100 text-blue-600"
+      },
+      {
+        id: "product-analyst",
+        title: "Product Analyst",
+        description: "Focus on product metrics and user behavior analysis",
+        difficulty: "Easy",
+        timeline: "6-12 months",
+        transferableSkills: ["Data Analysis", "SQL", "Statistics"],
+        newSkills: ["Product Metrics", "User Research", "A/B Testing"],
+        salaryIncrease: "+25%",
+        icon: Target,
+        color: "bg-purple-100 text-purple-600"
+      }
+    ]
+  };
+
+
+
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty.toLowerCase()) {
+      case "easy": return "bg-green-100 text-green-700";
+      case "medium": return "bg-yellow-100 text-yellow-700";
+      case "hard": return "bg-red-100 text-red-700";
+      default: return "bg-gray-100 text-gray-700";
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Mobile-Optimized Navigation Header */}
+      <header className="border-b bg-background sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <Link to="/home" className="flex items-center space-x-2 text-muted-foreground hover:text-foreground">
+              <ArrowLeft className="h-4 w-4" />
+              <span className="hidden sm:inline">Back</span>
+            </Link>
+            <div className="flex items-center space-x-2">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              <h1 className="text-lg md:text-xl font-bold">Career Branching</h1>
+            </div>
+          </div>
+
+          {/* Mobile Menu */}
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-80">
+              <div className="flex flex-col h-full">
+                <div className="flex items-center space-x-2 mb-6">
+                  <MapPin className="h-6 w-6 text-primary" />
+                  <h2 className="text-xl font-bold">Career Atlas</h2>
+                </div>
+                
+                <nav className="flex-1">
+                  <div className="space-y-2">
+                    <Link 
+                      to="/" 
+                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
+                      onClick={handleMobileMenuClose}
+                    >
+                      <Home className="h-5 w-5" />
+                      <span className="font-medium">Dashboard</span>
+                    </Link>
+                    <Link 
+                      to="/categories" 
+                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
+                      onClick={handleMobileMenuClose}
+                    >
+                      <Briefcase className="h-5 w-5" />
+                      <span className="font-medium">Browse Categories</span>
+                    </Link>
+                    <Link 
+                      to="/my-paths" 
+                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
+                      onClick={handleMobileMenuClose}
+                    >
+                      <Target className="h-5 w-5" />
+                      <span className="font-medium">My Career Paths</span>
+                    </Link>
+                    <Link 
+                      to="/skills" 
+                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
+                      onClick={handleMobileMenuClose}
+                    >
+                      <BookOpen className="h-5 w-5" />
+                      <span className="font-medium">Skills Assessment</span>
+                    </Link>
+                  </div>
+                </nav>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="bg-gradient-to-b from-background to-muted py-6 md:py-8">
+        <div className="container mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">
+              Explore Career Transitions
+            </h2>
+            <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
+              Discover how to leverage your current skills to transition into new career paths. 
+              See transferable skills, learning requirements, and potential salary increases.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-6 md:py-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Current Career Display */}
+          <div className="mb-8">
+            <h3 className="text-lg md:text-xl font-semibold mb-4">Your Current Career</h3>
+            <Card className="bg-primary/5 border-primary/20">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 rounded-full bg-blue-100">
+                    <Code className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-xl font-bold text-primary mb-2">{userCurrentCareer}</h4>
+                    <p className="text-muted-foreground mb-3">
+                      Based on your current role, here are possible career transitions that leverage your existing skills and experience.
+                    </p>
+                    <div className="flex items-center space-x-4 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <Star className="h-4 w-4 text-yellow-500" />
+                        <span>Mid-Level Position</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <TrendingUp className="h-4 w-4 text-green-500" />
+                        <span>Growth Potential</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Career Transitions */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg md:text-xl font-semibold">Possible Career Transitions</h3>
+              <Badge variant="secondary" className="text-xs">
+                {careerTransitions["software-developer"]?.length || 0} Options
+              </Badge>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {careerTransitions["software-developer"]?.map((transition) => (
+                <Card 
+                  key={transition.id}
+                  className="hover:shadow-lg transition-all cursor-pointer"
+                  onClick={() => setSelectedTransition(selectedTransition === transition.id ? null : transition.id)}
+                >
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className={`p-2 rounded-lg ${transition.color}`}>
+                          <transition.icon className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-base md:text-lg">{transition.title}</CardTitle>
+                          <p className="text-xs md:text-sm text-muted-foreground mt-1">
+                            {transition.description}
+                          </p>
+                        </div>
+                      </div>
+                      <ChevronRight 
+                        className={`h-5 w-5 text-muted-foreground transition-transform ${
+                          selectedTransition === transition.id ? 'rotate-90' : ''
+                        }`} 
+                      />
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent className="pt-0">
+                    {/* Quick Stats */}
+                    <div className="grid grid-cols-3 gap-3 mb-4">
+                      <div className="text-center p-2 bg-muted rounded-lg">
+                        <div className="text-xs text-muted-foreground">Difficulty</div>
+                        <Badge className={`text-xs mt-1 ${getDifficultyColor(transition.difficulty)}`}>
+                          {transition.difficulty}
+                        </Badge>
+                      </div>
+                      <div className="text-center p-2 bg-muted rounded-lg">
+                        <div className="text-xs text-muted-foreground">Timeline</div>
+                        <div className="text-sm font-medium mt-1">{transition.timeline}</div>
+                      </div>
+                      <div className="text-center p-2 bg-muted rounded-lg">
+                        <div className="text-xs text-muted-foreground">Salary</div>
+                        <div className="text-sm font-medium text-green-600 mt-1">{transition.salaryIncrease}</div>
+                      </div>
+                    </div>
+
+                    {/* Expanded Details */}
+                    {selectedTransition === transition.id && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="space-y-4 pt-4 border-t"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <h5 className="font-medium text-sm mb-2 flex items-center">
+                              <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
+                              Transferable Skills
+                            </h5>
+                            <div className="space-y-1">
+                              {transition.transferableSkills.map((skill, index) => (
+                                <div key={index} className="text-xs md:text-sm text-muted-foreground">
+                                  • {skill}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <h5 className="font-medium text-sm mb-2 flex items-center">
+                              <Star className="h-4 w-4 mr-2 text-blue-600" />
+                              New Skills to Learn
+                            </h5>
+                            <div className="space-y-1">
+                              {transition.newSkills.map((skill, index) => (
+                                <div key={index} className="text-xs md:text-sm text-muted-foreground">
+                                  • {skill}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <Button className="flex-1 h-10 text-sm">
+                            <Target className="h-4 w-4 mr-2" />
+                            View Roadmap
+                          </Button>
+                          <Button variant="outline" className="flex-1 h-10 text-sm">
+                            <BookOpen className="h-4 w-4 mr-2" />
+                            Learning Resources
+                          </Button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {/* Tips Section */}
+          <Card className="mt-8">
+            <CardHeader>
+              <CardTitle className="text-base md:text-lg flex items-center">
+                <Lightbulb className="h-5 w-5 mr-2 text-yellow-600" />
+                Career Transition Tips
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {[
+                "Focus on transferable skills that apply across industries",
+                "Build a portfolio or case studies to demonstrate your capabilities",
+                "Network with professionals in your target field",
+                "Consider taking relevant courses or certifications",
+                "Start with side projects or freelance work to gain experience",
+                "Be patient - career transitions typically take 1-2 years"
+              ].map((tip, index) => (
+                <div key={index} className="flex items-start space-x-3">
+                  <Circle className="h-2 w-2 mt-2 text-muted-foreground flex-shrink-0" />
+                  <p className="text-sm text-muted-foreground">{tip}</p>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+
+      {/* Mobile-Optimized Footer */}
+      <footer className="bg-muted py-6 mt-12">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-xs md:text-sm text-muted-foreground">
+            Explore career transitions based on your current skills and experience.
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default CareerBranchingPage;

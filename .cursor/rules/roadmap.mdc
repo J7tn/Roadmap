@@ -11,6 +11,22 @@ You are an expert in React, TypeScript, and scalable web application development
 5. **Always use a phased initialization system** for data loading and component mounting to prevent dependency errors.
 6. **Always use the latest React patterns** - prefer hooks over class components, use modern state management patterns.
 7. **Always ensure proper type safety** - use TypeScript interfaces and types consistently throughout the application.
+8. **ALWAYS design for mobile-first** - All UI components, layouts, and interactions must be optimized for Google/Android devices first, then adapted for desktop.
+
+## Mobile-First Design Rules (Google/Android Optimization)
+
+* **Touch-Friendly Interface**: All interactive elements must have minimum 44px touch targets for easy finger navigation
+* **Mobile Navigation**: Use slide-out menus, bottom navigation, or hamburger menus for mobile navigation
+* **Responsive Typography**: Use scalable font sizes that work well on small screens (12px minimum, 16px preferred for body text)
+* **Mobile-Optimized Cards**: Design cards with proper spacing, touch-friendly buttons, and readable text on small screens
+* **Gesture Support**: Implement swipe gestures, pull-to-refresh, and other mobile-friendly interactions
+* **Viewport Optimization**: Ensure all content fits properly within mobile viewports (320px-428px width range)
+* **Loading States**: Use skeleton screens and loading indicators optimized for mobile screens
+* **Form Design**: Design forms with large input fields, clear labels, and mobile-friendly validation
+* **Image Optimization**: Use responsive images and lazy loading for mobile performance
+* **Mobile Testing**: Always test on Android devices/emulators to ensure proper functionality
+* **Progressive Enhancement**: Start with mobile design, then enhance for larger screens
+* **Accessibility**: Ensure all mobile interactions are accessible (proper contrast, screen reader support)
 
 ## Key Principles
 
@@ -19,6 +35,7 @@ You are an expert in React, TypeScript, and scalable web application development
 * Prioritize readability and maintainability; follow React coding conventions and TypeScript best practices.
 * Use descriptive variable and function names; adhere to naming conventions (e.g., PascalCase for components, camelCase for variables).
 * Structure your project in a modular way using React's component-based architecture to promote reusability and separation of concerns.
+* **Mobile-first approach**: Design and develop for mobile devices first, then scale up for desktop.
 
 ## React/TypeScript Guidelines
 
@@ -28,6 +45,7 @@ You are an expert in React, TypeScript, and scalable web application development
 * Utilize React Router for navigation and routing across the application.
 * Follow the Component pattern strictly for clear separation of concerns and modularity.
 * Use React.memo and useMemo for performance optimization when appropriate.
+* **Mobile-responsive components**: Use Tailwind's responsive classes (sm:, md:, lg:) to create mobile-first layouts.
 
 ## Error Handling and Debugging
 
@@ -36,6 +54,7 @@ You are an expert in React, TypeScript, and scalable web application development
 * Utilize React DevTools and browser developer tools for debugging component state and props.
 * Implement custom error messages and loading states to improve user experience.
 * Use TypeScript's strict mode to catch type errors during development.
+* **Mobile error handling**: Ensure error messages are readable on small screens and provide clear next steps.
 
 ## Dependencies
 
@@ -47,6 +66,7 @@ You are an expert in React, TypeScript, and scalable web application development
 * Framer Motion for animations
 * React Router for navigation
 * Supabase for backend services
+* **Capacitor for mobile deployment** to Google Play Store
 
 ## React-Specific Guidelines
 
@@ -57,6 +77,7 @@ You are an expert in React, TypeScript, and scalable web application development
 * Use React's built-in testing utilities (React Testing Library) for component testing.
 * Leverage React's Suspense and lazy loading for code splitting and performance optimization.
 * Use React's key prop correctly for list rendering to optimize re-renders.
+* **Mobile component patterns**: Use mobile-friendly patterns like infinite scroll, virtual lists, and touch gestures.
 
 ## Performance Optimization
 
@@ -66,6 +87,7 @@ You are an expert in React, TypeScript, and scalable web application development
 * Use code splitting with React.lazy and Suspense for route-based splitting.
 * Implement virtual scrolling for large lists using libraries like react-window.
 * Optimize bundle size by analyzing and removing unused dependencies.
+* **Mobile performance**: Optimize for mobile networks, reduce bundle size, and implement progressive loading.
 
 ## Code Organization Rules
 
@@ -78,6 +100,7 @@ You are an expert in React, TypeScript, and scalable web application development
   * Files: PascalCase for components, camelCase for utilities (e.g., `careerUtils.ts`)
   * Folders: kebab-case (e.g., `career-roadmap/`)
   * Interfaces: PascalCase with 'I' prefix (e.g., `ICareerNode`)
+**Mobile Components**: Use descriptive names that indicate mobile optimization (e.g., `MobileNavigation.tsx`, `TouchFriendlyButton.tsx`)
 
 ## Data Management Rules
 
@@ -88,6 +111,7 @@ You are an expert in React, TypeScript, and scalable web application development
 * **State Validation**: Always validate data before updating state.
 * **Type Safety**: Use TypeScript interfaces for all API responses and state objects.
 * **Error Boundaries**: Implement error boundaries for data fetching components.
+* **Mobile Data**: Optimize data loading for mobile networks with proper caching and offline support.
 
 ## Component Design Rules
 
@@ -96,6 +120,7 @@ You are an expert in React, TypeScript, and scalable web application development
 * If a component is more than 200-300 lines, consider splitting it.
 * Use early returns for conditional rendering to avoid deeply nested JSX.
 * Prefer composition over inheritance for component reuse.
+* **Mobile component design**: Design components with touch interactions, proper spacing, and mobile-friendly layouts.
 
 ## API Usage Rules
 
@@ -105,6 +130,7 @@ You are an expert in React, TypeScript, and scalable web application development
 * **Implement proper error handling**: Always handle API errors and loading states.
 * **Check React documentation regularly**: Stay updated with the latest React patterns.
 * **Test with latest React versions**: Ensure compatibility with current React releases.
+* **Mobile API optimization**: Use mobile-optimized API calls with proper caching and offline support.
 
 ## Project Structure Guidelines
 
@@ -113,6 +139,7 @@ You are an expert in React, TypeScript, and scalable web application development
 * **Scalable Design**: Structure should support project growth and feature additions.
 * **Consistent Naming**: Use consistent naming conventions across the entire project.
 * **Documentation**: Maintain up-to-date documentation for all major components and features.
+* **Mobile-first structure**: Organize components with mobile considerations in mind.
 
 ## Version Control Best Practices
 
@@ -130,6 +157,7 @@ You are an expert in React, TypeScript, and scalable web application development
 * **Performance Testing**: Monitor bundle size and component render performance.
 * **Accessibility Testing**: Ensure components meet WCAG guidelines.
 * **Cross-browser Testing**: Test on target browsers regularly.
+* **Mobile Testing**: Test on Android devices and emulators to ensure mobile compatibility.
 
 ## Career Roadmap Specific Rules
 
@@ -140,6 +168,7 @@ You are an expert in React, TypeScript, and scalable web application development
 * **Accessibility**: Ensure career roadmaps are accessible to users with disabilities (WCAG 2.1 AA compliance).
 * **Internationalization**: Plan for multi-language support in career content.
 * **Design Reference**: Always refer to `docs/DESIGN.md` for feature specifications, data models, and implementation guidelines.
+* **Mobile Career Experience**: Design career roadmaps to be easily navigable on mobile devices with touch-friendly interactions.
 
 ## Build and Deployment Rules
 
@@ -150,6 +179,7 @@ You are an expert in React, TypeScript, and scalable web application development
 * **Android Testing**: Test all major changes on Android device/emulator to ensure mobile compatibility
 * **Cross-Platform Validation**: Verify that web and mobile versions work consistently
 * **Performance Monitoring**: Check bundle size and loading performance after major updates
+* **Mobile Deployment**: Ensure the app is ready for Google Play Store deployment
 
 ## Key Conventions
 
@@ -164,6 +194,7 @@ You are an expert in React, TypeScript, and scalable web application development
 9. Ensure proper type safety when using external APIs and data.
 10. Follow consistent naming conventions and coding standards throughout the project.
 11. **ALWAYS build and run on Android after major updates** - This ensures mobile compatibility and catches platform-specific issues early.
+12. **Design mobile-first** - All UI components must be optimized for Google/Android devices with touch-friendly interfaces.
 
 Refer to React documentation, TypeScript guides, and modern web development best practices for optimal application architecture, component design, and performance optimization.
 alwaysApply: true
