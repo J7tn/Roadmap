@@ -464,11 +464,8 @@ const CategoryCareersPage = () => {
       </main>
 
       {/* Bottom Navigation Dashboard - Fixed */}
-      <motion.nav 
+      <nav 
         className="border-t bg-background sticky bottom-0 z-50"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.6 }}
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-around py-3">
@@ -505,7 +502,7 @@ const CategoryCareersPage = () => {
             </Link>
           </div>
         </div>
-      </motion.nav>
+              </nav>
 
       {/* Mobile-Optimized Footer */}
       <motion.footer 

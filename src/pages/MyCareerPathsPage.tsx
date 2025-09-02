@@ -30,6 +30,12 @@ import {
   MapPin as LocationIcon,
   Trash2,
   X,
+  Code,
+  Palette as CreativeIcon,
+  Calculator,
+  Globe,
+  Zap,
+  Lightbulb,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -40,29 +46,30 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const MyCareerPathsPage = () => {
   const [activeTab, setActiveTab] = useState("my-career");
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  // State for saved assessments
+  const [savedAssessments, setSavedAssessments] = useState(() => {
+    const saved = localStorage.getItem('savedAssessments');
+    return saved ? JSON.parse(saved) : [];
+  });
 
-  // Mock data for saved career paths
+  // Mock data for saved career paths (career types, not specific jobs)
   const [savedCareerPaths, setSavedCareerPaths] = useState([
     {
       id: 1,
       title: "Software Engineer",
       category: "Technology",
       level: "Mid-Level",
-      progress: 65,
-      nextMilestone: "Senior Software Engineer",
-      timeline: "6 months remaining",
+      interest: "High",
+      nextStep: "Senior Software Engineer",
+      timeline: "6-12 months",
       salary: "$85,000 - $120,000",
       skills: ["JavaScript", "React", "Node.js", "Python", "AWS"],
-      completedMilestones: [
-        "Junior Developer (Completed)",
-        "Full-Stack Development (Completed)",
-        "Team Lead Experience (In Progress)"
-      ],
-      upcomingMilestones: [
-        "Advanced System Design",
-        "Architecture Leadership",
-        "Senior Developer Certification"
-      ],
+      description: "Building scalable web applications and software solutions",
+      icon: Code,
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
       savedDate: "2 weeks ago"
     },
     {
@@ -70,19 +77,15 @@ const MyCareerPathsPage = () => {
       title: "Data Scientist",
       category: "Technology",
       level: "Entry-Level",
-      progress: 25,
-      nextMilestone: "Junior Data Scientist",
-      timeline: "1 year remaining",
+      interest: "Medium",
+      nextStep: "Junior Data Scientist",
+      timeline: "1-2 years",
       salary: "$70,000 - $90,000",
       skills: ["Python", "SQL", "Machine Learning", "Statistics", "Data Visualization"],
-      completedMilestones: [
-        "Data Analysis Fundamentals (Completed)"
-      ],
-      upcomingMilestones: [
-        "Machine Learning Basics",
-        "Advanced Analytics",
-        "Domain Specialization"
-      ],
+      description: "Analyzing data to extract insights and build predictive models",
+      icon: BarChart3,
+      color: "text-green-600",
+      bgColor: "bg-green-100",
       savedDate: "1 week ago"
     },
     {
@@ -90,114 +93,194 @@ const MyCareerPathsPage = () => {
       title: "Product Manager",
       category: "Business",
       level: "Senior",
-      progress: 85,
-      nextMilestone: "Director of Product",
-      timeline: "8 months remaining",
+      interest: "High",
+      nextStep: "Director of Product",
+      timeline: "8-12 months",
       salary: "$120,000 - $160,000",
       skills: ["Product Strategy", "User Research", "Agile", "Data Analysis", "Leadership"],
-      completedMilestones: [
-        "Product Management (Completed)",
-        "Team Leadership (Completed)",
-        "Strategic Planning (Completed)"
-      ],
-      upcomingMilestones: [
-        "Executive Communication",
-        "Portfolio Management",
-        "Industry Expertise"
-      ],
+      description: "Leading product development and strategy for digital products",
+      icon: Target,
+      color: "text-purple-600",
+      bgColor: "bg-purple-100",
       savedDate: "3 days ago"
+    },
+    {
+      id: 4,
+      title: "UX Designer",
+      category: "Creative",
+      level: "Mid-Level",
+      interest: "Medium",
+      nextStep: "Senior UX Designer",
+      timeline: "1-2 years",
+      salary: "$80,000 - $110,000",
+      skills: ["User Research", "Wireframing", "Prototyping", "User Testing", "Design Systems"],
+      description: "Creating intuitive and engaging user experiences",
+      icon: CreativeIcon,
+      color: "text-orange-600",
+      bgColor: "bg-orange-100",
+      savedDate: "5 days ago"
     }
   ]);
+
+  // Mock data for career interests (career types user is exploring)
+  const careerInterests = [
+    {
+      id: 1,
+      title: "AI Engineer",
+      category: "Technology",
+      description: "Building and deploying artificial intelligence models",
+      interest: "High",
+      skills: ["Python", "TensorFlow", "Machine Learning", "Deep Learning"],
+      icon: Lightbulb,
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-100",
+      savedDate: "1 day ago"
+    },
+    {
+      id: 2,
+      title: "DevOps Engineer",
+      category: "Technology",
+      description: "Automating deployment and infrastructure management",
+      interest: "Medium",
+      skills: ["Docker", "Kubernetes", "CI/CD", "Cloud Platforms"],
+      icon: Zap,
+      color: "text-teal-600",
+      bgColor: "bg-teal-100",
+      savedDate: "2 days ago"
+    },
+    {
+      id: 3,
+      title: "Business Analyst",
+      category: "Business",
+      description: "Analyzing business processes and recommending improvements",
+      interest: "Medium",
+      skills: ["Data Analysis", "SQL", "Excel", "Business Process Modeling"],
+      icon: Calculator,
+      color: "text-pink-600",
+      bgColor: "bg-pink-100",
+      savedDate: "4 days ago"
+    }
+  ];
 
   // Function to remove a saved career path
   const removeCareerPath = useCallback((id: number) => {
     setSavedCareerPaths(prev => prev.filter(path => path.id !== id));
   }, []);
 
-  // Mock data for saved jobs
-  const savedJobs = [
-    {
-      id: 1,
-      title: "Senior Frontend Developer",
-      company: "InnovateTech",
-      location: "San Francisco, CA",
-      salary: "$120,000 - $160,000",
-      type: "Full-time",
-      postedDate: "2 days ago",
-      isRemote: true,
-      skills: ["React", "TypeScript", "Next.js", "GraphQL"],
-      status: "Interested",
-      icon: Building,
-      color: "text-blue-600",
-      bgColor: "bg-blue-100"
-    },
-    {
-      id: 2,
-      title: "Lead Software Engineer",
-      company: "DataFlow Systems",
-      location: "Austin, TX",
-      salary: "$130,000 - $180,000",
-      type: "Full-time",
-      postedDate: "1 week ago",
-      isRemote: false,
-      skills: ["Python", "Machine Learning", "Docker", "Kubernetes"],
-      status: "Applied",
-      icon: TrendingUp,
-      color: "text-green-600",
-      bgColor: "bg-green-100"
-    },
-    {
-      id: 3,
-      title: "Full-Stack Developer",
-      company: "StartupXYZ",
-      location: "Remote",
-      salary: "$90,000 - $130,000",
-      type: "Full-time",
-      postedDate: "3 days ago",
-      isRemote: true,
-      skills: ["React", "Node.js", "MongoDB", "Express"],
-      status: "Interested",
-      icon: Users,
-      color: "text-purple-600",
-      bgColor: "bg-purple-100"
-    },
-    {
-      id: 4,
-      title: "DevOps Engineer",
-      company: "CloudTech Solutions",
-      location: "Seattle, WA",
-      salary: "$110,000 - $150,000",
-      type: "Full-time",
-      postedDate: "5 days ago",
-      isRemote: true,
-      skills: ["AWS", "Docker", "Kubernetes", "Terraform"],
-      status: "Interested",
-      icon: BarChart3,
-      color: "text-orange-600",
-      bgColor: "bg-orange-100"
-    }
-  ];
+  // Function to remove a career interest
+  const removeCareerInterest = useCallback((id: number) => {
+    // This would update the careerInterests state in a real app
+  }, []);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Applied": return "bg-blue-100 text-blue-800";
-      case "Interested": return "bg-yellow-100 text-yellow-800";
-      case "Interviewing": return "bg-green-100 text-green-800";
+  // Function to remove a saved assessment
+  const removeAssessment = useCallback((id: string) => {
+    setSavedAssessments(prev => {
+      const updated = prev.filter(assessment => assessment.id !== id);
+      localStorage.setItem('savedAssessments', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
+  const getInterestColor = (interest: string) => {
+    switch (interest) {
+      case "High": return "bg-green-100 text-green-800";
+      case "Medium": return "bg-yellow-100 text-yellow-800";
+      case "Low": return "bg-gray-100 text-gray-800";
       default: return "bg-gray-100 text-gray-800";
     }
   };
 
-  const getProgressColor = (progress: number) => {
-    if (progress >= 80) return "bg-green-500";
-    if (progress >= 60) return "bg-blue-500";
-    if (progress >= 40) return "bg-yellow-500";
-    return "bg-gray-500";
+  const getLevelColor = (level: string) => {
+    switch (level) {
+      case "Entry-Level": return "bg-blue-100 text-blue-800";
+      case "Mid-Level": return "bg-green-100 text-green-800";
+      case "Senior": return "bg-purple-100 text-purple-800";
+      case "Expert": return "bg-orange-100 text-orange-800";
+      default: return "bg-gray-100 text-gray-800";
+    }
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const headerVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const searchVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  // Filter career paths based on search
+  const filteredCareerPaths = savedCareerPaths.filter(path =>
+    path.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    path.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    path.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  // Filter career interests based on search
+  const filteredCareerInterests = careerInterests.filter(interest =>
+    interest.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    interest.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    interest.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  // Filter assessments based on search
+  const filteredAssessments = savedAssessments.filter(assessment =>
+    assessment.selectedCareerGoal.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    assessment.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    assessment.experienceLevel.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <motion.div 
+      className="min-h-screen bg-background flex flex-col"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       {/* Top Header - Fixed */}
-      <header className="border-b bg-background sticky top-0 z-50">
+      <motion.header 
+        className="border-b bg-background sticky top-0 z-50"
+        variants={headerVariants}
+      >
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Link to="/home" className="flex items-center space-x-2 text-muted-foreground hover:text-foreground">
@@ -211,53 +294,63 @@ const MyCareerPathsPage = () => {
           </div>
 
           <div className="flex items-center space-x-3">
-            {/* Search - Hidden on mobile to save space */}
-            <div className="relative hidden md:block w-48">
+            {/* Search */}
+            <motion.div 
+              className="relative w-48"
+              variants={searchVariants}
+            >
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search..." className="pl-8 h-9" />
-            </div>
-            
-
-
-
+              <Input 
+                placeholder="Search careers..." 
+                className="pl-8 h-9"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </motion.div>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* Main Content Area - Scrollable */}
       <main className="flex-1 overflow-y-auto">
         {/* Content Navigation Tabs */}
-        <div className="border-b bg-muted/50">
+        <motion.div 
+          className="border-b bg-muted/50"
+          variants={itemVariants}
+        >
           <div className="container mx-auto px-4">
             <div className="flex items-center space-x-6 overflow-x-auto">
-              <Button variant="ghost" size="sm" className="flex items-center space-x-2">
-                <Plus className="h-4 w-4" />
-                <span className="hidden sm:inline">Add New</span>
-              </Button>
               <Button 
                 variant={activeTab === "my-career" ? "default" : "ghost"} 
                 size="sm"
                 onClick={() => setActiveTab("my-career")}
               >
-                My Career ({savedCareerPaths.length})
+                My Career Paths ({filteredCareerPaths.length})
               </Button>
               <Button 
-                variant={activeTab === "saved-jobs" ? "default" : "ghost"} 
+                variant={activeTab === "career-interests" ? "default" : "ghost"} 
                 size="sm"
-                onClick={() => setActiveTab("saved-jobs")}
+                onClick={() => setActiveTab("career-interests")}
               >
-                Saved Jobs ({savedJobs.length})
+                Career Interests ({filteredCareerInterests.length})
+              </Button>
+              <Button 
+                variant={activeTab === "my-assessments" ? "default" : "ghost"} 
+                size="sm"
+                onClick={() => setActiveTab("my-assessments")}
+              >
+                My Assessments ({filteredAssessments.length})
               </Button>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Content Tabs */}
         <div className="container mx-auto px-4 py-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            {/* My Career Tab */}
+            {/* My Career Paths Tab */}
             <TabsContent value="my-career" className="space-y-6">
-              {savedCareerPaths.length === 0 ? (
+              {filteredCareerPaths.length === 0 ? (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -274,198 +367,297 @@ const MyCareerPathsPage = () => {
                   </Button>
                 </motion.div>
               ) : (
-                savedCareerPaths.map((careerPath, index) => (
-                  <motion.div
-                    key={careerPath.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                  >
-                    <Card className="hover:shadow-md transition-all relative group">
-                      {/* Remove Button */}
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-100 hover:text-red-600"
-                        onClick={() => removeCareerPath(careerPath.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                      
-                      <CardContent className="p-6">
-                        <div className="flex items-start space-x-4">
-                          {/* Career Icon */}
-                          <div className="p-4 rounded-full bg-blue-100 flex-shrink-0">
-                            <Briefcase className="h-8 w-8 text-blue-600" />
-                          </div>
-                          
-                          {/* Career Content */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between mb-4">
-                              <div>
-                                <div className="flex items-center space-x-2 mb-2">
-                                  <h2 className="text-2xl font-bold">{careerPath.title}</h2>
-                                  <Badge variant="outline" className="text-xs">
-                                    {careerPath.category}
-                                  </Badge>
-                                </div>
-                                <Badge variant="secondary" className="text-sm">{careerPath.level}</Badge>
-                                <div className="text-sm text-muted-foreground mt-1">
-                                  Saved {careerPath.savedDate}
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                <div className="text-lg font-bold text-blue-600">{careerPath.salary}</div>
-                                <div className="text-sm text-muted-foreground">{careerPath.timeline}</div>
-                              </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {filteredCareerPaths.map((careerPath, index) => (
+                    <motion.div
+                      key={careerPath.id}
+                      variants={itemVariants}
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Card className="hover:shadow-lg transition-all relative group h-full">
+                        {/* Remove Button */}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-100 hover:text-red-600"
+                          onClick={() => removeCareerPath(careerPath.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                        
+                        <CardContent className="p-6 h-full flex flex-col">
+                          {/* Header */}
+                          <div className="flex items-start space-x-4 mb-4">
+                            <div className={`p-3 rounded-full ${careerPath.bgColor} flex-shrink-0`}>
+                              <careerPath.icon className={`h-6 w-6 ${careerPath.color}`} />
                             </div>
-                            
-                            {/* Progress Section */}
-                            <div className="mb-6">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="text-sm font-medium text-muted-foreground">Career Progress</span>
-                                <span className="text-sm font-medium">{careerPath.progress}%</span>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center space-x-2 mb-2">
+                                <h2 className="text-xl font-bold">{careerPath.title}</h2>
+                                <Badge variant="outline" className="text-xs">
+                                  {careerPath.category}
+                                </Badge>
                               </div>
-                              <div className="w-full bg-gray-200 rounded-full h-3">
-                                <div 
-                                  className={`h-3 rounded-full ${getProgressColor(careerPath.progress)}`}
-                                  style={{ width: `${careerPath.progress}%` }}
-                                ></div>
-                              </div>
-                              <p className="text-sm text-muted-foreground mt-2">
-                                Next milestone: <span className="font-medium">{careerPath.nextMilestone}</span>
-                              </p>
-                            </div>
-                            
-                            {/* Skills Section */}
-                            <div className="mb-6">
-                              <h3 className="font-semibold mb-3">Current Skills</h3>
-                              <div className="flex flex-wrap gap-2">
-                                {careerPath.skills.map((skill, skillIndex) => (
-                                  <Badge key={skillIndex} variant="outline" className="text-sm">
-                                    {skill}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-                            
-                            {/* Milestones Section */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                              <div>
-                                <h3 className="font-semibold mb-3 text-green-700">Completed Milestones</h3>
-                                <ul className="space-y-2">
-                                  {careerPath.completedMilestones.map((milestone, milestoneIndex) => (
-                                    <li key={milestoneIndex} className="flex items-center space-x-2 text-sm">
-                                      <CheckCircle className="h-4 w-4 text-green-600" />
-                                      <span className="text-muted-foreground">{milestone}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                              <div>
-                                <h3 className="font-semibold mb-3 text-blue-700">Upcoming Milestones</h3>
-                                <ul className="space-y-2">
-                                  {careerPath.upcomingMilestones.map((milestone, milestoneIndex) => (
-                                    <li key={milestoneIndex} className="flex items-center space-x-2 text-sm">
-                                      <Clock className="h-4 w-4 text-blue-600" />
-                                      <span className="text-muted-foreground">{milestone}</span>
-                                    </li>
-                                  ))}
-                                </ul>
+                              <div className="flex items-center space-x-2">
+                                <Badge className={getLevelColor(careerPath.level)}>
+                                  {careerPath.level}
+                                </Badge>
+                                <Badge className={getInterestColor(careerPath.interest)}>
+                                  {careerPath.interest} Interest
+                                </Badge>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))
+
+                          {/* Description */}
+                          <p className="text-muted-foreground mb-4 flex-1">
+                            {careerPath.description}
+                          </p>
+
+                          {/* Next Step */}
+                          <div className="bg-muted/50 rounded-lg p-3 mb-4">
+                            <div className="flex items-center space-x-2 mb-1">
+                              <Target className="h-4 w-4 text-primary" />
+                              <span className="text-sm font-medium">Next Step</span>
+                            </div>
+                            <p className="text-sm font-semibold">{careerPath.nextStep}</p>
+                            <p className="text-xs text-muted-foreground">
+                              Timeline: {careerPath.timeline} • Salary: {careerPath.salary}
+                            </p>
+                          </div>
+
+                          {/* Skills */}
+                          <div className="mb-4">
+                            <h3 className="text-sm font-medium mb-2">Key Skills</h3>
+                            <div className="flex flex-wrap gap-1">
+                              {careerPath.skills.slice(0, 4).map((skill, skillIndex) => (
+                                <Badge key={skillIndex} variant="outline" className="text-xs">
+                                  {skill}
+                                </Badge>
+                              ))}
+                              {careerPath.skills.length > 4 && (
+                                <Badge variant="outline" className="text-xs">
+                                  +{careerPath.skills.length - 4} more
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Footer */}
+                          <div className="flex items-center justify-between text-xs text-muted-foreground">
+                            <span>Saved {careerPath.savedDate}</span>
+                            <Button variant="ghost" size="sm" className="h-7 text-xs">
+                              View Details
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
               )}
             </TabsContent>
 
-            {/* Saved Jobs Tab */}
-            <TabsContent value="saved-jobs" className="space-y-4">
-              {savedJobs.map((job, index) => (
+            {/* Career Interests Tab */}
+            <TabsContent value="career-interests" className="space-y-6">
+              {filteredCareerInterests.length === 0 ? (
                 <motion.div
-                  key={job.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-center py-12"
                 >
-                  <Card className="hover:shadow-md transition-all cursor-pointer">
-                    <CardContent className="p-4">
-                      <div className="flex items-start space-x-4">
-                        {/* Job Icon */}
-                        <div className={`p-3 rounded-full ${job.bgColor} flex-shrink-0`}>
-                          <job.icon className={`h-6 w-6 ${job.color}`} />
-                        </div>
-                        
-                        {/* Job Content */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex-1">
-                              <h3 className="font-semibold text-base mb-1">{job.title}</h3>
-                              <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-2">
-                                <Building className="h-4 w-4" />
-                                <span>{job.company}</span>
-                                <span>•</span>
-                                <LocationIcon className="h-4 w-4" />
-                                <span>{job.location}</span>
-                                {job.isRemote && (
-                                  <>
-                                    <span>•</span>
-                                    <Badge variant="secondary" className="text-xs">Remote</Badge>
-                                  </>
-                                )}
-                              </div>
+                  <Lightbulb className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No career interests yet</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Save career types you're interested in exploring
+                  </p>
+                  <Button asChild>
+                    <Link to="/categories">Explore Careers</Link>
+                  </Button>
+                </motion.div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredCareerInterests.map((interest, index) => (
+                    <motion.div
+                      key={interest.id}
+                      variants={itemVariants}
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Card className="hover:shadow-lg transition-all relative group h-full">
+                        {/* Remove Button */}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-100 hover:text-red-600"
+                          onClick={() => removeCareerInterest(interest.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+
+                        <CardContent className="p-4 h-full flex flex-col">
+                          {/* Header */}
+                          <div className="text-center mb-4">
+                            <div className={`p-3 rounded-full ${interest.bgColor} mx-auto mb-3`}>
+                              <interest.icon className={`h-6 w-6 ${interest.color}`} />
                             </div>
-                            <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0 ml-2" />
-                          </div>
-                          
-                          {/* Job Details */}
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center space-x-4">
-                              <div className="text-center">
-                                <div className="text-sm font-medium text-green-600">{job.salary}</div>
-                                <div className="text-xs text-muted-foreground">Salary</div>
-                              </div>
-                              <div className="text-center">
-                                <div className="text-sm font-medium text-blue-600">{job.type}</div>
-                                <div className="text-xs text-muted-foreground">Type</div>
-                              </div>
-                              <div className="text-center">
-                                <div className="text-sm font-medium text-purple-600">{job.postedDate}</div>
-                                <div className="text-xs text-muted-foreground">Posted</div>
-                              </div>
-                            </div>
-                            
-                            {/* Status Badge */}
-                            <Badge className={getStatusColor(job.status)}>
-                              {job.status}
+                            <h3 className="font-semibold text-base mb-1">{interest.title}</h3>
+                            <Badge variant="outline" className="text-xs">
+                              {interest.category}
                             </Badge>
                           </div>
-                          
+
+                          {/* Description */}
+                          <p className="text-sm text-muted-foreground mb-4 flex-1 text-center">
+                            {interest.description}
+                          </p>
+
                           {/* Skills */}
-                          <div className="flex flex-wrap gap-1">
-                            {job.skills.map((skill, skillIndex) => (
-                              <Badge key={skillIndex} variant="outline" className="text-xs">
-                                {skill}
-                              </Badge>
-                            ))}
+                          <div className="mb-4">
+                            <h4 className="text-xs font-medium mb-2 text-center">Skills to Learn</h4>
+                            <div className="flex flex-wrap gap-1 justify-center">
+                              {interest.skills.slice(0, 3).map((skill, skillIndex) => (
+                                <Badge key={skillIndex} variant="outline" className="text-xs">
+                                  {skill}
+                                </Badge>
+                              ))}
+                              {interest.skills.length > 3 && (
+                                <Badge variant="outline" className="text-xs">
+                                  +{interest.skills.length - 3} more
+                                </Badge>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+
+                          {/* Footer */}
+                          <div className="text-center">
+                            <Badge className={getInterestColor(interest.interest)}>
+                              {interest.interest} Interest
+                            </Badge>
+                            <div className="text-xs text-muted-foreground mt-2">
+                              Saved {interest.savedDate}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            {/* My Assessments Tab */}
+            <TabsContent value="my-assessments" className="space-y-6">
+              {filteredAssessments.length === 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-center py-12"
+                >
+                  <Target className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No saved assessments yet</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Complete a skills assessment to see your results here
+                  </p>
+                  <Button asChild>
+                    <Link to="/skills">Take Assessment</Link>
+                  </Button>
                 </motion.div>
-              ))}
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {filteredAssessments.map((assessment, index) => (
+                    <motion.div
+                      key={assessment.id}
+                      variants={itemVariants}
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Card className="hover:shadow-lg transition-all relative group h-full">
+                        {/* Remove Button */}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-100 hover:text-red-600"
+                          onClick={() => removeAssessment(assessment.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                        
+                        <CardContent className="p-6 h-full flex flex-col">
+                          {/* Header */}
+                          <div className="flex items-start space-x-4 mb-4">
+                            <div className="p-3 rounded-full bg-primary/10 flex-shrink-0">
+                              <Target className="h-6 w-6 text-primary" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center space-x-2 mb-2">
+                                <h2 className="text-xl font-bold">Skills Assessment</h2>
+                                <Badge variant="outline" className="text-xs">
+                                  {assessment.selectedCareerGoal || 'Not specified'}
+                                </Badge>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Badge className={getLevelColor(assessment.experienceLevel || 'Not specified')}>
+                                  {assessment.experienceLevel || 'Not specified'}
+                                </Badge>
+                                <Badge variant="outline" className="text-xs">
+                                  {assessment.skills.length} skills
+                                </Badge>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Skills Summary */}
+                          <div className="mb-4">
+                            <h3 className="text-sm font-medium mb-2">Selected Skills</h3>
+                            <div className="flex flex-wrap gap-1">
+                              {assessment.skills.slice(0, 6).map((skill, skillIndex) => (
+                                <Badge key={skillIndex} variant="outline" className="text-xs">
+                                  {skill}
+                                </Badge>
+                              ))}
+                              {assessment.skills.length > 6 && (
+                                <Badge variant="outline" className="text-xs">
+                                  +{assessment.skills.length - 6} more
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Additional Details */}
+                          {assessment.currentRole && (
+                            <div className="bg-muted/50 rounded-lg p-3 mb-4">
+                              <div className="text-sm">
+                                <span className="font-medium">Current Role:</span> {assessment.currentRole}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Footer */}
+                          <div className="flex items-center justify-between text-xs text-muted-foreground mt-auto">
+                            <span>Completed {assessment.completedDate}</span>
+                            <Button variant="ghost" size="sm" className="h-7 text-xs">
+                              View Details
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
             </TabsContent>
           </Tabs>
         </div>
       </main>
 
       {/* Bottom Navigation Dashboard - Fixed */}
-      <nav className="border-t bg-background sticky bottom-0 z-50">
+      <nav 
+        className="border-t bg-background sticky bottom-0 z-50"
+      >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-around py-3">
             {/* Home Button */}
@@ -501,8 +693,8 @@ const MyCareerPathsPage = () => {
             </Link>
           </div>
         </div>
-      </nav>
-    </div>
+              </nav>
+    </motion.div>
   );
 };
 

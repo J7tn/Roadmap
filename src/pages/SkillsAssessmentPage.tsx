@@ -1,6 +1,8 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { SkillsAssessmentService, AssessmentRecommendations } from "@/services/skillsAssessmentService";
+import { NotificationService } from "@/services/notificationService";
 import {
   Search,
   MapPin,
@@ -53,15 +55,53 @@ const SkillsAssessmentPage = () => {
     selectedCareerGoal: ""
   });
 
+  const [recommendations, setRecommendations] = useState<AssessmentRecommendations | null>(null);
+  const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
+
+
+
   const handleNextStep = () => {
     if (currentStep < 4) {
-      setCurrentStep(currentStep + 1);
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      
+      // Generate recommendations when reaching step 4
+      if (nextStep === 4) {
+        generateRecommendations();
+      }
     }
+  };
+
+  const generateRecommendations = async () => {
+    setIsLoadingRecommendations(true);
+    try {
+      const recs = await SkillsAssessmentService.getRecommendations(assessmentData);
+      setRecommendations(recs);
+      
+      // Create notifications for high-priority skill recommendations
+      const notificationService = NotificationService.getInstance();
+      recs.skillDevelopment.forEach(skill => {
+        if (skill.priority === 'High') {
+          notificationService.createSkillRecommendationNotification(skill.skill, skill.priority);
+        }
+      });
+    } catch (error) {
+      console.error('Failed to generate recommendations:', error);
+    } finally {
+      setIsLoadingRecommendations(false);
+    }
+  };
+
+  // Check if next button should be disabled
+  const isNextDisabled = (): boolean => {
+    // Always allow progression
+    return false;
   };
 
   const handlePrevStep = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
+      const prevStep = currentStep - 1;
+      setCurrentStep(prevStep);
     }
   };
 
@@ -88,6 +128,36 @@ const SkillsAssessmentPage = () => {
       ...prev,
       [field]: value
     }));
+  };
+
+  // Function to save assessment to localStorage
+  const saveAssessment = () => {
+    const assessmentToSave = {
+      id: `assessment_${Date.now()}`,
+      ...assessmentData,
+      recommendations: recommendations, // Include AI-generated recommendations
+      completedDate: new Date().toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      })
+    };
+
+    // Get existing assessments
+    const existingAssessments = JSON.parse(localStorage.getItem('savedAssessments') || '[]');
+    
+    // Add new assessment
+    const updatedAssessments = [...existingAssessments, assessmentToSave];
+    
+    // Save to localStorage
+    localStorage.setItem('savedAssessments', JSON.stringify(updatedAssessments));
+    
+    // Create notification
+    const notificationService = NotificationService.getInstance();
+    notificationService.createAssessmentNotification(assessmentToSave);
+    
+    // Show success message
+    alert('Assessment saved successfully! You can view it in the "My Assessments" tab.');
   };
 
   const skillCategories = [
@@ -151,93 +221,174 @@ const SkillsAssessmentPage = () => {
     { value: "analyst", label: "Data/Analytics", icon: TrendingUp, description: "Focus on data and insights" }
   ];
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const headerVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const progressVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut"
+      }
+    }
+  };
+
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-6">
-            <div>
+          <motion.div 
+            className="space-y-6"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div variants={itemVariants}>
               <h3 className="text-lg md:text-xl font-semibold mb-4">What skills do you currently have?</h3>
               <p className="text-sm md:text-base text-muted-foreground mb-6">
                 Select the skills you're proficient in. You can add custom skills too.
               </p>
-            </div>
+            </motion.div>
             
             <div className="space-y-4">
-              {skillCategories.map((category) => (
-                <Card key={category.id} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-lg ${category.color}`}>
-                        <category.icon className="h-5 w-5" />
+              {skillCategories.map((category, categoryIndex) => (
+                <motion.div
+                  key={category.id}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.01, y: -2 }}
+                >
+                  <Card className="hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center space-x-3">
+                        <div className={`p-2 rounded-lg ${category.color}`}>
+                          <category.icon className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-base md:text-lg">{category.name}</CardTitle>
+                          <p className="text-xs md:text-sm text-muted-foreground">
+                            Select relevant skills from this category
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <CardTitle className="text-base md:text-lg">{category.name}</CardTitle>
-                        <p className="text-xs md:text-sm text-muted-foreground">
-                          Select relevant skills from this category
-                        </p>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        {category.skills.map((skill, skillIndex) => {
+                          const isSelected = assessmentData.skills.includes(skill);
+                          return (
+                            <motion.div
+                              key={skill}
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: categoryIndex * 0.1 + skillIndex * 0.05 }}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              <Button
+                                variant={isSelected ? "default" : "outline"}
+                                size="sm"
+                                className={`h-9 text-xs md:text-sm justify-start ${
+                                  isSelected ? "bg-primary text-primary-foreground" : ""
+                                }`}
+                                onClick={() => toggleSkill(skill)}
+                              >
+                                {isSelected ? (
+                                  <CheckCircle className="h-3 w-3 mr-2" />
+                                ) : (
+                                  <Circle className="h-3 w-3 mr-2" />
+                                )}
+                                {skill}
+                              </Button>
+                            </motion.div>
+                          );
+                        })}
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                      {category.skills.map((skill) => {
-                        const isSelected = assessmentData.skills.includes(skill);
-                        return (
-                          <Button
-                            key={skill}
-                            variant={isSelected ? "default" : "outline"}
-                            size="sm"
-                            className={`h-9 text-xs md:text-sm justify-start ${
-                              isSelected ? "bg-primary text-primary-foreground" : ""
-                            }`}
-                            onClick={() => toggleSkill(skill)}
-                          >
-                            {isSelected ? (
-                              <CheckCircle className="h-3 w-3 mr-2" />
-                            ) : (
-                              <Circle className="h-3 w-3 mr-2" />
-                            )}
-                            {skill}
-                          </Button>
-                        );
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </div>
 
-            <div className="space-y-4">
-              <Label htmlFor="custom-skills" className="text-sm md:text-base font-medium">
-                Add Custom Skills
-              </Label>
-              <Textarea
-                id="custom-skills"
-                placeholder="Enter any additional skills you have (comma-separated)"
-                className="min-h-[80px] md:min-h-[100px]"
-                value={assessmentData.interests.join(", ")}
-                onChange={(e) => {
-                  const customSkills = e.target.value.split(",").map(s => s.trim()).filter(s => s);
-                  updateField("interests", e.target.value);
-                }}
-              />
-            </div>
-          </div>
+                         <motion.div className="space-y-4" variants={itemVariants}>
+               <Label htmlFor="custom-skills" className="text-sm md:text-base font-medium">
+                 Add Custom Skills
+               </Label>
+               <Textarea
+                 id="custom-skills"
+                 placeholder="Enter any additional skills you have (comma-separated)"
+                 className="min-h-[80px] md:min-h-[100px]"
+                 value={assessmentData.interests.join(", ")}
+                 onChange={(e) => {
+                   const customSkills = e.target.value.split(",").map(s => s.trim()).filter(s => s);
+                   updateField("interests", e.target.value);
+                 }}
+               />
+             </motion.div>
+
+             {/* Validation message for Step 1 */}
+             {currentStep === 1 && assessmentData.skills.length === 0 && (
+               <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                 <p className="text-sm text-amber-700">
+                   ⚠️ Please select at least one skill to continue
+                 </p>
+               </div>
+             )}
+          </motion.div>
         );
 
       case 2:
         return (
-          <div className="space-y-6">
-            <div>
+          <motion.div 
+            className="space-y-6"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div variants={itemVariants}>
               <h3 className="text-lg md:text-xl font-semibold mb-4">What's your experience level?</h3>
               <p className="text-sm md:text-base text-muted-foreground mb-6">
                 Tell us about your professional experience and background.
               </p>
-            </div>
+            </motion.div>
 
             <div className="space-y-4">
-              <div>
+              <motion.div variants={itemVariants}>
                 <Label htmlFor="current-role" className="text-sm md:text-base font-medium">
                   Current Role (if any)
                 </Label>
@@ -248,9 +399,9 @@ const SkillsAssessmentPage = () => {
                   value={assessmentData.currentRole}
                   onChange={(e) => updateField("currentRole", e.target.value)}
                 />
-              </div>
+              </motion.div>
 
-              <div>
+              <motion.div variants={itemVariants}>
                 <Label className="text-sm md:text-base font-medium mb-3 block">
                   Years of Professional Experience
                 </Label>
@@ -259,32 +410,48 @@ const SkillsAssessmentPage = () => {
                   value={assessmentData.experienceLevel}
                   onValueChange={(value) => updateField("experienceLevel", value)}
                 >
-                  {experienceLevels.map((level) => (
-                    <div key={level.value} className="flex items-center space-x-3">
+                  {experienceLevels.map((level, index) => (
+                    <motion.div
+                      key={level.value}
+                      className="flex items-center space-x-3"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      whileHover={{ x: 5 }}
+                    >
                       <RadioGroupItem value={level.value} id={level.value} />
                       <Label htmlFor={level.value} className="flex-1 cursor-pointer">
                         <div className="font-medium text-sm md:text-base">{level.label}</div>
                         <div className="text-xs md:text-sm text-muted-foreground">{level.description}</div>
                       </Label>
-                    </div>
+                    </motion.div>
                   ))}
                 </RadioGroup>
-              </div>
+              </motion.div>
 
-              <div>
-                <Label htmlFor="experience-details" className="text-sm md:text-base font-medium">
-                  Additional Experience Details
-                </Label>
-                <Textarea
-                  id="experience-details"
-                  placeholder="Describe your work experience, projects, achievements, or any relevant background..."
-                  className="mt-2 min-h-[100px] md:min-h-[120px]"
-                  value={assessmentData.experienceDetails}
-                  onChange={(e) => updateField("experienceDetails", e.target.value)}
-                />
-              </div>
+                             <motion.div variants={itemVariants}>
+                 <Label htmlFor="experience-details" className="text-sm md:text-base font-medium">
+                   Additional Experience Details
+                 </Label>
+                 <Textarea
+                   id="experience-details"
+                   placeholder="Describe your work experience, projects, achievements, or any relevant background..."
+                   className="mt-2 min-h-[100px] md:min-h-[120px]"
+                   value={assessmentData.experienceDetails}
+                   onChange={(e) => updateField("experienceDetails", e.target.value)}
+                 />
+               </motion.div>
+
+               {/* Validation message for Step 2 */}
+               {currentStep === 2 && assessmentData.experienceLevel === "" && (
+                 <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                   <p className="text-sm text-amber-700">
+                     ⚠️ Please select your experience level to continue
+                   </p>
+                 </div>
+               )}
             </div>
-          </div>
+          </motion.div>
         );
 
       case 3:
@@ -297,140 +464,243 @@ const SkillsAssessmentPage = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {careerGoals.map((goal) => (
-                <Card 
-                  key={goal.value} 
-                  className={`hover:shadow-md transition-shadow cursor-pointer ${
-                    assessmentData.selectedCareerGoal === goal.value ? "ring-2 ring-primary" : ""
-                  }`}
-                  onClick={() => updateField("selectedCareerGoal", goal.value)}
-                >
-                  <CardContent className="p-4">
-                    <div className="flex items-start space-x-3">
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <goal.icon className="h-5 w-5 text-primary" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm md:text-base mb-1">{goal.label}</h4>
-                        <p className="text-xs md:text-sm text-muted-foreground">{goal.description}</p>
-                      </div>
-                      <RadioGroupItem 
-                        value={goal.value} 
-                        id={goal.value}
-                        checked={assessmentData.selectedCareerGoal === goal.value}
-                        onChange={() => updateField("selectedCareerGoal", goal.value)}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                         <RadioGroup 
+               value={assessmentData.selectedCareerGoal}
+                               onValueChange={(value) => updateField("selectedCareerGoal", value)}
+               className="grid grid-cols-1 md:grid-cols-2 gap-4"
+             >
+               {careerGoals.map((goal, index) => (
+                 <div key={goal.value}>
+                   <Card 
+                     className={`hover:shadow-md transition-shadow cursor-pointer ${
+                       assessmentData.selectedCareerGoal === goal.value ? "ring-2 ring-primary" : ""
+                     }`}
+                     onClick={() => updateField("selectedCareerGoal", goal.value)}
+                   >
+                     <CardContent className="p-4">
+                       <div className="flex items-start space-x-3">
+                         <div className="p-2 bg-primary/10 rounded-lg">
+                           <goal.icon className="h-5 w-5 text-primary" />
+                         </div>
+                         <div className="flex-1">
+                           <h4 className="font-medium text-sm md:text-base mb-1">{goal.label}</h4>
+                           <p className="text-xs md:text-sm text-muted-foreground">{goal.description}</p>
+                         </div>
+                         <RadioGroupItem 
+                           value={goal.value} 
+                           id={goal.value}
+                         />
+                       </div>
+                     </CardContent>
+                   </Card>
+                 </div>
+               ))}
+             </RadioGroup>
 
-            <div>
-              <Label htmlFor="goals-details" className="text-sm md:text-base font-medium">
-                Additional Goals & Interests
-              </Label>
-              <Textarea
-                id="goals-details"
-                placeholder="Tell us more about your specific career goals, interests, or what you're looking for..."
-                className="mt-2 min-h-[100px] md:min-h-[120px]"
-                value={assessmentData.goalsDetails}
-                onChange={(e) => updateField("goalsDetails", e.target.value)}
-              />
-            </div>
+                           <div>
+                 <Label htmlFor="goals-details" className="text-sm md:text-base font-medium">
+                   Additional Goals & Interests
+                 </Label>
+                 <Textarea
+                   id="goals-details"
+                   placeholder="Tell us more about your specific career goals, interests, or what you're looking for..."
+                   className="mt-2 min-h-[100px] md:min-h-[120px]"
+                   value={assessmentData.goalsDetails}
+                   onChange={(e) => updateField("goalsDetails", e.target.value)}
+                 />
+               </div>
+
+               {/* Validation message for Step 3 */}
+               {currentStep === 3 && assessmentData.selectedCareerGoal === "" && (
+                 <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                   <p className="text-sm text-amber-700">
+                     ⚠️ Please select a career goal to continue
+                   </p>
+                 </div>
+               )}
           </div>
         );
 
-      case 4:
-        return (
-          <div className="space-y-6">
-            <div className="text-center">
-              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                <CheckCircle className="h-8 w-8 text-green-600" />
-              </div>
-              <h3 className="text-lg md:text-xl font-semibold mb-2">Assessment Complete!</h3>
-              <p className="text-sm md:text-base text-muted-foreground">
-                Based on your skills and goals, here are your personalized career recommendations.
-              </p>
-            </div>
+             case 4:
+         return (
+           <div className="space-y-6">
+             <div className="text-center">
+               <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                 <CheckCircle className="h-8 w-8 text-primary" />
+               </div>
+               <h3 className="text-lg md:text-xl font-semibold mb-2">Assessment Complete!</h3>
+               <p className="text-muted-foreground">Here are your personalized recommendations.</p>
+             </div>
 
-            <div className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base md:text-lg flex items-center">
-                    <Target className="h-5 w-5 mr-2" />
-                    Recommended Career Paths
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {[
-                    { title: "Software Engineer", match: "95%", description: "Strong technical skills match" },
-                    { title: "Product Manager", match: "87%", description: "Good mix of technical and business skills" },
-                    { title: "Data Scientist", match: "82%", description: "Analytical skills align well" },
-                    { title: "UX Designer", match: "78%", description: "Creative and technical combination" }
-                  ].map((career, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex-1">
-                        <div className="font-medium text-sm md:text-base">{career.title}</div>
-                        <div className="text-xs md:text-sm text-muted-foreground">{career.description}</div>
-                      </div>
-                      <Badge variant="secondary" className="ml-2">{career.match}</Badge>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+             {isLoadingRecommendations ? (
+               <div className="text-center py-8">
+                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                 <p className="text-muted-foreground">Generating personalized recommendations...</p>
+               </div>
+             ) : recommendations ? (
+               <div className="space-y-4">
+                 <div>
+                   <Card>
+                     <CardHeader>
+                       <CardTitle className="text-base md:text-lg flex items-center">
+                         <Target className="h-5 w-5 mr-2" />
+                         Recommended Career Paths
+                       </CardTitle>
+                     </CardHeader>
+                     <CardContent className="space-y-3">
+                       {recommendations.careerPaths.map((career, index) => (
+                         <div
+                           key={index}
+                           className="p-3 border rounded-lg space-y-2"
+                         >
+                           <div className="flex items-center justify-between">
+                             <div className="font-medium text-sm md:text-base">{career.title}</div>
+                             <Badge variant="secondary">{career.match}</Badge>
+                           </div>
+                           <div className="text-xs md:text-sm text-muted-foreground">{career.description}</div>
+                           <div className="flex items-center justify-between text-xs text-muted-foreground">
+                             <span>💰 {career.salary}</span>
+                             <span>📈 {career.growth}</span>
+                           </div>
+                           <div className="text-xs">
+                             <span className="font-medium">Required Skills:</span> {career.requiredSkills.join(', ')}
+                           </div>
+                           <div className="text-xs">
+                             <span className="font-medium">Next Steps:</span> {career.nextSteps.join(', ')}
+                           </div>
+                         </div>
+                       ))}
+                     </CardContent>
+                   </Card>
+                 </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base md:text-lg flex items-center">
-                    <TrendingUp className="h-5 w-5 mr-2" />
-                    Skill Development Plan
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {[
-                    { skill: "Advanced JavaScript", priority: "High", timeline: "3-6 months" },
-                    { skill: "System Design", priority: "Medium", timeline: "6-12 months" },
-                    { skill: "Leadership Skills", priority: "Medium", timeline: "Ongoing" },
-                    { skill: "Cloud Architecture", priority: "Low", timeline: "12+ months" }
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex-1">
-                        <div className="font-medium text-sm md:text-base">{item.skill}</div>
-                        <div className="text-xs md:text-sm text-muted-foreground">Timeline: {item.timeline}</div>
-                      </div>
-                      <Badge variant={item.priority === "High" ? "default" : "secondary"} className="ml-2">
-                        {item.priority}
-                      </Badge>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </div>
+                 <div>
+                   <Card>
+                     <CardHeader>
+                       <CardTitle className="text-base md:text-lg flex items-center">
+                         <TrendingUp className="h-5 w-5 mr-2" />
+                         Skill Development Plan
+                       </CardTitle>
+                     </CardHeader>
+                     <CardContent className="space-y-3">
+                       {recommendations.skillDevelopment.map((item, index) => (
+                         <div
+                           key={index}
+                           className="p-3 border rounded-lg space-y-2"
+                         >
+                           <div className="flex items-center justify-between">
+                             <div className="font-medium text-sm md:text-base">{item.skill}</div>
+                             <Badge variant={item.priority === "High" ? "default" : "secondary"}>
+                               {item.priority}
+                             </Badge>
+                           </div>
+                           <div className="text-xs md:text-sm text-muted-foreground">{item.description}</div>
+                           <div className="text-xs text-muted-foreground">⏰ Timeline: {item.timeline}</div>
+                           <div className="text-xs">
+                             <span className="font-medium">Resources:</span> {item.resources.join(', ')}
+                           </div>
+                         </div>
+                       ))}
+                     </CardContent>
+                   </Card>
+                 </div>
 
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button className="flex-1 h-11">
-                <Target className="h-4 w-4 mr-2" />
-                View Detailed Roadmap
-              </Button>
-              <Button variant="outline" className="flex-1 h-11">
-                <BookOpen className="h-4 w-4 mr-2" />
-                Save Assessment
-              </Button>
-            </div>
-          </div>
-        );
+                 <div>
+                   <Card>
+                     <CardHeader>
+                       <CardTitle className="text-base md:text-lg flex items-center">
+                         <MapPin className="h-5 w-5 mr-2" />
+                         Career Roadmap
+                       </CardTitle>
+                     </CardHeader>
+                     <CardContent className="space-y-4">
+                       <div>
+                         <h4 className="font-medium text-sm mb-2">Short Term (3-6 months)</h4>
+                         <ul className="text-xs text-muted-foreground space-y-1">
+                           {recommendations.roadmap.shortTerm.map((goal, index) => (
+                             <li key={index}>• {goal}</li>
+                           ))}
+                         </ul>
+                       </div>
+                       <div>
+                         <h4 className="font-medium text-sm mb-2">Medium Term (6-12 months)</h4>
+                         <ul className="text-xs text-muted-foreground space-y-1">
+                           {recommendations.roadmap.mediumTerm.map((goal, index) => (
+                             <li key={index}>• {goal}</li>
+                           ))}
+                         </ul>
+                       </div>
+                       <div>
+                         <h4 className="font-medium text-sm mb-2">Long Term (1+ years)</h4>
+                         <ul className="text-xs text-muted-foreground space-y-1">
+                           {recommendations.roadmap.longTerm.map((goal, index) => (
+                             <li key={index}>• {goal}</li>
+                           ))}
+                         </ul>
+                       </div>
+                     </CardContent>
+                   </Card>
+                 </div>
+               </div>
+             ) : (
+               <div className="text-center py-8">
+                 <p className="text-muted-foreground">Failed to load recommendations. Please try again.</p>
+                 <Button onClick={generateRecommendations} className="mt-2">
+                   Retry
+                 </Button>
+               </div>
+             )}
+
+             <div className="flex flex-col sm:flex-row gap-3">
+               <Button 
+                 className="flex-1 h-11" 
+                 onClick={() => {
+                   if (recommendations) {
+                     // Save assessment with recommendations
+                     const assessmentWithRecs = {
+                       ...assessmentData,
+                       recommendations: recommendations
+                     };
+                     localStorage.setItem('currentAssessment', JSON.stringify(assessmentWithRecs));
+                     // You could navigate to a detailed roadmap page here
+                     alert('Assessment saved! You can now view your detailed roadmap.');
+                   }
+                 }}
+                 disabled={!recommendations}
+               >
+                 <Target className="h-4 w-4 mr-2" />
+                 View Detailed Roadmap
+               </Button>
+               <Button variant="outline" className="flex-1 h-11" onClick={saveAssessment}>
+                 <BookOpen className="h-4 w-4 mr-2" />
+                 Save Assessment
+               </Button>
+             </div>
+           </div>
+         );
 
       default:
-        return null;
+        return (
+          <div className="text-center py-8">
+            <h3 className="text-lg font-semibold mb-2">Step {currentStep}</h3>
+            <p className="text-muted-foreground">This step is not yet implemented.</p>
+          </div>
+        );
     }
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <motion.div 
+      className="min-h-screen bg-background"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       {/* Mobile-Optimized Navigation Header */}
-      <header className="border-b bg-background sticky top-0 z-50">
+      <motion.header 
+        className="border-b bg-background sticky top-0 z-50"
+        variants={headerVariants}
+      >
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Link to="/home" className="flex items-center space-x-2 text-muted-foreground hover:text-foreground">
@@ -443,29 +713,56 @@ const SkillsAssessmentPage = () => {
             </div>
           </div>
         </div>
-      </header>
+      </motion.header>
 
-      {/* Progress Bar */}
-      <div className="border-b bg-muted/50">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium">Step {currentStep} of 4</span>
-            <span className="text-sm text-muted-foreground">
-              {Math.round((currentStep / 4) * 100)}% Complete
-            </span>
-          </div>
-          <Progress value={(currentStep / 4) * 100} className="h-2" />
-        </div>
-      </div>
+             {/* Progress Bar */}
+       <motion.div 
+         className="border-b bg-muted/50"
+         variants={progressVariants}
+       >
+         <div className="container mx-auto px-4 py-3">
+           <div className="flex items-center justify-between mb-2">
+             <span className="text-sm font-medium">Step {currentStep} of 4</span>
+             <span className="text-sm text-muted-foreground">
+               {Math.round((currentStep / 4) * 100)}% Complete
+             </span>
+           </div>
+           <Progress value={(currentStep / 4) * 100} className="h-2" />
+           
+           {/* Step completion indicator */}
+           <div className="mt-2 text-xs text-muted-foreground">
+             {currentStep === 1 && (
+               <span>Skills selected: {assessmentData.skills.length}</span>
+             )}
+             {currentStep === 2 && (
+               <span>Experience level: {assessmentData.experienceLevel ? "✓ Selected" : "Not selected"}</span>
+             )}
+             {currentStep === 3 && (
+               <span>Career goal: {assessmentData.selectedCareerGoal ? "✓ Selected" : "Not selected"}</span>
+             )}
+             {currentStep === 4 && (
+               <span>Assessment complete!</span>
+             )}
+           </div>
+         </div>
+       </motion.div>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-6 md:py-8">
-        <div className="max-w-2xl mx-auto">
-          {renderStepContent()}
+             {/* Main Content */}
+       <main className="container mx-auto px-4 py-6 md:py-8">
+         <div className="max-w-2xl mx-auto">
+           
+           
+           
+           {renderStepContent()}
 
           {/* Navigation Buttons */}
           {currentStep < 4 && (
-            <div className="flex justify-between mt-8">
+            <motion.div 
+              className="flex justify-between mt-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
               <Button
                 variant="outline"
                 onClick={handlePrevStep}
@@ -474,17 +771,23 @@ const SkillsAssessmentPage = () => {
               >
                 Previous
               </Button>
-              <Button onClick={handleNextStep} className="h-11">
-                {currentStep === 3 ? "Complete Assessment" : "Next"}
-                <ChevronRight className="h-4 w-4 ml-2" />
-              </Button>
-            </div>
+                             <Button 
+                 onClick={handleNextStep}
+                 disabled={isNextDisabled()}
+                 className="h-11"
+               >
+                 {currentStep === 3 ? "Complete Assessment" : "Next"}
+                 <ChevronRight className="h-4 w-4 ml-2" />
+               </Button>
+            </motion.div>
           )}
         </div>
       </main>
 
       {/* Bottom Navigation Dashboard - Fixed */}
-      <nav className="border-t bg-background sticky bottom-0 z-50">
+      <nav 
+        className="border-t bg-background sticky bottom-0 z-50"
+      >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-around py-3">
             {/* Home Button */}
@@ -520,8 +823,8 @@ const SkillsAssessmentPage = () => {
             </Link>
           </div>
         </div>
-      </nav>
-    </div>
+              </nav>
+    </motion.div>
   );
 };
 

@@ -50,46 +50,11 @@ import {
 
 import { useIndustryBrowser } from "@/hooks/useCareerData";
 import RealTimeJobFeed from "./RealTimeJobFeed";
+import { NotificationService, Notification } from "@/services/notificationService";
 
 const HomePage = React.memo(() => {
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      type: "info",
-      title: "New Career Path Available",
-      message: "Data Science career path has been updated with new skills and requirements",
-      time: "2 hours ago",
-      read: false,
-      action: "view"
-    },
-    {
-      id: 2,
-      type: "success",
-      title: "Skills Assessment Complete",
-      message: "Your recent skills assessment shows 15% improvement in technical skills",
-      time: "4 hours ago",
-      read: false,
-      action: "review"
-    },
-    {
-      id: 3,
-      type: "warning",
-      title: "Career Transition Opportunity",
-      message: "Based on your profile, you might be interested in AI Engineering roles",
-      time: "6 hours ago",
-      read: false,
-      action: "explore"
-    },
-    {
-      id: 4,
-      type: "info",
-      title: "Market Update",
-      message: "Software Engineering salaries have increased by 12% in your region",
-      time: "1 day ago",
-      read: true,
-      action: "details"
-    }
-  ]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const notificationService = NotificationService.getInstance();
    
   // Use the optimized industry browser hook
   const {
@@ -101,42 +66,40 @@ const HomePage = React.memo(() => {
 
 
 
-  const handleNotificationClick = useCallback((notificationId: number) => {
-    setNotifications(prev => 
-      prev.map(notif => 
-        notif.id === notificationId 
-          ? { ...notif, read: true }
-          : notif
-      )
-    );
-  }, []);
+  // Load notifications on component mount
+  useEffect(() => {
+    const loadNotifications = () => {
+      const notifs = notificationService.getNotifications();
+      setNotifications(notifs);
+    };
+
+    loadNotifications();
+
+    // Set up interval to refresh notifications
+    const interval = setInterval(loadNotifications, 30000); // Every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [notificationService]);
+
+  const handleNotificationClick = useCallback((notificationId: string) => {
+    notificationService.markAsRead(notificationId);
+    setNotifications(notificationService.getNotifications());
+  }, [notificationService]);
 
   const handleMarkAllAsRead = useCallback(() => {
-    setNotifications(prev => 
-      prev.map(notif => ({ ...notif, read: true }))
-    );
-  }, []);
+    notificationService.markAllAsRead();
+    setNotifications(notificationService.getNotifications());
+  }, [notificationService]);
 
-  const handleDeleteNotification = useCallback((notificationId: number) => {
-    setNotifications(prev => 
-      prev.filter(notif => notif.id !== notificationId)
-    );
-  }, []);
-
-  const addNotification = useCallback((notification: Omit<typeof notifications[0], 'id'>) => {
-    const newNotification = {
-      ...notification,
-      id: Date.now(),
-      time: 'Just now',
-      read: false
-    };
-    setNotifications(prev => [newNotification, ...prev]);
-  }, []);
+  const handleDeleteNotification = useCallback((notificationId: string) => {
+    notificationService.deleteNotification(notificationId);
+    setNotifications(notificationService.getNotifications());
+  }, [notificationService]);
 
   // Memoize expensive calculations
   const unreadCount = useMemo(() => 
-    notifications.filter(n => !n.read).length, 
-    [notifications]
+    notificationService.getUnreadCount(), 
+    [notificationService, notifications]
   );
 
   const getNotificationIcon = useCallback((type: string) => {
@@ -144,6 +107,9 @@ const HomePage = React.memo(() => {
       case "success": return <Check className="h-4 w-4 text-green-600" />;
       case "warning": return <Star className="h-4 w-4 text-yellow-600" />;
       case "error": return <X className="h-4 w-4 text-red-600" />;
+      case "career": return <Briefcase className="h-4 w-4 text-blue-600" />;
+      case "market": return <TrendingUp className="h-4 w-4 text-purple-600" />;
+      case "assessment": return <Target className="h-4 w-4 text-orange-600" />;
       default: return <Bell className="h-4 w-4 text-blue-600" />;
     }
   }, []);
@@ -153,6 +119,9 @@ const HomePage = React.memo(() => {
       case "success": return "border-l-green-500";
       case "warning": return "border-l-yellow-500";
       case "error": return "border-l-red-500";
+      case "career": return "border-l-blue-500";
+      case "market": return "border-l-purple-500";
+      case "assessment": return "border-l-orange-500";
       default: return "border-l-blue-500";
     }
   }, []);
@@ -176,19 +145,6 @@ const HomePage = React.memo(() => {
             
             {/* Notifications Button */}
             <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => addNotification({
-                  type: "info",
-                  title: "Demo Notification",
-                  message: "This is a test notification to demonstrate the system",
-                  action: "demo"
-                })}
-                className="text-xs h-8 px-2"
-              >
-                Test
-              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="relative">

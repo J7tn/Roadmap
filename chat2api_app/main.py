@@ -57,6 +57,14 @@ class MarketTrendsRequest(BaseModel):
 class SkillsRequest(BaseModel):
     skill_name: Optional[str] = None
 
+class SkillsAssessmentRequest(BaseModel):
+    skills: List[str]
+    experience_level: str
+    current_role: str
+    experience_details: str
+    selected_career_goal: str
+    goals_details: str
+
 # Configuration
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 CHAT2API_API_KEY = os.getenv("CHAT2API_API_KEY")
@@ -198,6 +206,67 @@ async def get_skills_data(request: SkillsRequest):
         
         cache_response(cache_key, skills_data)
         return skills_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/skills/assessment")
+async def get_skills_assessment_recommendations(request: SkillsAssessmentRequest):
+    """Get personalized career recommendations based on skills assessment"""
+    cache_key = get_cache_key("skills_assessment", 
+                             skills=",".join(sorted(request.skills)),
+                             experience=request.experience_level,
+                             goal=request.selected_career_goal)
+    
+    cached = get_cached_response(cache_key)
+    if cached:
+        return cached
+    
+    try:
+        prompt = f"""Based on this skills assessment, provide personalized career recommendations:
+
+Skills: {', '.join(request.skills)}
+Experience Level: {request.experience_level}
+Current Role: {request.current_role}
+Experience Details: {request.experience_details}
+Career Goal: {request.selected_career_goal}
+Additional Goals: {request.goals_details}
+
+Please provide recommendations in this exact JSON format:
+{{
+  "careerPaths": [
+    {{
+      "title": "Job Title",
+      "match": "95%",
+      "description": "Why this career path matches",
+      "salary": "Salary range",
+      "growth": "Growth potential",
+      "requiredSkills": ["skill1", "skill2"],
+      "nextSteps": ["step1", "step2"]
+    }}
+  ],
+  "skillDevelopment": [
+    {{
+      "skill": "Skill Name",
+      "priority": "High/Medium/Low",
+      "timeline": "3-6 months",
+      "description": "Why this skill is important",
+      "resources": ["resource1", "resource2"]
+    }}
+  ],
+  "roadmap": {{
+    "shortTerm": ["Goal 1", "Goal 2"],
+    "mediumTerm": ["Goal 1", "Goal 2"],
+    "longTerm": ["Goal 1", "Goal 2"]
+  }}
+}}
+
+Make the recommendations highly personalized and actionable based on their specific skills, experience, and goals."""
+        
+        response = await generate_ai_response(prompt)
+        recommendations = parse_assessment_response(response)
+        
+        cache_response(cache_key, recommendations)
+        return recommendations
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -400,6 +469,61 @@ def parse_skills_response(response: str) -> List[Dict[str, Any]]:
             "certifications": ["AWS Certified Developer"]
         }
     ]
+
+def parse_assessment_response(response: str) -> Dict[str, Any]:
+    """Parse AI response into assessment recommendations format"""
+    try:
+        json_match = response.find('{')
+        if json_match != -1:
+            json_str = response[json_match:]
+            return json.loads(json_str)
+    except:
+        pass
+    
+    # Return fallback assessment data if parsing fails
+    return {
+        "careerPaths": [
+            {
+                "title": "Software Engineer",
+                "match": "90%",
+                "description": "Strong technical skills match your background",
+                "salary": "$80,000 - $120,000",
+                "growth": "High growth potential",
+                "requiredSkills": ["JavaScript", "React", "Node.js"],
+                "nextSteps": ["Build portfolio projects", "Learn system design"]
+            },
+            {
+                "title": "Product Manager",
+                "match": "85%",
+                "description": "Good mix of technical and business skills",
+                "salary": "$90,000 - $140,000",
+                "growth": "Strong career progression",
+                "requiredSkills": ["Project Management", "Communication", "Technical Understanding"],
+                "nextSteps": ["Take product management courses", "Gain stakeholder experience"]
+            }
+        ],
+        "skillDevelopment": [
+            {
+                "skill": "Advanced JavaScript",
+                "priority": "High",
+                "timeline": "3-6 months",
+                "description": "Essential for modern web development",
+                "resources": ["Eloquent JavaScript", "You Don't Know JS"]
+            },
+            {
+                "skill": "System Design",
+                "priority": "Medium",
+                "timeline": "6-12 months",
+                "description": "Important for senior engineering roles",
+                "resources": ["System Design Primer", "Grokking the System Design Interview"]
+            }
+        ],
+        "roadmap": {
+            "shortTerm": ["Master current skill set", "Build portfolio projects"],
+            "mediumTerm": ["Learn advanced concepts", "Gain leadership experience"],
+            "longTerm": ["Become a technical leader", "Mentor others"]
+        }
+    }
 
 if __name__ == "__main__":
     import uvicorn
