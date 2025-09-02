@@ -1,0 +1,48 @@
+services:
+  chat2api:
+    build:
+      context: .
+      dockerfile: Dockerfile.chat2api
+    container_name: roadmap-chat2api
+    ports:
+      - "8000:8000"
+    env_file:
+      - chat2api.env
+    environment:
+      - CHAT2API_BASE_URL=http://localhost:8000
+      - CHAT2API_MODEL=gpt-3.5-turbo
+      - CHAT2API_MAX_TOKENS=2000
+      - CHAT2API_TEMPERATURE=0.7
+    volumes:
+      - ./chat2api_data:/app/data
+      - ./chat2api_logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - roadmap-network
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: roadmap-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis_data:/data
+    restart: unless-stopped
+    networks:
+      - roadmap-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  roadmap-network:
+    driver: bridge
+
+volumes:
+  chat2api_data:
+  chat2api_logs:
+  redis_data:

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Search,
-  Menu,
   MapPin,
   ArrowLeft,
   TrendingUp,
@@ -36,19 +35,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 
 const CareerBranchingPage = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // Get user's current career from the MyCareerPathsPage data
   const userCurrentCareer = "Software Engineer"; // This would come from user's actual data
   const [selectedTransition, setSelectedTransition] = useState<string | null>(null);
-
-  const handleMobileMenuClose = () => {
-    setIsMobileMenuOpen(false);
-  };
 
   const careerTransitions = {
     "software-developer": [
@@ -206,59 +200,7 @@ const CareerBranchingPage = () => {
             </div>
           </div>
 
-          {/* Mobile Menu */}
-          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-80">
-              <div className="flex flex-col h-full">
-                <div className="flex items-center space-x-2 mb-6">
-                  <MapPin className="h-6 w-6 text-primary" />
-                  <h2 className="text-xl font-bold">Career Atlas</h2>
-                </div>
-                
-                <nav className="flex-1">
-                  <div className="space-y-2">
-                    <Link 
-                      to="/" 
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                      onClick={handleMobileMenuClose}
-                    >
-                      <Home className="h-5 w-5" />
-                      <span className="font-medium">Dashboard</span>
-                    </Link>
-                    <Link 
-                      to="/categories" 
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                      onClick={handleMobileMenuClose}
-                    >
-                      <Briefcase className="h-5 w-5" />
-                      <span className="font-medium">Browse Categories</span>
-                    </Link>
-                    <Link 
-                      to="/my-paths" 
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                      onClick={handleMobileMenuClose}
-                    >
-                      <Target className="h-5 w-5" />
-                      <span className="font-medium">My Career Paths</span>
-                    </Link>
-                    <Link 
-                      to="/skills" 
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                      onClick={handleMobileMenuClose}
-                    >
-                      <BookOpen className="h-5 w-5" />
-                      <span className="font-medium">Skills Assessment</span>
-                    </Link>
-                  </div>
-                </nav>
-              </div>
-            </SheetContent>
-          </Sheet>
+
         </div>
       </header>
 
@@ -451,6 +393,45 @@ const CareerBranchingPage = () => {
           </Card>
         </div>
       </main>
+
+      {/* Bottom Navigation Dashboard - Fixed */}
+      <nav className="border-t bg-background sticky bottom-0 z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-around py-3">
+            {/* Home Button */}
+            <Link to="/home" className="flex flex-col items-center space-y-1">
+              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                <Home className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-medium">Home</span>
+            </Link>
+
+            {/* Search Button */}
+            <Link to="/categories" className="flex flex-col items-center space-y-1">
+              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                <Search className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-medium">Search</span>
+            </Link>
+
+            {/* Saved Careers Button */}
+            <Link to="/my-paths" className="flex flex-col items-center space-y-1">
+              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                <Target className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-medium">My Career</span>
+            </Link>
+
+            {/* Skill Assessment Button */}
+            <Link to="/skills" className="flex flex-col items-center space-y-1">
+              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                <BookOpen className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-medium">Assessment</span>
+            </Link>
+          </div>
+        </div>
+      </nav>
 
       {/* Mobile-Optimized Footer */}
       <footer className="bg-muted py-6 mt-12">

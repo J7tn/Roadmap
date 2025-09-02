@@ -50,48 +50,44 @@ export interface SkillsData {
 }
 
 class JobMarketAPIService {
-  private apiKeys: {
-    linkedin?: string;
-    indeed?: string;
-    glassdoor?: string;
-    bls?: string;
-    onet?: string;
-  } = {};
+  private chat2apiKey: string;
+  private chat2apiUrl: string;
+  private supabaseUrl: string;
+  private supabaseAnonKey: string;
 
   constructor() {
-    // Load API keys from environment variables or config
-    this.loadAPIKeys();
+    // Load configuration from environment variables
+    this.loadConfig();
   }
 
-  private loadAPIKeys() {
-    // In production, these would come from environment variables
-    this.apiKeys = {
-      linkedin: process.env.REACT_APP_LINKEDIN_API_KEY,
-      indeed: process.env.REACT_APP_INDEED_API_KEY,
-      glassdoor: process.env.REACT_APP_GLASSDOOR_API_KEY,
-      bls: process.env.REACT_APP_BLS_API_KEY,
-      onet: process.env.REACT_APP_ONET_API_KEY,
-    };
+  private loadConfig() {
+    this.chat2apiKey = process.env.REACT_APP_CHAT2API_KEY || '';
+    this.chat2apiUrl = process.env.REACT_APP_CHAT2API_URL || 'https://api.chat2api.com';
+    this.supabaseUrl = process.env.REACT_APP_SUPABASE_URL || '';
+    this.supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || '';
   }
 
   // Fetch real-time job market data
   async getJobMarketData(industry?: string, location?: string): Promise<JobMarketData[]> {
     try {
-      // Combine data from multiple sources for comprehensive results
-      const [linkedinJobs, indeedJobs, blsData] = await Promise.allSettled([
-        this.fetchLinkedInJobs(industry, location),
-        this.fetchIndeedJobs(industry, location),
-        this.fetchBLSData(industry),
-      ]);
+      // First try to get data from Supabase (cached data from Chat2API)
+      const cachedData = await this.getCachedJobData(industry, location);
+      if (cachedData.length > 0) {
+        return cachedData;
+      }
 
-      // Merge and deduplicate results
-      const allJobs = [
-        ...(linkedinJobs.status === 'fulfilled' ? linkedinJobs.value : []),
-        ...(indeedJobs.status === 'fulfilled' ? indeedJobs.value : []),
-        ...(blsData.status === 'fulfilled' ? this.transformBLSData(blsData.value) : []),
-      ];
+      // If no cached data, try to fetch fresh data using Chat2API
+      if (this.chat2apiKey) {
+        const freshData = await this.fetchJobDataViaChat2API(industry, location);
+        if (freshData.length > 0) {
+          // Store the fresh data in Supabase for future use
+          await this.storeJobDataInSupabase(freshData);
+          return freshData;
+        }
+      }
 
-      return this.deduplicateAndRankJobs(allJobs);
+      // Fallback to local data if APIs fail
+      return this.getFallbackData();
     } catch (error) {
       console.error('Error fetching job market data:', error);
       return this.getFallbackData();
@@ -101,17 +97,24 @@ class JobMarketAPIService {
   // Fetch market trends and insights
   async getMarketTrends(): Promise<MarketTrends> {
     try {
-      const [skillsData, industryData, roleData] = await Promise.allSettled([
-        this.fetchSkillsData(),
-        this.fetchIndustryInsights(),
-        this.fetchEmergingRoles(),
-      ]);
+      // First try to get cached trends from Supabase
+      const cachedTrends = await this.getCachedMarketTrends();
+      if (cachedTrends) {
+        return cachedTrends;
+      }
 
-      return {
-        trendingSkills: skillsData.status === 'fulfilled' ? skillsData.value : [],
-        emergingRoles: roleData.status === 'fulfilled' ? roleData.value : [],
-        industryInsights: industryData.status === 'fulfilled' ? industryData.value : [],
-      };
+      // If no cached data, try to fetch fresh trends using Chat2API
+      if (this.chat2apiKey) {
+        const freshTrends = await this.fetchMarketTrendsViaChat2API();
+        if (freshTrends) {
+          // Store the fresh trends in Supabase for future use
+          await this.storeMarketTrendsInSupabase(freshTrends);
+          return freshTrends;
+        }
+      }
+
+      // Fallback to local data if APIs fail
+      return this.getFallbackTrends();
     } catch (error) {
       console.error('Error fetching market trends:', error);
       return this.getFallbackTrends();
@@ -121,173 +124,336 @@ class JobMarketAPIService {
   // Fetch skills assessment data
   async getSkillsData(skillName?: string): Promise<SkillsData[]> {
     try {
-      if (skillName) {
-        return await this.fetchSpecificSkillData(skillName);
+      // First try to get cached skills data from Supabase
+      const cachedSkills = await this.getCachedSkillsData(skillName);
+      if (cachedSkills.length > 0) {
+        return cachedSkills;
       }
-      return await this.fetchAllSkillsData();
+
+      // If no cached data, try to fetch fresh skills data using Chat2API
+      if (this.chat2apiKey) {
+        const freshSkills = await this.fetchSkillsDataViaChat2API(skillName);
+        if (freshSkills.length > 0) {
+          // Store the fresh skills data in Supabase for future use
+          await this.storeSkillsDataInSupabase(freshSkills);
+          return freshSkills;
+        }
+      }
+
+      // Fallback to local data if APIs fail
+      return this.getFallbackSkillsData();
     } catch (error) {
       console.error('Error fetching skills data:', error);
       return this.getFallbackSkillsData();
     }
   }
 
-  // LinkedIn Jobs API integration
-  private async fetchLinkedInJobs(industry?: string, location?: string): Promise<JobMarketData[]> {
-    if (!this.apiKeys.linkedin) {
-      throw new Error('LinkedIn API key not configured');
+  // Chat2API integration for fetching job market data
+  private async fetchJobDataViaChat2API(industry?: string, location?: string): Promise<JobMarketData[]> {
+    if (!this.chat2apiKey) {
+      console.warn('Chat2API key not configured, using fallback data');
+      return this.getFallbackData();
     }
 
-    const params = new URLSearchParams({
-      keywords: industry || 'technology',
-      location: location || 'United States',
-      count: '50',
-    });
+    try {
+      const prompt = `Find current job openings for ${industry || 'technology'} positions in ${location || 'United States'}. 
+      Return the data in JSON format with fields: id, title, company, location, salary (min, max, currency), 
+      skills, experience, type, postedDate, demand, growthRate, industry, description.`;
 
-    const response = await fetch(`https://api.linkedin.com/v2/jobs?${params}`, {
-      headers: {
-        'Authorization': `Bearer ${this.apiKeys.linkedin}`,
-        'Content-Type': 'application/json',
-      },
-    });
+      const response = await fetch(`${this.chat2apiUrl}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.chat2apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 2000
+        }),
+      });
 
-    if (!response.ok) {
-      throw new Error(`LinkedIn API error: ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`Chat2API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const jobData = this.parseChat2APIResponse(data);
+      return jobData.length > 0 ? jobData : this.getFallbackData();
+    } catch (error) {
+      console.warn('Chat2API failed, using fallback data:', error);
+      return this.getFallbackData();
     }
-
-    const data = await response.json();
-    return this.transformLinkedInData(data);
   }
 
-  // Indeed Jobs API integration
-  private async fetchIndeedJobs(industry?: string, location?: string): Promise<JobMarketData[]> {
-    if (!this.apiKeys.indeed) {
-      throw new Error('Indeed API key not configured');
+  // Chat2API integration for fetching market trends
+  private async fetchMarketTrendsViaChat2API(): Promise<MarketTrends | null> {
+    if (!this.chat2apiKey) {
+      console.warn('Chat2API key not configured, using fallback data');
+      return null;
     }
 
-    const params = new URLSearchParams({
-      q: industry || 'technology',
-      l: location || 'United States',
-      limit: '50',
-    });
+    try {
+      const prompt = `Provide current market trends for technology and other industries including:
+      1. Trending skills with demand scores (0-100), growth rates, and salary estimates
+      2. Emerging job roles with descriptions, growth rates, and required skills
+      3. Industry insights with growth rates, job counts, and average salaries
+      Return in JSON format matching the MarketTrends interface.`;
 
-    const response = await fetch(`https://api.indeed.com/ads/apisearch?${params}`, {
-      headers: {
-        'Authorization': `Bearer ${this.apiKeys.indeed}`,
-        'Content-Type': 'application/json',
-      },
-    });
+      const response = await fetch(`${this.chat2apiUrl}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.chat2apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 2000
+        }),
+      });
 
-    if (!response.ok) {
-      throw new Error(`Indeed API error: ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`Chat2API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const trends = this.parseChat2APITrendsResponse(data);
+      return trends || null;
+    } catch (error) {
+      console.warn('Chat2API failed, using fallback data:', error);
+      return null;
     }
-
-    const data = await response.json();
-    return this.transformIndeedData(data);
   }
 
-  // Bureau of Labor Statistics API
-  private async fetchBLSData(industry?: string): Promise<any> {
-    if (!this.apiKeys.bls) {
-      throw new Error('BLS API key not configured');
+  // Chat2API integration for fetching skills data
+  private async fetchSkillsDataViaChat2API(skillName?: string): Promise<SkillsData[]> {
+    if (!this.chat2apiKey) {
+      console.warn('Chat2API key not configured, using fallback data');
+      return this.getFallbackSkillsData();
     }
 
-    const response = await fetch(`https://api.bls.gov/publicAPI/v2/timeseries/data/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'BLS-API-KEY': this.apiKeys.bls,
-      },
-      body: JSON.stringify({
-        seriesid: industry ? this.getIndustrySeriesID(industry) : ['CES0000000001'],
-        startyear: new Date().getFullYear() - 1,
-        endyear: new Date().getFullYear(),
-      }),
-    });
+    try {
+      const prompt = `Provide detailed information about ${skillName || 'in-demand technical skills'} including:
+      demand score (0-100), salary estimates, growth rate, related skills, and relevant certifications.
+      Return in JSON format matching the SkillsData interface.`;
 
-    if (!response.ok) {
-      throw new Error(`BLS API error: ${response.status}`);
+      const response = await fetch(`${this.chat2apiUrl}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.chat2apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 2000
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Chat2API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const skillsData = this.parseChat2APISkillsResponse(data);
+      return skillsData.length > 0 ? skillsData : this.getFallbackSkillsData();
+    } catch (error) {
+      console.warn('Chat2API failed, using fallback data:', error);
+      return this.getFallbackSkillsData();
     }
-
-    return await response.json();
   }
 
-  // O*NET API for skills and career data
-  private async fetchSkillsData(): Promise<MarketTrends['trendingSkills']> {
-    if (!this.apiKeys.onet) {
-      throw new Error('O*NET API key not configured');
+  // Supabase integration methods
+  private async getCachedJobData(industry?: string, location?: string): Promise<JobMarketData[]> {
+    if (!this.supabaseUrl || !this.supabaseAnonKey) {
+      return [];
     }
 
-    const response = await fetch('https://services.onetcenter.org/ws/online/occupations', {
-      headers: {
-        'Authorization': `Bearer ${this.apiKeys.onet}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`O*NET API error: ${response.status}`);
+    try {
+      // This would use your Supabase client to fetch cached job data
+      // For now, return empty array - implement when Supabase is set up
+      return [];
+    } catch (error) {
+      console.warn('Failed to fetch cached job data:', error);
+      return [];
     }
-
-    const data = await response.json();
-    return this.transformONETData(data);
   }
 
-  // Data transformation methods
-  private transformLinkedInData(data: any): JobMarketData[] {
-    // Transform LinkedIn API response to our format
-    return data.elements?.map((job: any) => ({
-      id: job.id,
-      title: job.title,
-      company: job.company?.name || 'Unknown',
+  private async getCachedMarketTrends(): Promise<MarketTrends | null> {
+    if (!this.supabaseUrl || !this.supabaseAnonKey) {
+      return null;
+    }
+
+    try {
+      // This would use your Supabase client to fetch cached market trends
+      // For now, return null - implement when Supabase is set up
+      return null;
+    } catch (error) {
+      console.warn('Failed to fetch cached market trends:', error);
+      return null;
+    }
+  }
+
+  private async getCachedSkillsData(skillName?: string): Promise<SkillsData[]> {
+    if (!this.supabaseUrl || !this.supabaseAnonKey) {
+      return [];
+    }
+
+    try {
+      // This would use your Supabase client to fetch cached skills data
+      // For now, return empty array - implement when Supabase is set up
+      return [];
+    } catch (error) {
+      console.warn('Failed to fetch cached skills data:', error);
+      return [];
+    }
+  }
+
+  private async storeJobDataInSupabase(jobData: JobMarketData[]): Promise<void> {
+    if (!this.supabaseUrl || !this.supabaseAnonKey) {
+      return;
+    }
+
+    try {
+      // This would use your Supabase client to store job data
+      // For now, just log - implement when Supabase is set up
+      console.log('Storing job data in Supabase:', jobData.length, 'jobs');
+    } catch (error) {
+      console.warn('Failed to store job data in Supabase:', error);
+    }
+  }
+
+  private async storeMarketTrendsInSupabase(trends: MarketTrends): Promise<void> {
+    if (!this.supabaseUrl || !this.supabaseAnonKey) {
+      return;
+    }
+
+    try {
+      // This would use your Supabase client to store market trends
+      // For now, just log - implement when Supabase is set up
+      console.log('Storing market trends in Supabase');
+    } catch (error) {
+      console.warn('Failed to store market trends in Supabase:', error);
+    }
+  }
+
+  private async storeSkillsDataInSupabase(skillsData: SkillsData[]): Promise<void> {
+    if (!this.supabaseUrl || !this.supabaseAnonKey) {
+      return;
+    }
+
+    try {
+      // This would use your Supabase client to store skills data
+      // For now, just log - implement when Supabase is set up
+      console.log('Storing skills data in Supabase:', skillsData.length, 'skills');
+    } catch (error) {
+      console.warn('Failed to store skills data in Supabase:', error);
+    }
+  }
+
+  // Response parsing methods for Chat2API
+  private parseChat2APIResponse(data: any): JobMarketData[] {
+    try {
+      const content = data.choices?.[0]?.message?.content;
+      if (!content) return [];
+
+      // Try to extract JSON from the response
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0]);
+        return Array.isArray(parsed) ? parsed : [parsed];
+      }
+
+      return [];
+    } catch (error) {
+      console.warn('Failed to parse Chat2API response:', error);
+      return [];
+    }
+  }
+
+  private parseChat2APITrendsResponse(data: any): MarketTrends | null {
+    try {
+      const content = data.choices?.[0]?.message?.content;
+      if (!content) return null;
+
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        return JSON.parse(jsonMatch[0]);
+      }
+
+      return null;
+    } catch (error) {
+      console.warn('Failed to parse Chat2API trends response:', error);
+      return null;
+    }
+  }
+
+  private parseChat2APISkillsResponse(data: any): SkillsData[] {
+    try {
+      const content = data.choices?.[0]?.message?.content;
+      if (!content) return [];
+
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0]);
+        return Array.isArray(parsed) ? parsed : [parsed];
+      }
+
+      return [];
+    } catch (error) {
+      console.warn('Failed to parse Chat2API skills response:', error);
+      return [];
+    }
+  }
+
+  // Data transformation methods (kept for fallback data processing)
+  private transformJobData(data: any): JobMarketData[] {
+    // Generic transformation for any job data format
+    if (Array.isArray(data)) {
+      return data.map(job => this.transformSingleJob(job));
+    }
+    return [this.transformSingleJob(data)];
+  }
+
+  private transformSingleJob(job: any): JobMarketData {
+    return {
+      id: job.id || `job-${Date.now()}`,
+      title: job.title || 'Unknown Position',
+      company: job.company || 'Unknown Company',
       location: job.location || 'Remote',
       salary: {
-        min: job.salary?.min || 0,
-        max: job.salary?.max || 0,
+        min: job.salary?.min || job.salaryMin || 0,
+        max: job.salary?.max || job.salaryMax || 0,
         currency: job.salary?.currency || 'USD',
       },
       skills: job.skills || [],
       experience: job.experience || 'Entry Level',
       type: job.type || 'full-time',
-      postedDate: job.postedDate || new Date().toISOString(),
+      postedDate: job.postedDate || job.date || new Date().toISOString(),
       demand: this.calculateDemand(job.applications || 0),
       growthRate: this.calculateGrowthRate(job),
       industry: job.industry || 'Technology',
-      description: job.description || '',
-    })) || [];
-  }
-
-  private transformIndeedData(data: any): JobMarketData[] {
-    // Transform Indeed API response to our format
-    return data.results?.map((job: any) => ({
-      id: job.jobkey,
-      title: job.jobtitle,
-      company: job.company || 'Unknown',
-      location: job.formattedLocation || 'Remote',
-      salary: {
-        min: job.salaryMin || 0,
-        max: job.salaryMax || 0,
-        currency: 'USD',
-      },
-      skills: job.skills || [],
-      experience: job.experience || 'Entry Level',
-      type: job.type || 'full-time',
-      postedDate: job.date || new Date().toISOString(),
-      demand: this.calculateDemand(job.applications || 0),
-      growthRate: this.calculateGrowthRate(job),
-      industry: job.industry || 'Technology',
-      description: job.snippet || '',
-    })) || [];
-  }
-
-  private transformBLSData(data: any): JobMarketData[] {
-    // Transform BLS API response to our format
-    // This would be more complex as BLS provides employment statistics
-    return [];
-  }
-
-  private transformONETData(data: any): MarketTrends['trendingSkills'] {
-    // Transform O*NET API response to our format
-    return [];
+      description: job.description || job.snippet || '',
+    };
   }
 
   // Helper methods
@@ -302,16 +468,7 @@ class JobMarketAPIService {
     return Math.random() * 100; // Placeholder
   }
 
-  private getIndustrySeriesID(industry: string): string[] {
-    // Map industry names to BLS series IDs
-    const industryMap: Record<string, string[]> = {
-      'technology': ['CES5000000001'],
-      'healthcare': ['CES6000000001'],
-      'finance': ['CES5500000001'],
-      'manufacturing': ['CES3000000001'],
-    };
-    return industryMap[industry.toLowerCase()] || ['CES0000000001'];
-  }
+
 
   private deduplicateAndRankJobs(jobs: JobMarketData[]): JobMarketData[] {
     // Remove duplicates and rank by relevance
@@ -346,6 +503,21 @@ class JobMarketAPIService {
         industry: 'Technology',
         description: 'Fallback job data when APIs are unavailable.',
       },
+      {
+        id: 'fallback-2',
+        title: 'Data Scientist',
+        company: 'Analytics Corp',
+        location: 'Remote',
+        salary: { min: 90000, max: 140000, currency: 'USD' },
+        skills: ['Python', 'Machine Learning', 'SQL'],
+        experience: 'Mid Level',
+        type: 'full-time',
+        postedDate: new Date().toISOString(),
+        demand: 'high',
+        growthRate: 20,
+        industry: 'Technology',
+        description: 'Fallback job data when APIs are unavailable.',
+      },
     ];
   }
 
@@ -355,14 +527,20 @@ class JobMarketAPIService {
         { skill: 'AI/ML', demand: 95, growth: 25, salary: 120000 },
         { skill: 'Cybersecurity', demand: 90, growth: 20, salary: 110000 },
         { skill: 'Cloud Computing', demand: 85, growth: 18, salary: 105000 },
+        { skill: 'Data Science', demand: 88, growth: 22, salary: 115000 },
+        { skill: 'DevOps', demand: 82, growth: 16, salary: 100000 },
       ],
       emergingRoles: [
         { title: 'AI Engineer', description: 'Build and deploy AI models', growth: 30, skills: ['Python', 'TensorFlow', 'ML'] },
         { title: 'DevOps Engineer', description: 'Automate deployment processes', growth: 25, skills: ['Docker', 'Kubernetes', 'CI/CD'] },
+        { title: 'Data Engineer', description: 'Build data pipelines and infrastructure', growth: 28, skills: ['Python', 'SQL', 'Big Data'] },
+        { title: 'Security Engineer', description: 'Protect systems and data', growth: 22, skills: ['Cybersecurity', 'Networking', 'Incident Response'] },
       ],
       industryInsights: [
         { industry: 'Technology', growth: 15, jobCount: 50000, avgSalary: 95000 },
         { industry: 'Healthcare', growth: 12, jobCount: 30000, avgSalary: 85000 },
+        { industry: 'Finance', growth: 8, jobCount: 25000, avgSalary: 90000 },
+        { industry: 'Manufacturing', growth: 5, jobCount: 20000, avgSalary: 75000 },
       ],
     };
   }
@@ -377,24 +555,38 @@ class JobMarketAPIService {
         relatedSkills: ['TypeScript', 'React', 'Node.js'],
         certifications: ['AWS Certified Developer', 'Microsoft Certified: Azure Developer'],
       },
+      {
+        skill: 'Python',
+        demand: 92,
+        salary: 98000,
+        growth: 18,
+        relatedSkills: ['Data Science', 'Machine Learning', 'Django'],
+        certifications: ['Google Cloud Professional Data Engineer', 'AWS Machine Learning Specialty'],
+      },
+      {
+        skill: 'React',
+        demand: 88,
+        salary: 92000,
+        growth: 12,
+        relatedSkills: ['JavaScript', 'TypeScript', 'Next.js'],
+        certifications: ['Meta Front-End Developer', 'React Developer Certification'],
+      },
     ];
   }
 
-  // Data refresh methods
+  // Data refresh methods - these are now just aliases to the main methods
   async refreshJobData(): Promise<JobMarketData[]> {
-    // Force refresh of job data
     return this.getJobMarketData();
   }
 
   async refreshMarketTrends(): Promise<MarketTrends> {
-    // Force refresh of market trends
     return this.getMarketTrends();
   }
 
   async refreshSkillsData(): Promise<SkillsData[]> {
-    // Force refresh of skills data
     return this.getSkillsData();
   }
 }
 
 export const jobMarketAPI = new JobMarketAPIService();
+

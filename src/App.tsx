@@ -6,7 +6,7 @@ import AllJobsPage from "./pages/AllJobsPage";
 import JobDetailPage from "./pages/JobDetailPage";
 import CareerCategoriesPage from "./pages/CareerCategoriesPage";
 import MyCareerPathsPage from "./pages/MyCareerPathsPage";
-import AboutPage from "./pages/AboutPage";
+
 import SkillsAssessmentPage from "./pages/SkillsAssessmentPage";
 import CareerBranchingPage from "./pages/CareerBranchingPage";
 import CategoryCareersPage from "./pages/CategoryCareersPage";
@@ -25,7 +25,7 @@ function App() {
           <Route path="/jobs/:id" element={<JobDetailPage />} />
           <Route path="/categories" element={<CareerCategoriesPage />} />
           <Route path="/my-paths" element={<MyCareerPathsPage />} />
-          <Route path="/about" element={<AboutPage />} />
+
           <Route path="/skills" element={<SkillsAssessmentPage />} />
           <Route path="/branching" element={<CareerBranchingPage />} />
           <Route path="/category/:categoryId" element={<CategoryCareersPage />} />

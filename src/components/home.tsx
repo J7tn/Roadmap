@@ -1,10 +1,8 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Search,
-  Menu,
-  X,
   MapPin,
   BookOpen,
   Grid3X3,
@@ -40,7 +38,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -53,8 +51,7 @@ import {
 import { useIndustryBrowser } from "@/hooks/useCareerData";
 import RealTimeJobFeed from "./RealTimeJobFeed";
 
-const HomePage = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+const HomePage = React.memo(() => {
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -93,7 +90,7 @@ const HomePage = () => {
       action: "details"
     }
   ]);
-  
+   
   // Use the optimized industry browser hook
   const {
     data: careerData,
@@ -102,11 +99,9 @@ const HomePage = () => {
     total
   } = useIndustryBrowser();
 
-  const handleMobileMenuClose = () => {
-    setIsMobileMenuOpen(false);
-  };
 
-  const handleNotificationClick = (notificationId: number) => {
+
+  const handleNotificationClick = useCallback((notificationId: number) => {
     setNotifications(prev => 
       prev.map(notif => 
         notif.id === notificationId 
@@ -114,21 +109,21 @@ const HomePage = () => {
           : notif
       )
     );
-  };
+  }, []);
 
-  const handleMarkAllAsRead = () => {
+  const handleMarkAllAsRead = useCallback(() => {
     setNotifications(prev => 
       prev.map(notif => ({ ...notif, read: true }))
     );
-  };
+  }, []);
 
-  const handleDeleteNotification = (notificationId: number) => {
+  const handleDeleteNotification = useCallback((notificationId: number) => {
     setNotifications(prev => 
       prev.filter(notif => notif.id !== notificationId)
     );
-  };
+  }, []);
 
-  const addNotification = (notification: Omit<typeof notifications[0], 'id'>) => {
+  const addNotification = useCallback((notification: Omit<typeof notifications[0], 'id'>) => {
     const newNotification = {
       ...notification,
       id: Date.now(),
@@ -136,61 +131,31 @@ const HomePage = () => {
       read: false
     };
     setNotifications(prev => [newNotification, ...prev]);
-  };
-
-  // Simulate real-time notifications (for demo purposes)
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      // Randomly add notifications to simulate real-time updates
-      if (Math.random() < 0.1) { // 10% chance every interval
-        const notificationTypes = [
-          {
-            type: "success" as const,
-            title: "Career Path Updated",
-            message: "Your selected career path has new information available",
-            action: "view"
-          },
-          {
-            type: "warning" as const,
-            title: "Skills Gap Detected",
-            message: "New skills are required for your target role",
-            action: "assess"
-          },
-          {
-            type: "info" as const,
-            title: "Market Alert",
-            message: "New job opportunities in your field",
-            action: "explore"
-          }
-        ];
-        
-        const randomNotification = notificationTypes[Math.floor(Math.random() * notificationTypes.length)];
-        addNotification(randomNotification);
-      }
-    }, 30000); // Check every 30 seconds
-
-    return () => clearInterval(interval);
   }, []);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  // Memoize expensive calculations
+  const unreadCount = useMemo(() => 
+    notifications.filter(n => !n.read).length, 
+    [notifications]
+  );
 
-  const getNotificationIcon = (type: string) => {
+  const getNotificationIcon = useCallback((type: string) => {
     switch (type) {
       case "success": return <Check className="h-4 w-4 text-green-600" />;
       case "warning": return <Star className="h-4 w-4 text-yellow-600" />;
       case "error": return <X className="h-4 w-4 text-red-600" />;
       default: return <Bell className="h-4 w-4 text-blue-600" />;
     }
-  };
+  }, []);
 
-  const getNotificationColor = (type: string) => {
+  const getNotificationColor = useCallback((type: string) => {
     switch (type) {
       case "success": return "border-l-green-500";
       case "warning": return "border-l-yellow-500";
       case "error": return "border-l-red-500";
       default: return "border-l-blue-500";
     }
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -295,96 +260,13 @@ const HomePage = () => {
               </DropdownMenu>
             </div>
 
-            {/* Mobile Menu */}
-            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-80">
-                <div className="flex flex-col h-full">
-                  <div className="flex items-center space-x-2 mb-6">
-                    <MapPin className="h-6 w-6 text-primary" />
-                    <h2 className="text-xl font-bold">Career Atlas</h2>
-                  </div>
-                  
-                  {/* Mobile Search */}
-                  <div className="relative mb-6">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search careers..." className="pl-10 h-11" />
-                  </div>
-                  
-                  {/* Mobile Navigation Links */}
-                  <nav className="flex-1">
-                    <div className="space-y-2">
-                      <Link 
-                        to="/categories" 
-                        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                        onClick={handleMobileMenuClose}
-                      >
-                        <Grid3X3 className="h-5 w-5" />
-                        <span className="font-medium">Browse Categories</span>
-                      </Link>
-                      <Link 
-                        to="/my-paths" 
-                        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                        onClick={handleMobileMenuClose}
-                      >
-                        <Target className="h-5 w-5" />
-                        <span className="font-medium">My Career Paths</span>
-                      </Link>
-                      <Link 
-                        to="/about" 
-                        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                        onClick={handleMobileMenuClose}
-                      >
-                        <User className="h-5 w-5" />
-                        <span className="font-medium">About</span>
-                      </Link>
-                    </div>
-                  </nav>
-                  
-                  {/* Mobile Footer */}
-                  <div className="border-t pt-4">
-                    <p className="text-sm text-muted-foreground">
-                      All data saved locally on your device
-                    </p>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
+
           </div>
         </div>
       </header>
 
       {/* Main Content Area - Scrollable */}
       <main className="flex-1 overflow-y-auto">
-        {/* Content Navigation Tabs */}
-        <div className="border-b bg-muted/50">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center space-x-6 overflow-x-auto">
-              <Button variant="ghost" size="sm" className="flex items-center space-x-2">
-                <Plus className="h-4 w-4" />
-                <span className="hidden sm:inline">Customize</span>
-              </Button>
-              <Button variant="ghost" size="sm" className="border-b-2 border-primary text-primary">
-                For You
-              </Button>
-              <Button variant="ghost" size="sm">
-                Following
-              </Button>
-              <Button variant="ghost" size="sm" className="flex items-center space-x-2">
-                Featured
-                <Badge variant="secondary" className="text-xs">New</Badge>
-              </Button>
-              <Button variant="ghost" size="sm">
-                Discover
-              </Button>
-            </div>
-          </div>
-        </div>
-
         {/* Career Market Trends */}
         <div className="container mx-auto px-4 py-6">
           <RealTimeJobFeed />
@@ -431,6 +313,8 @@ const HomePage = () => {
       </nav>
     </div>
   );
-};
+});
+
+HomePage.displayName = 'HomePage';
 
 export default HomePage;

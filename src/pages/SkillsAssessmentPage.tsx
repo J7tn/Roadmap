@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Search,
-  Menu,
   MapPin,
   ArrowLeft,
   BookOpen,
@@ -34,26 +33,25 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const SkillsAssessmentPage = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [assessmentData, setAssessmentData] = useState({
-    skills: [],
+    skills: [] as string[],
     experience: "",
-    interests: [],
+    interests: [] as string[],
     goals: "",
     currentRole: "",
+    experienceLevel: "",
+    experienceDetails: "",
+    goalsDetails: "",
+    selectedCareerGoal: ""
   });
-
-  const handleMobileMenuClose = () => {
-    setIsMobileMenuOpen(false);
-  };
 
   const handleNextStep = () => {
     if (currentStep < 4) {
@@ -65,6 +63,31 @@ const SkillsAssessmentPage = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
+  };
+
+  const toggleSkill = (skill: string) => {
+    setAssessmentData(prev => ({
+      ...prev,
+      skills: prev.skills.includes(skill)
+        ? prev.skills.filter(s => s !== skill)
+        : [...prev.skills, skill]
+    }));
+  };
+
+  const toggleInterest = (interest: string) => {
+    setAssessmentData(prev => ({
+      ...prev,
+      interests: prev.interests.includes(interest)
+        ? prev.interests.filter(i => i !== interest)
+        : [...prev.interests, interest]
+    }));
+  };
+
+  const updateField = (field: string, value: string) => {
+    setAssessmentData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const skillCategories = [
@@ -158,17 +181,27 @@ const SkillsAssessmentPage = () => {
                   </CardHeader>
                   <CardContent className="pt-0">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                      {category.skills.map((skill) => (
-                        <Button
-                          key={skill}
-                          variant="outline"
-                          size="sm"
-                          className="h-9 text-xs md:text-sm justify-start"
-                        >
-                          <Circle className="h-3 w-3 mr-2" />
-                          {skill}
-                        </Button>
-                      ))}
+                      {category.skills.map((skill) => {
+                        const isSelected = assessmentData.skills.includes(skill);
+                        return (
+                          <Button
+                            key={skill}
+                            variant={isSelected ? "default" : "outline"}
+                            size="sm"
+                            className={`h-9 text-xs md:text-sm justify-start ${
+                              isSelected ? "bg-primary text-primary-foreground" : ""
+                            }`}
+                            onClick={() => toggleSkill(skill)}
+                          >
+                            {isSelected ? (
+                              <CheckCircle className="h-3 w-3 mr-2" />
+                            ) : (
+                              <Circle className="h-3 w-3 mr-2" />
+                            )}
+                            {skill}
+                          </Button>
+                        );
+                      })}
                     </div>
                   </CardContent>
                 </Card>
@@ -183,6 +216,11 @@ const SkillsAssessmentPage = () => {
                 id="custom-skills"
                 placeholder="Enter any additional skills you have (comma-separated)"
                 className="min-h-[80px] md:min-h-[100px]"
+                value={assessmentData.interests.join(", ")}
+                onChange={(e) => {
+                  const customSkills = e.target.value.split(",").map(s => s.trim()).filter(s => s);
+                  updateField("interests", e.target.value);
+                }}
               />
             </div>
           </div>
@@ -207,6 +245,8 @@ const SkillsAssessmentPage = () => {
                   id="current-role"
                   placeholder="e.g., Software Developer, Marketing Manager, Student"
                   className="mt-2 h-11"
+                  value={assessmentData.currentRole}
+                  onChange={(e) => updateField("currentRole", e.target.value)}
                 />
               </div>
 
@@ -214,7 +254,11 @@ const SkillsAssessmentPage = () => {
                 <Label className="text-sm md:text-base font-medium mb-3 block">
                   Years of Professional Experience
                 </Label>
-                <RadioGroup className="space-y-3">
+                <RadioGroup 
+                  className="space-y-3"
+                  value={assessmentData.experienceLevel}
+                  onValueChange={(value) => updateField("experienceLevel", value)}
+                >
                   {experienceLevels.map((level) => (
                     <div key={level.value} className="flex items-center space-x-3">
                       <RadioGroupItem value={level.value} id={level.value} />
@@ -235,6 +279,8 @@ const SkillsAssessmentPage = () => {
                   id="experience-details"
                   placeholder="Describe your work experience, projects, achievements, or any relevant background..."
                   className="mt-2 min-h-[100px] md:min-h-[120px]"
+                  value={assessmentData.experienceDetails}
+                  onChange={(e) => updateField("experienceDetails", e.target.value)}
                 />
               </div>
             </div>
@@ -253,7 +299,13 @@ const SkillsAssessmentPage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {careerGoals.map((goal) => (
-                <Card key={goal.value} className="hover:shadow-md transition-shadow cursor-pointer">
+                <Card 
+                  key={goal.value} 
+                  className={`hover:shadow-md transition-shadow cursor-pointer ${
+                    assessmentData.selectedCareerGoal === goal.value ? "ring-2 ring-primary" : ""
+                  }`}
+                  onClick={() => updateField("selectedCareerGoal", goal.value)}
+                >
                   <CardContent className="p-4">
                     <div className="flex items-start space-x-3">
                       <div className="p-2 bg-primary/10 rounded-lg">
@@ -263,7 +315,12 @@ const SkillsAssessmentPage = () => {
                         <h4 className="font-medium text-sm md:text-base mb-1">{goal.label}</h4>
                         <p className="text-xs md:text-sm text-muted-foreground">{goal.description}</p>
                       </div>
-                      <RadioGroupItem value={goal.value} id={goal.value} />
+                      <RadioGroupItem 
+                        value={goal.value} 
+                        id={goal.value}
+                        checked={assessmentData.selectedCareerGoal === goal.value}
+                        onChange={() => updateField("selectedCareerGoal", goal.value)}
+                      />
                     </div>
                   </CardContent>
                 </Card>
@@ -278,6 +335,8 @@ const SkillsAssessmentPage = () => {
                 id="goals-details"
                 placeholder="Tell us more about your specific career goals, interests, or what you're looking for..."
                 className="mt-2 min-h-[100px] md:min-h-[120px]"
+                value={assessmentData.goalsDetails}
+                onChange={(e) => updateField("goalsDetails", e.target.value)}
               />
             </div>
           </div>
@@ -383,60 +442,6 @@ const SkillsAssessmentPage = () => {
               <h1 className="text-lg md:text-xl font-bold">Skills Assessment</h1>
             </div>
           </div>
-
-          {/* Mobile Menu */}
-          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-80">
-              <div className="flex flex-col h-full">
-                <div className="flex items-center space-x-2 mb-6">
-                  <MapPin className="h-6 w-6 text-primary" />
-                  <h2 className="text-xl font-bold">Career Atlas</h2>
-                </div>
-                
-                <nav className="flex-1">
-                  <div className="space-y-2">
-                    <Link 
-                      to="/home" 
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                      onClick={handleMobileMenuClose}
-                    >
-                      <Home className="h-5 w-5" />
-                      <span className="text-xs font-medium">Home</span>
-                    </Link>
-                    <Link 
-                      to="/categories" 
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                      onClick={handleMobileMenuClose}
-                    >
-                      <Briefcase className="h-5 w-5" />
-                      <span className="font-medium">Browse Categories</span>
-                    </Link>
-                    <Link 
-                      to="/my-paths" 
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                      onClick={handleMobileMenuClose}
-                    >
-                      <Target className="h-5 w-5" />
-                      <span className="font-medium">My Career Paths</span>
-                    </Link>
-                    <Link 
-                      to="/branching" 
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                      onClick={handleMobileMenuClose}
-                    >
-                      <TrendingUp className="h-5 w-5" />
-                      <span className="font-medium">Career Branching</span>
-                    </Link>
-                  </div>
-                </nav>
-              </div>
-            </SheetContent>
-          </Sheet>
         </div>
       </header>
 

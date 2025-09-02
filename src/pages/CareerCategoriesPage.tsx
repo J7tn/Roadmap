@@ -1,9 +1,8 @@
-import React, { useState, useCallback } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useCallback, useMemo } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Search,
-  Menu,
   MapPin,
   ArrowLeft,
   Briefcase,
@@ -36,166 +35,226 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import CategorySelector from "@/components/CategorySelector";
 import CareerRoadmap from "@/components/CareerRoadmap";
+import { useCareerData } from "@/hooks/useCareerData";
 
 const CareerCategoriesPage = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const navigate = useNavigate();
+  
+  const { useOptimizedSearch } = useCareerData();
+  const { data: searchResults } = useOptimizedSearch(searchQuery, {});
 
-  const handleMobileMenuClose = () => {
-    setIsMobileMenuOpen(false);
+  // Generate search suggestions based on what user types
+  const searchSuggestions = useMemo(() => {
+    if (!searchQuery || searchQuery.length < 2) return [];
+    
+    const suggestions: string[] = [];
+    
+    // Add career titles that match the query
+    if (searchResults?.careers) {
+      searchResults.careers.forEach(path => {
+        path.nodes.forEach(node => {
+          if (node.t?.toLowerCase().includes(searchQuery.toLowerCase())) {
+            suggestions.push(node.t);
+          }
+          // Add skills that match
+          if (node.s) {
+            node.s.forEach(skill => {
+              if (skill.toLowerCase().includes(searchQuery.toLowerCase()) && !suggestions.includes(skill)) {
+                suggestions.push(skill);
+              }
+            });
+          }
+        });
+      });
+    }
+    
+    // Add industry categories that match
+    if (searchQuery.toLowerCase().includes('tech') || searchQuery.toLowerCase().includes('technology')) {
+      suggestions.push('Technology');
+    }
+    if (searchQuery.toLowerCase().includes('health') || searchQuery.toLowerCase().includes('medical')) {
+      suggestions.push('Healthcare');
+    }
+    if (searchQuery.toLowerCase().includes('business') || searchQuery.toLowerCase().includes('finance')) {
+      suggestions.push('Business & Finance');
+    }
+    
+    return suggestions.slice(0, 5); // Limit to 5 suggestions
+  }, [searchQuery, searchResults]);
+
+  const handleSearchSubmit = useCallback((query: string) => {
+    if (query.trim()) {
+      navigate(`/jobs?search=${encodeURIComponent(query.trim())}`);
+      setSearchQuery("");
+      setShowSuggestions(false);
+    }
+  }, [navigate]);
+
+  const handleSuggestionClick = useCallback((suggestion: string) => {
+    handleSearchSubmit(suggestion);
+  }, [handleSearchSubmit]);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const searchVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut"
+      }
+    }
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Top Header - Fixed */}
-      <header className="border-b bg-background sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Link to="/home" className="flex items-center space-x-2 text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Back</span>
-            </Link>
-            <div className="flex items-center space-x-2">
-              <Grid3X3 className="h-5 w-5 text-primary" />
-              <h1 className="text-lg md:text-xl font-bold">Browse Career Categories</h1>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-3">
-            {/* Search - Hidden on mobile to save space */}
-            <div className="relative hidden md:block w-48">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search categories..." className="pl-8 h-9" />
-            </div>
-            
-            {/* Notifications Button */}
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs">1</Badge>
-            </Button>
-
-            {/* Mobile Menu */}
-            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-80">
-                <div className="flex flex-col h-full">
-                  <div className="flex items-center space-x-2 mb-6">
-                    <MapPin className="h-6 w-6 text-primary" />
-                    <h2 className="text-xl font-bold">Career Atlas</h2>
-                  </div>
-                  
-                  {/* Mobile Search */}
-                  <div className="relative mb-6">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search categories..." className="pl-10 h-11" />
-                  </div>
-                  
-                  {/* Mobile Navigation Links */}
-                  <nav className="flex-1">
-                    <div className="space-y-2">
-                      <Link 
-                        to="/" 
-                        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                        onClick={handleMobileMenuClose}
-                      >
-                        <Home className="h-5 w-5" />
-                        <span className="font-medium">Home</span>
-                      </Link>
-                      <Link 
-                        to="/my-paths" 
-                        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                        onClick={handleMobileMenuClose}
-                      >
-                        <Target className="h-5 w-5" />
-                        <span className="font-medium">My Career Paths</span>
-                      </Link>
-                      <Link 
-                        to="/skills" 
-                        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                        onClick={handleMobileMenuClose}
-                      >
-                        <BookOpen className="h-5 w-5" />
-                        <span className="font-medium">Skills Assessment</span>
-                      </Link>
-                    </div>
-                  </nav>
-                  
-                  {/* Mobile Footer */}
-                  <div className="border-t pt-4">
-                    <p className="text-sm text-muted-foreground">
-                      Explore career opportunities
-                    </p>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </div>
-      </header>
-
+    <motion.div 
+      className="min-h-screen bg-background flex flex-col"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       {/* Main Content Area - Scrollable */}
       <main className="flex-1 overflow-y-auto">
-        {/* Content Navigation Tabs */}
-        <div className="border-b bg-muted/50">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center space-x-6 overflow-x-auto">
-              <Button variant="ghost" size="sm" className="flex items-center space-x-2">
-                <Plus className="h-4 w-4" />
-                <span className="hidden sm:inline">Add New</span>
-              </Button>
-              <Button variant="default" size="sm" className="border-b-2 border-primary text-primary">
-                All Categories
-              </Button>
-              <Button variant="ghost" size="sm">
-                Popular
-              </Button>
-              <Button variant="ghost" size="sm">
-                Trending
-              </Button>
-              <Button variant="ghost" size="sm">
-                New
-              </Button>
-            </div>
-          </div>
-        </div>
-
         {/* Career Categories Content */}
         <div className="container mx-auto px-4 py-6">
           {/* Hero Section */}
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold mb-3">
-              Explore Career Categories
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+          <motion.div 
+            className="text-center mb-8"
+            variants={itemVariants}
+          >
+            <motion.h2 
+              className="text-2xl md:text-3xl font-bold mb-3"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              Career Categories
+            </motion.h2>
+            <motion.p 
+              className="text-muted-foreground max-w-2xl mx-auto mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
               Discover diverse career paths across different industries. Click on any category to explore 
               specific careers and their requirements.
-            </p>
-          </div>
+            </motion.p>
+            
+            {/* Search Bar */}
+            <motion.div 
+              className="max-w-md mx-auto relative"
+              variants={searchVariants}
+            >
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder="Search for jobs, skills, or careers..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowSuggestions(e.target.value.length >= 2);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearchSubmit(searchQuery);
+                    }
+                  }}
+                  className="pl-10 h-11 text-base"
+                />
+                {searchQuery && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setShowSuggestions(false);
+                    }}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
+                  >
+                    ×
+                  </Button>
+                )}
+              </div>
+              
+              {/* Search Suggestions */}
+              {showSuggestions && searchSuggestions.length > 0 && (
+                <motion.div 
+                  className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {searchSuggestions.map((suggestion, index) => (
+                    <motion.div
+                      key={index}
+                      className="px-4 py-2 hover:bg-muted cursor-pointer border-b last:border-b-0"
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      whileHover={{ backgroundColor: "hsl(var(--muted))" }}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <Search className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm">{suggestion}</span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </motion.div>
+          </motion.div>
 
-                      {/* Category Selector */}
-            <div className="mb-8">
-              <CategorySelector 
-                selectedCategory={selectedCategory}
-                onSelectCategory={setSelectedCategory}
-                showStats={true}
-              />
-            </div>
+          {/* Category Selector */}
+          <motion.div 
+            className="mb-8"
+            variants={itemVariants}
+          >
+            <CategorySelector 
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory}
+              showStats={true}
+            />
+          </motion.div>
 
           {/* Career Roadmap Section */}
           {selectedCategory && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
               className="mt-8"
             >
               <div className="flex items-center justify-between mb-4">
@@ -207,34 +266,58 @@ const CareerCategoriesPage = () => {
           )}
 
           {/* Quick Actions */}
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="hover:shadow-md transition-all cursor-pointer">
-              <CardContent className="p-4 text-center">
-                <Target className="h-8 w-8 mx-auto mb-2 text-blue-600" />
-                <h3 className="font-medium text-sm mb-1">Find Your Path</h3>
-                <p className="text-xs text-muted-foreground">Discover careers that match your skills</p>
-              </CardContent>
-            </Card>
-            <Card className="hover:shadow-md transition-all cursor-pointer">
-              <CardContent className="p-4 text-center">
-                <TrendingUp className="h-8 w-8 mx-auto mb-2 text-green-600" />
-                <h3 className="font-medium text-sm mb-1">Growth Areas</h3>
-                <p className="text-xs text-muted-foreground">Explore high-demand career fields</p>
-              </CardContent>
-            </Card>
-            <Card className="hover:shadow-md transition-all cursor-pointer">
-              <CardContent className="p-4 text-center">
-                <BookOpen className="h-8 w-8 mx-auto mb-2 text-purple-600" />
-                <h3 className="font-medium text-sm mb-1">Learn Skills</h3>
-                <p className="text-xs text-muted-foreground">Build the skills you need to succeed</p>
-              </CardContent>
-            </Card>
-          </div>
+          <motion.div 
+            className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4"
+            variants={itemVariants}
+          >
+            {[
+              {
+                icon: Target,
+                title: "Find Your Path",
+                description: "Discover careers that match your skills",
+                color: "text-blue-600"
+              },
+              {
+                icon: TrendingUp,
+                title: "Growth Areas",
+                description: "Explore high-demand career fields",
+                color: "text-green-600"
+              },
+              {
+                icon: BookOpen,
+                title: "Learn Skills",
+                description: "Build the skills you need to succeed",
+                color: "text-purple-600"
+              }
+            ].map((action, index) => (
+              <motion.div
+                key={action.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + index * 0.1 }}
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Card className="hover:shadow-md transition-all cursor-pointer">
+                  <CardContent className="p-4 text-center">
+                    <action.icon className={`h-8 w-8 mx-auto mb-2 ${action.color}`} />
+                    <h3 className="font-medium text-sm mb-1">{action.title}</h3>
+                    <p className="text-xs text-muted-foreground">{action.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </main>
 
       {/* Bottom Navigation Dashboard - Fixed */}
-      <nav className="border-t bg-background sticky bottom-0 z-50">
+      <motion.nav 
+        className="border-t bg-background sticky bottom-0 z-50"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+      >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-around py-3">
             {/* Home Button */}
@@ -270,8 +353,8 @@ const CareerCategoriesPage = () => {
             </Link>
           </div>
         </div>
-      </nav>
-    </div>
+      </motion.nav>
+    </motion.div>
   );
 };
 

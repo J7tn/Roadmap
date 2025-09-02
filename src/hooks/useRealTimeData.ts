@@ -38,6 +38,26 @@ export const useRealTimeData = (options: UseRealTimeDataOptions = {}) => {
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const dataRef = useRef(data);
+  
+  useEffect(() => {
+    dataRef.current = data;
+  }, [data]);
+
+  // Show notification helper
+  const showNotification = useCallback((message: string) => {
+    if (!enableNotifications || !('Notification' in window)) return;
+
+    if (Notification.permission === 'granted') {
+      new Notification('Career Atlas Update', { body: message });
+    } else if (Notification.permission !== 'denied') {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          new Notification('Career Atlas Update', { body: message });
+        }
+      });
+    }
+  }, [enableNotifications]);
 
   // Fetch all data
   const fetchAllData = useCallback(async (signal?: AbortSignal) => {
@@ -66,8 +86,8 @@ export const useRealTimeData = (options: UseRealTimeDataOptions = {}) => {
       }));
 
       // Show notification for new data if enabled
-      if (enableNotifications && data.lastUpdated) {
-        const newJobsCount = jobs.length - data.jobs.length;
+      if (enableNotifications && dataRef.current.lastUpdated) {
+        const newJobsCount = jobs.length - dataRef.current.jobs.length;
         if (newJobsCount > 0) {
           showNotification(`New ${newJobsCount} job opportunities available!`);
         }
@@ -83,13 +103,13 @@ export const useRealTimeData = (options: UseRealTimeDataOptions = {}) => {
         isLoading: false,
       }));
     }
-  }, [industries, locations, enableNotifications, data.jobs.length, data.lastUpdated]);
+  }, [industries, locations, enableNotifications, showNotification]);
 
   // Refresh specific data types
   const refreshJobs = useCallback(async () => {
     try {
       setData(prev => ({ ...prev, isLoading: true }));
-      const jobs = await jobMarketAPI.refreshJobData();
+      const jobs = await jobMarketAPI.getJobMarketData();
       setData(prev => ({ ...prev, jobs, lastUpdated: new Date(), isLoading: false }));
     } catch (error) {
       console.error('Error refreshing jobs:', error);
@@ -104,13 +124,13 @@ export const useRealTimeData = (options: UseRealTimeDataOptions = {}) => {
   const refreshTrends = useCallback(async () => {
     try {
       setData(prev => ({ ...prev, isLoading: true }));
-      const trends = await jobMarketAPI.refreshMarketTrends();
+      const trends = await jobMarketAPI.getMarketTrends();
       setData(prev => ({ ...prev, trends, lastUpdated: new Date(), isLoading: false }));
     } catch (error) {
       console.error('Error refreshing trends:', error);
       setData(prev => ({ 
         ...prev, 
-        error: error instanceof Error ? error.message : 'Failed to refresh trends',
+        error: error instanceof Error ? error.message : 'Failed to fetch market trends',
         isLoading: false 
       }));
     }
@@ -119,13 +139,13 @@ export const useRealTimeData = (options: UseRealTimeDataOptions = {}) => {
   const refreshSkills = useCallback(async () => {
     try {
       setData(prev => ({ ...prev, isLoading: true }));
-      const skills = await jobMarketAPI.refreshSkillsData();
+      const skills = await jobMarketAPI.getSkillsData();
       setData(prev => ({ ...prev, skills, lastUpdated: new Date(), isLoading: false }));
     } catch (error) {
       console.error('Error refreshing skills:', error);
       setData(prev => ({ 
         ...prev, 
-        error: error instanceof Error ? error.message : 'Failed to refresh skills',
+        error: error instanceof Error ? error.message : 'Failed to fetch skills data',
         isLoading: false 
       }));
     }
@@ -140,21 +160,6 @@ export const useRealTimeData = (options: UseRealTimeDataOptions = {}) => {
     abortControllerRef.current = new AbortController();
     await fetchAllData(abortControllerRef.current.signal);
   }, [fetchAllData]);
-
-  // Show notification helper
-  const showNotification = useCallback((message: string) => {
-    if (!enableNotifications || !('Notification' in window)) return;
-
-    if (Notification.permission === 'granted') {
-      new Notification('Career Atlas Update', { body: message });
-    } else if (Notification.permission !== 'denied') {
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-          new Notification('Career Atlas Update', { body: message });
-        }
-      });
-    }
-  }, [enableNotifications]);
 
   // Setup auto-refresh interval
   useEffect(() => {

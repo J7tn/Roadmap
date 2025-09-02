@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Search,
-  Menu,
   MapPin,
   ArrowLeft,
   Briefcase,
@@ -15,7 +14,6 @@ import {
   Grid3X3,
   BookOpen,
   Activity,
-  Bell,
   Plus,
   Bookmark,
   TrendingUp,
@@ -30,44 +28,91 @@ import {
   Heart,
   Building,
   MapPin as LocationIcon,
+  Trash2,
+  X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const MyCareerPathsPage = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("my-path");
+  const [activeTab, setActiveTab] = useState("my-career");
 
-  const handleMobileMenuClose = () => {
-    setIsMobileMenuOpen(false);
-  };
+  // Mock data for saved career paths
+  const [savedCareerPaths, setSavedCareerPaths] = useState([
+    {
+      id: 1,
+      title: "Software Engineer",
+      category: "Technology",
+      level: "Mid-Level",
+      progress: 65,
+      nextMilestone: "Senior Software Engineer",
+      timeline: "6 months remaining",
+      salary: "$85,000 - $120,000",
+      skills: ["JavaScript", "React", "Node.js", "Python", "AWS"],
+      completedMilestones: [
+        "Junior Developer (Completed)",
+        "Full-Stack Development (Completed)",
+        "Team Lead Experience (In Progress)"
+      ],
+      upcomingMilestones: [
+        "Advanced System Design",
+        "Architecture Leadership",
+        "Senior Developer Certification"
+      ],
+      savedDate: "2 weeks ago"
+    },
+    {
+      id: 2,
+      title: "Data Scientist",
+      category: "Technology",
+      level: "Entry-Level",
+      progress: 25,
+      nextMilestone: "Junior Data Scientist",
+      timeline: "1 year remaining",
+      salary: "$70,000 - $90,000",
+      skills: ["Python", "SQL", "Machine Learning", "Statistics", "Data Visualization"],
+      completedMilestones: [
+        "Data Analysis Fundamentals (Completed)"
+      ],
+      upcomingMilestones: [
+        "Machine Learning Basics",
+        "Advanced Analytics",
+        "Domain Specialization"
+      ],
+      savedDate: "1 week ago"
+    },
+    {
+      id: 3,
+      title: "Product Manager",
+      category: "Business",
+      level: "Senior",
+      progress: 85,
+      nextMilestone: "Director of Product",
+      timeline: "8 months remaining",
+      salary: "$120,000 - $160,000",
+      skills: ["Product Strategy", "User Research", "Agile", "Data Analysis", "Leadership"],
+      completedMilestones: [
+        "Product Management (Completed)",
+        "Team Leadership (Completed)",
+        "Strategic Planning (Completed)"
+      ],
+      upcomingMilestones: [
+        "Executive Communication",
+        "Portfolio Management",
+        "Industry Expertise"
+      ],
+      savedDate: "3 days ago"
+    }
+  ]);
 
-  // Mock data for user's current career path
-  const currentCareerPath = {
-    title: "Software Engineer",
-    company: "TechCorp Inc.",
-    level: "Mid-Level",
-    progress: 65,
-    nextMilestone: "Senior Software Engineer",
-    timeline: "6 months remaining",
-    salary: "$85,000 - $120,000",
-    skills: ["JavaScript", "React", "Node.js", "Python", "AWS"],
-    completedMilestones: [
-      "Junior Developer (Completed)",
-      "Full-Stack Development (Completed)",
-      "Team Lead Experience (In Progress)"
-    ],
-    upcomingMilestones: [
-      "Advanced System Design",
-      "Architecture Leadership",
-      "Senior Developer Certification"
-    ]
-  };
+  // Function to remove a saved career path
+  const removeCareerPath = useCallback((id: number) => {
+    setSavedCareerPaths(prev => prev.filter(path => path.id !== id));
+  }, []);
 
   // Mock data for saved jobs
   const savedJobs = [
@@ -172,71 +217,9 @@ const MyCareerPathsPage = () => {
               <Input placeholder="Search..." className="pl-8 h-9" />
             </div>
             
-            {/* Notifications Button */}
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs">2</Badge>
-            </Button>
 
-            {/* Mobile Menu */}
-            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-80">
-                <div className="flex flex-col h-full">
-                  <div className="flex items-center space-x-2 mb-6">
-                    <MapPin className="h-6 w-6 text-primary" />
-                    <h2 className="text-xl font-bold">Career Atlas</h2>
-                  </div>
-                  
-                  {/* Mobile Search */}
-                  <div className="relative mb-6">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search..." className="pl-10 h-11" />
-                  </div>
-                  
-                  {/* Mobile Navigation Links */}
-                  <nav className="flex-1">
-                    <div className="space-y-2">
-                      <Link 
-                        to="/" 
-                        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                        onClick={handleMobileMenuClose}
-                      >
-                        <Home className="h-5 w-5" />
-                        <span className="font-medium">Home</span>
-                      </Link>
-                      <Link 
-                        to="/categories" 
-                        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                        onClick={handleMobileMenuClose}
-                      >
-                        <Grid3X3 className="h-5 w-5" />
-                        <span className="font-medium">Browse Categories</span>
-                      </Link>
-                      <Link 
-                        to="/skills" 
-                        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                        onClick={handleMobileMenuClose}
-                      >
-                        <BookOpen className="h-5 w-5" />
-                        <span className="font-medium">Skills Assessment</span>
-                      </Link>
-                    </div>
-                  </nav>
-                  
-                  {/* Mobile Footer */}
-                  <div className="border-t pt-4">
-                    <p className="text-sm text-muted-foreground">
-                      Track your career progress
-                    </p>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
+
+
           </div>
         </div>
       </header>
@@ -252,11 +235,11 @@ const MyCareerPathsPage = () => {
                 <span className="hidden sm:inline">Add New</span>
               </Button>
               <Button 
-                variant={activeTab === "my-path" ? "default" : "ghost"} 
+                variant={activeTab === "my-career" ? "default" : "ghost"} 
                 size="sm"
-                onClick={() => setActiveTab("my-path")}
+                onClick={() => setActiveTab("my-career")}
               >
-                My Path
+                My Career ({savedCareerPaths.length})
               </Button>
               <Button 
                 variant={activeTab === "saved-jobs" ? "default" : "ghost"} 
@@ -272,94 +255,132 @@ const MyCareerPathsPage = () => {
         {/* Content Tabs */}
         <div className="container mx-auto px-4 py-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            {/* My Path Tab */}
-            <TabsContent value="my-path" className="space-y-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Card className="hover:shadow-md transition-all">
-                  <CardContent className="p-6">
-                    <div className="flex items-start space-x-4">
-                      {/* Career Icon */}
-                      <div className="p-4 rounded-full bg-blue-100 flex-shrink-0">
-                        <Briefcase className="h-8 w-8 text-blue-600" />
-                      </div>
+            {/* My Career Tab */}
+            <TabsContent value="my-career" className="space-y-6">
+              {savedCareerPaths.length === 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-center py-12"
+                >
+                  <Bookmark className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No saved career paths yet</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Start exploring career paths and save the ones that interest you
+                  </p>
+                  <Button asChild>
+                    <Link to="/categories">Explore Careers</Link>
+                  </Button>
+                </motion.div>
+              ) : (
+                savedCareerPaths.map((careerPath, index) => (
+                  <motion.div
+                    key={careerPath.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                  >
+                    <Card className="hover:shadow-md transition-all relative group">
+                      {/* Remove Button */}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-100 hover:text-red-600"
+                        onClick={() => removeCareerPath(careerPath.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                       
-                      {/* Career Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between mb-4">
-                          <div>
-                            <h2 className="text-2xl font-bold mb-2">{currentCareerPath.title}</h2>
-                            <p className="text-lg text-muted-foreground mb-1">{currentCareerPath.company}</p>
-                            <Badge variant="secondary" className="text-sm">{currentCareerPath.level}</Badge>
+                      <CardContent className="p-6">
+                        <div className="flex items-start space-x-4">
+                          {/* Career Icon */}
+                          <div className="p-4 rounded-full bg-blue-100 flex-shrink-0">
+                            <Briefcase className="h-8 w-8 text-blue-600" />
                           </div>
-                          <div className="text-right">
-                            <div className="text-lg font-bold text-blue-600">{currentCareerPath.salary}</div>
-                            <div className="text-sm text-muted-foreground">{currentCareerPath.timeline}</div>
+                          
+                          {/* Career Content */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between mb-4">
+                              <div>
+                                <div className="flex items-center space-x-2 mb-2">
+                                  <h2 className="text-2xl font-bold">{careerPath.title}</h2>
+                                  <Badge variant="outline" className="text-xs">
+                                    {careerPath.category}
+                                  </Badge>
+                                </div>
+                                <Badge variant="secondary" className="text-sm">{careerPath.level}</Badge>
+                                <div className="text-sm text-muted-foreground mt-1">
+                                  Saved {careerPath.savedDate}
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-lg font-bold text-blue-600">{careerPath.salary}</div>
+                                <div className="text-sm text-muted-foreground">{careerPath.timeline}</div>
+                              </div>
+                            </div>
+                            
+                            {/* Progress Section */}
+                            <div className="mb-6">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-sm font-medium text-muted-foreground">Career Progress</span>
+                                <span className="text-sm font-medium">{careerPath.progress}%</span>
+                              </div>
+                              <div className="w-full bg-gray-200 rounded-full h-3">
+                                <div 
+                                  className={`h-3 rounded-full ${getProgressColor(careerPath.progress)}`}
+                                  style={{ width: `${careerPath.progress}%` }}
+                                ></div>
+                              </div>
+                              <p className="text-sm text-muted-foreground mt-2">
+                                Next milestone: <span className="font-medium">{careerPath.nextMilestone}</span>
+                              </p>
+                            </div>
+                            
+                            {/* Skills Section */}
+                            <div className="mb-6">
+                              <h3 className="font-semibold mb-3">Current Skills</h3>
+                              <div className="flex flex-wrap gap-2">
+                                {careerPath.skills.map((skill, skillIndex) => (
+                                  <Badge key={skillIndex} variant="outline" className="text-sm">
+                                    {skill}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                            
+                            {/* Milestones Section */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div>
+                                <h3 className="font-semibold mb-3 text-green-700">Completed Milestones</h3>
+                                <ul className="space-y-2">
+                                  {careerPath.completedMilestones.map((milestone, milestoneIndex) => (
+                                    <li key={milestoneIndex} className="flex items-center space-x-2 text-sm">
+                                      <CheckCircle className="h-4 w-4 text-green-600" />
+                                      <span className="text-muted-foreground">{milestone}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                              <div>
+                                <h3 className="font-semibold mb-3 text-blue-700">Upcoming Milestones</h3>
+                                <ul className="space-y-2">
+                                  {careerPath.upcomingMilestones.map((milestone, milestoneIndex) => (
+                                    <li key={milestoneIndex} className="flex items-center space-x-2 text-sm">
+                                      <Clock className="h-4 w-4 text-blue-600" />
+                                      <span className="text-muted-foreground">{milestone}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        
-                        {/* Progress Section */}
-                        <div className="mb-6">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-muted-foreground">Career Progress</span>
-                            <span className="text-sm font-medium">{currentCareerPath.progress}%</span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-3">
-                            <div 
-                              className={`h-3 rounded-full ${getProgressColor(currentCareerPath.progress)}`}
-                              style={{ width: `${currentCareerPath.progress}%` }}
-                            ></div>
-                          </div>
-                          <p className="text-sm text-muted-foreground mt-2">
-                            Next milestone: <span className="font-medium">{currentCareerPath.nextMilestone}</span>
-                          </p>
-                        </div>
-                        
-                        {/* Skills Section */}
-                        <div className="mb-6">
-                          <h3 className="font-semibold mb-3">Current Skills</h3>
-                          <div className="flex flex-wrap gap-2">
-                            {currentCareerPath.skills.map((skill, index) => (
-                              <Badge key={index} variant="outline" className="text-sm">
-                                {skill}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        {/* Milestones Section */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div>
-                            <h3 className="font-semibold mb-3 text-green-700">Completed Milestones</h3>
-                            <ul className="space-y-2">
-                              {currentCareerPath.completedMilestones.map((milestone, index) => (
-                                <li key={index} className="flex items-center space-x-2 text-sm">
-                                  <CheckCircle className="h-4 w-4 text-green-600" />
-                                  <span className="text-muted-foreground">{milestone}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div>
-                            <h3 className="font-semibold mb-3 text-blue-700">Upcoming Milestones</h3>
-                            <ul className="space-y-2">
-                              {currentCareerPath.upcomingMilestones.map((milestone, index) => (
-                                <li key={index} className="flex items-center space-x-2 text-sm">
-                                  <Clock className="h-4 w-4 text-blue-600" />
-                                  <span className="text-muted-foreground">{milestone}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))
+              )}
             </TabsContent>
 
             {/* Saved Jobs Tab */}

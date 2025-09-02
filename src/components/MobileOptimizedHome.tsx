@@ -2,12 +2,10 @@ import React, { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   Search,
-  Menu,
   ChevronRight,
   MapPin,
   Briefcase,
   BookOpen,
-  X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -25,7 +23,6 @@ import { useIndustryBrowser } from "@/hooks/useCareerData";
 const MobileOptimizedHome = () => {
   const [selectedCareer, setSelectedCareer] = useState<ICareerNode | null>(null);
   const [showCareerDetails, setShowCareerDetails] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const navigate = useNavigate();
 
   // Use the optimized industry browser hook
@@ -67,27 +64,7 @@ const MobileOptimizedHome = () => {
     navigate('/search');
   }, [navigate]);
 
-  // Handle mobile menu button clicks
-  const handleMobileMenuAction = useCallback((action: string) => {
-    setShowMobileMenu(false);
-    
-    switch (action) {
-      case 'home':
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        break;
-      case 'explore':
-        handleExploreCareers();
-        break;
-      case 'assessment':
-        handleSkillAssessment();
-        break;
-      case 'about':
-        navigate('/jobs');
-        break;
-      default:
-        break;
-    }
-  }, [handleExploreCareers, handleSkillAssessment, navigate]);
+
 
   const handleViewAllCareers = useCallback(() => {
     navigate('/jobs');
@@ -107,41 +84,11 @@ const MobileOptimizedHome = () => {
             <Button variant="ghost" size="icon" className="md:hidden" onClick={() => navigate('/search')}>
               <Search className="h-5 w-5" />
             </Button>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="md:hidden"
-              onClick={() => setShowMobileMenu(!showMobileMenu)}
-            >
-              {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
+
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {showMobileMenu && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t bg-background"
-          >
-            <div className="container mx-auto px-4 py-4 space-y-3">
-              <Button variant="ghost" className="w-full justify-start" onClick={() => handleMobileMenuAction('home')}>
-                Home
-              </Button>
-              <Button variant="ghost" className="w-full justify-start" onClick={() => handleMobileMenuAction('explore')}>
-                Explore Careers
-              </Button>
-              <Button variant="ghost" className="w-full justify-start" onClick={() => handleMobileMenuAction('assessment')}>
-                Skills Assessment
-              </Button>
-              <Button variant="ghost" className="w-full justify-start" onClick={() => handleMobileMenuAction('about')}>
-                About
-              </Button>
-            </div>
-          </motion.div>
-        )}
+
       </header>
 
       {/* Mobile-Optimized Hero Section */}
@@ -226,6 +173,45 @@ const MobileOptimizedHome = () => {
           </TabsContent>
         </Tabs>
       </main>
+
+      {/* Bottom Navigation Dashboard - Fixed */}
+      <nav className="border-t bg-background sticky bottom-0 z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-around py-3">
+            {/* Home Button */}
+            <div className="flex flex-col items-center space-y-1">
+              <div className="p-2 rounded-lg bg-primary text-primary-foreground">
+                <MapPin className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-medium">Home</span>
+            </div>
+
+            {/* Search Button */}
+            <div className="flex flex-col items-center space-y-1">
+              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                <Search className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-medium">Search</span>
+            </div>
+
+            {/* Saved Careers Button */}
+            <div className="flex flex-col items-center space-y-1">
+              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                <Briefcase className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-medium">My Career</span>
+            </div>
+
+            {/* Skill Assessment Button */}
+            <div className="flex flex-col items-center space-y-1">
+              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                <BookOpen className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-medium">Assessment</span>
+            </div>
+          </div>
+        </div>
+      </nav>
 
       {/* Mobile-Optimized Footer */}
       <footer className="bg-muted py-8 mt-8">

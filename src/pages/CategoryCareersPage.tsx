@@ -3,7 +3,6 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Search,
-  Menu,
   MapPin,
   ArrowLeft,
   Briefcase,
@@ -25,30 +24,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { INDUSTRY_CATEGORIES } from "@/data/industries";
-import { useIndustryBrowser } from "@/hooks/useCareerData";
+import { useCareerData } from "@/hooks/useCareerData";
 
 const CategoryCareersPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "salary" | "growth" | "demand">("name");
 
-  // Use the optimized industry browser hook
+  // Use the career data hook with the specific category
+  const { useCareerPathsByIndustry } = useCareerData();
   const {
     data: careerData,
     loading,
     error,
     total
-  } = useIndustryBrowser();
-
-  const handleMobileMenuClose = () => {
-    setIsMobileMenuOpen(false);
-  };
+  } = useCareerPathsByIndustry(categoryId as any, 1, 100); // Get more items
 
   // Get category information
   const category = useMemo(() => {
@@ -62,8 +57,8 @@ const CategoryCareersPage = () => {
     // Extract all career nodes from career paths that match the category
     let allCareers: any[] = [];
     
-    if (careerData.paths) {
-      careerData.paths.forEach((path: any) => {
+    if (careerData.careers) {
+      careerData.careers.forEach((path: any) => {
         if (path.cat === categoryId) {
           // Add career path info to each node
           path.nodes.forEach((node: any) => {
@@ -82,7 +77,10 @@ const CategoryCareersPage = () => {
     if (searchQuery) {
       allCareers = allCareers.filter(career =>
         career.t?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        career.d?.toLowerCase().includes(searchQuery.toLowerCase())
+        career.d?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (career.s && career.s.some((skill: string) => 
+          skill.toLowerCase().includes(searchQuery.toLowerCase())
+        ))
       );
     }
 
@@ -127,9 +125,62 @@ const CategoryCareersPage = () => {
     return <Badge className="bg-red-100 text-red-800">Low Demand</Badge>;
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.05
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const headerVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const searchVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut"
+      }
+    }
+  };
+
   if (!category) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <motion.div 
+        className="min-h-screen bg-background flex items-center justify-center"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Category Not Found</h1>
           <p className="text-muted-foreground mb-6">The category you're looking for doesn't exist.</p>
@@ -137,14 +188,22 @@ const CategoryCareersPage = () => {
             <Button>Back to Categories</Button>
           </Link>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <motion.div 
+      className="min-h-screen bg-background"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       {/* Mobile-Optimized Navigation Header */}
-      <header className="border-b bg-background sticky top-0 z-50">
+      <motion.header 
+        className="border-b bg-background sticky top-0 z-50"
+        variants={headerVariants}
+      >
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Link to="/categories" className="flex items-center space-x-2 text-muted-foreground hover:text-foreground">
@@ -156,65 +215,14 @@ const CategoryCareersPage = () => {
               <h1 className="text-lg md:text-xl font-bold">{category.name}</h1>
             </div>
           </div>
-
-          {/* Mobile Menu */}
-          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-80">
-              <div className="flex flex-col h-full">
-                <div className="flex items-center space-x-2 mb-6">
-                  <MapPin className="h-6 w-6 text-primary" />
-                  <h2 className="text-xl font-bold">Career Atlas</h2>
-                </div>
-                
-                <nav className="flex-1">
-                  <div className="space-y-2">
-                    <Link 
-                      to="/" 
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                      onClick={handleMobileMenuClose}
-                    >
-                      <Home className="h-5 w-5" />
-                      <span className="font-medium">Dashboard</span>
-                    </Link>
-                    <Link 
-                      to="/categories" 
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                      onClick={handleMobileMenuClose}
-                    >
-                      <Grid3X3 className="h-5 w-5" />
-                      <span className="font-medium">Browse Categories</span>
-                    </Link>
-                    <Link 
-                      to="/my-paths" 
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                      onClick={handleMobileMenuClose}
-                    >
-                      <Target className="h-5 w-5" />
-                      <span className="font-medium">My Career Paths</span>
-                    </Link>
-                    <Link 
-                      to="/skills" 
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                      onClick={handleMobileMenuClose}
-                    >
-                      <BookOpen className="h-5 w-5" />
-                      <span className="font-medium">Skills Assessment</span>
-                    </Link>
-                  </div>
-                </nav>
-              </div>
-            </SheetContent>
-          </Sheet>
         </div>
-      </header>
+      </motion.header>
 
       {/* Category Header */}
-      <section className="bg-gradient-to-b from-background to-muted py-6 md:py-8">
+      <motion.section 
+        className="bg-gradient-to-b from-background to-muted py-6 md:py-8"
+        variants={itemVariants}
+      >
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -231,29 +239,34 @@ const CategoryCareersPage = () => {
             
             {/* Category Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-              <div className="text-center p-3 bg-background rounded-lg border">
-                <div className="text-lg md:text-xl font-bold text-primary">{filteredCareers.length}</div>
-                <div className="text-xs md:text-sm text-muted-foreground">Careers</div>
-              </div>
-              <div className="text-center p-3 bg-background rounded-lg border">
-                <div className="text-lg md:text-xl font-bold text-green-600">{category.growthRate}</div>
-                <div className="text-xs md:text-sm text-muted-foreground">Growth Rate</div>
-              </div>
-              <div className="text-center p-3 bg-background rounded-lg border">
-                <div className="text-lg md:text-xl font-bold text-blue-600">{category.jobCount}</div>
-                <div className="text-xs md:text-sm text-muted-foreground">Job Count</div>
-              </div>
-              <div className="text-center p-3 bg-background rounded-lg border">
-                <div className="text-lg md:text-xl font-bold text-purple-600">{category.avgSalary}</div>
-                <div className="text-xs md:text-sm text-muted-foreground">Avg Salary</div>
-              </div>
+              {[
+                { value: filteredCareers.length, label: "Careers", color: "text-primary" },
+                { value: category.growthRate, label: "Growth Rate", color: "text-green-600" },
+                { value: category.jobCount, label: "Job Count", color: "text-blue-600" },
+                { value: category.avgSalary, label: "Avg Salary", color: "text-purple-600" }
+              ].map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  className="text-center p-3 bg-background rounded-lg border"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 + index * 0.1 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                >
+                  <div className={`text-lg md:text-xl font-bold ${stat.color}`}>{stat.value}</div>
+                  <div className="text-xs md:text-sm text-muted-foreground">{stat.label}</div>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Search and Filter */}
-      <div className="border-b bg-muted/50">
+      <motion.div 
+        className="border-b bg-muted/50"
+        variants={searchVariants}
+      >
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
@@ -267,35 +280,50 @@ const CategoryCareersPage = () => {
             </div>
             <div className="flex items-center space-x-2">
               <Filter className="h-4 w-4 text-muted-foreground" />
-                             <select
-                 value={sortBy}
-                 onChange={(e) => setSortBy(e.target.value as any)}
-                 className="h-11 px-3 border rounded-md bg-background text-sm"
-               >
-                 <option value="name">Sort by Name</option>
-                 <option value="salary">Sort by Salary</option>
-                 <option value="growth">Sort by Level</option>
-                 <option value="demand">Sort by Experience</option>
-               </select>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="h-11 px-3 border rounded-md bg-background text-sm"
+              >
+                <option value="name">Sort by Name</option>
+                <option value="salary">Sort by Salary</option>
+                <option value="growth">Sort by Level</option>
+                <option value="demand">Sort by Experience</option>
+              </select>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Careers List */}
       <main className="container mx-auto px-4 py-6 md:py-8">
         {loading ? (
-          <div className="text-center py-12">
+          <motion.div 
+            className="text-center py-12"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
             <p className="text-muted-foreground">Loading careers...</p>
-          </div>
+          </motion.div>
         ) : error ? (
-          <div className="text-center py-12">
+          <motion.div 
+            className="text-center py-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             <p className="text-red-600 mb-4">Error loading careers</p>
             <Button onClick={() => window.location.reload()}>Try Again</Button>
-          </div>
+          </motion.div>
         ) : filteredCareers.length === 0 ? (
-          <div className="text-center py-12">
+          <motion.div 
+            className="text-center py-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-xl font-semibold mb-2">No Careers Found</h3>
             <p className="text-muted-foreground mb-6">
@@ -306,126 +334,193 @@ const CategoryCareersPage = () => {
                 Clear Search
               </Button>
             )}
-          </div>
+          </motion.div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+            variants={containerVariants}
+          >
             {filteredCareers.map((career, index) => (
               <motion.div
                 key={career.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
+                variants={itemVariants}
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="cursor-pointer"
               >
-                <Card className="hover:shadow-lg transition-all cursor-pointer h-full">
-                                     <CardHeader className="pb-3">
-                     <div className="flex items-start justify-between">
-                       <div className="flex-1">
-                         <CardTitle className="text-base md:text-lg mb-2">{career.t}</CardTitle>
-                         <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">
-                           {career.d}
-                         </p>
-                       </div>
-                       <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0 ml-2" />
-                     </div>
-                   </CardHeader>
-                   <CardContent className="pt-0">
-                     <div className="space-y-3">
-                       {/* Career Path */}
-                       <div className="flex items-center justify-between">
-                         <span className="text-xs text-muted-foreground">Career Path</span>
-                         <Badge variant="outline" className="text-xs">
-                           {career.pathName}
-                         </Badge>
-                       </div>
+                <Card className="hover:shadow-lg transition-all h-full">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-base md:text-lg mb-2">{career.t}</CardTitle>
+                        <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">
+                          {career.d}
+                        </p>
+                      </div>
+                      <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0 ml-2" />
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="space-y-3">
+                      {/* Career Path */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">Career Path</span>
+                        <Badge variant="outline" className="text-xs">
+                          {career.pathName}
+                        </Badge>
+                      </div>
 
-                       {/* Salary Range */}
-                       {career.sr && (
-                         <div className="flex items-center justify-between">
-                           <span className="text-xs text-muted-foreground">Salary Range</span>
-                           <span className="text-sm font-medium text-green-600">
-                             {career.sr}
-                           </span>
-                         </div>
-                       )}
+                      {/* Salary Range */}
+                      {career.sr && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-muted-foreground">Salary Range</span>
+                          <span className="text-sm font-medium text-green-600">
+                            {career.sr}
+                          </span>
+                        </div>
+                      )}
 
-                       {/* Career Level */}
-                       <div className="flex items-center justify-between">
-                         <span className="text-xs text-muted-foreground">Level</span>
-                         <Badge 
-                           variant={career.l === 'X' ? 'default' : 'secondary'} 
-                           className="text-xs"
-                         >
-                           {career.l === 'E' ? 'Entry' : 
-                            career.l === 'I' ? 'Intermediate' : 
-                            career.l === 'A' ? 'Advanced' : 'Expert'}
-                         </Badge>
-                       </div>
+                      {/* Career Level */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">Level</span>
+                        <Badge 
+                          variant={career.l === 'X' ? 'default' : 'secondary'} 
+                          className="text-xs"
+                        >
+                          {career.l === 'E' ? 'Entry' : 
+                           career.l === 'I' ? 'Intermediate' : 
+                           career.l === 'A' ? 'Advanced' : 'Expert'}
+                        </Badge>
+                      </div>
 
-                       {/* Time Estimate */}
-                       {career.te && (
-                         <div className="flex items-center justify-between">
-                           <span className="text-xs text-muted-foreground">Experience</span>
-                           <span className="text-sm font-medium text-blue-600">
-                             {career.te}
-                           </span>
-                         </div>
-                       )}
+                      {/* Time Estimate */}
+                      {career.te && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-muted-foreground">Experience</span>
+                          <span className="text-sm font-medium text-blue-600">
+                            {career.te}
+                          </span>
+                        </div>
+                      )}
 
-                       {/* Skills */}
-                       {career.s && career.s.length > 0 && (
-                         <div>
-                           <span className="text-xs text-muted-foreground block mb-2">Key Skills</span>
-                           <div className="flex flex-wrap gap-1">
-                             {career.s.slice(0, 3).map((skill, skillIndex) => (
-                               <Badge key={skillIndex} variant="outline" className="text-xs">
-                                 {skill}
-                               </Badge>
-                             ))}
-                             {career.s.length > 3 && (
-                               <Badge variant="outline" className="text-xs">
-                                 +{career.s.length - 3} more
-                               </Badge>
-                             )}
-                           </div>
-                         </div>
-                       )}
+                      {/* Skills */}
+                      {career.s && career.s.length > 0 && (
+                        <div>
+                          <span className="text-xs text-muted-foreground block mb-2">Key Skills</span>
+                          <div className="flex flex-wrap gap-1">
+                            {career.s.slice(0, 3).map((skill, skillIndex) => (
+                              <motion.div
+                                key={skillIndex}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: skillIndex * 0.05 }}
+                              >
+                                <Badge variant="outline" className="text-xs">
+                                  {skill}
+                                </Badge>
+                              </motion.div>
+                            ))}
+                            {career.s.length > 3 && (
+                              <Badge variant="outline" className="text-xs">
+                                +{career.s.length - 3} more
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      )}
 
-                       {/* Job Titles */}
-                       {career.jt && career.jt.length > 0 && (
-                         <div>
-                           <span className="text-xs text-muted-foreground block mb-2">Job Titles</span>
-                           <div className="flex flex-wrap gap-1">
-                             {career.jt.slice(0, 2).map((title, titleIndex) => (
-                               <Badge key={titleIndex} variant="outline" className="text-xs">
-                                 {title}
-                               </Badge>
-                             ))}
-                             {career.jt.length > 2 && (
-                               <Badge variant="outline" className="text-xs">
-                                 +{career.jt.length - 2} more
-                               </Badge>
-                             )}
-                           </div>
-                         </div>
-                       )}
-                     </div>
-                   </CardContent>
+                      {/* Job Titles */}
+                      {career.jt && career.jt.length > 0 && (
+                        <div>
+                          <span className="text-xs text-muted-foreground block mb-2">Job Titles</span>
+                          <div className="flex flex-wrap gap-1">
+                            {career.jt.slice(0, 2).map((title, titleIndex) => (
+                              <motion.div
+                                key={titleIndex}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: titleIndex * 0.05 }}
+                              >
+                                <Badge variant="outline" className="text-xs">
+                                  {title}
+                                </Badge>
+                              </motion.div>
+                            ))}
+                            {career.jt.length > 2 && (
+                              <Badge variant="outline" className="text-xs">
+                                +{career.jt.length - 2} more
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
                 </Card>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </main>
 
+      {/* Bottom Navigation Dashboard - Fixed */}
+      <motion.nav 
+        className="border-t bg-background sticky bottom-0 z-50"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+      >
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-around py-3">
+            {/* Home Button */}
+            <Link to="/home" className="flex flex-col items-center space-y-1">
+              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                <Home className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-medium">Home</span>
+            </Link>
+
+            {/* Search Button */}
+            <Link to="/categories" className="flex flex-col items-center space-y-1">
+              <div className="p-2 rounded-lg bg-primary text-primary-foreground">
+                <Search className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-medium">Search</span>
+            </Link>
+
+            {/* Saved Careers Button */}
+            <Link to="/my-paths" className="flex flex-col items-center space-y-1">
+              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                <Target className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-medium">My Career</span>
+            </Link>
+
+            {/* Skill Assessment Button */}
+            <Link to="/skills" className="flex flex-col items-center space-y-1">
+              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                <BookOpen className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-medium">Assessment</span>
+            </Link>
+          </div>
+        </div>
+      </motion.nav>
+
       {/* Mobile-Optimized Footer */}
-      <footer className="bg-muted py-6 mt-12">
+      <motion.footer 
+        className="bg-muted py-6 mt-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.7 }}
+      >
         <div className="container mx-auto px-4 text-center">
           <p className="text-xs md:text-sm text-muted-foreground">
             Explore {category.name} careers and find your perfect professional path.
           </p>
         </div>
-      </footer>
-    </div>
+      </motion.footer>
+    </motion.div>
   );
 };
 
