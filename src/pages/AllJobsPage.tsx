@@ -62,15 +62,13 @@ const AllJobsPage: React.FC = () => {
           }));
           setItems(convertedItems);
         } else {
-          // Fallback to hardcoded data
-          const nodes = await getAllCareerNodes();
-          setItems(nodes);
+          // No data available, set empty items
+          setItems([]);
         }
       } catch (error) {
-        console.warn('Failed to load careers from Supabase, using fallback:', error);
-        // Fallback to hardcoded data
-        const nodes = await getAllCareerNodes();
-        setItems(nodes);
+        console.warn('Failed to load careers from Supabase:', error);
+        // Set empty items instead of fallback
+        setItems([]);
       }
       setLoading(false);
     })();
@@ -104,18 +102,9 @@ const AllJobsPage: React.FC = () => {
           }));
           setFilteredItems(convertedItems);
         } catch (error) {
-          console.warn('Supabase search failed, using fallback:', error);
-          // Fallback to local filtering
-          const query = searchQuery.toLowerCase().trim();
-          const filtered = items.filter(({ node, path }) => {
-            if (node.t?.toLowerCase().includes(query)) return true;
-            if (node.d?.toLowerCase().includes(query)) return true;
-            if (node.s && node.s.some(skill => skill.toLowerCase().includes(query))) return true;
-            if (node.jt && node.jt.some(title => title.toLowerCase().includes(query))) return true;
-            if (path.cat?.toLowerCase().includes(query)) return true;
-            return false;
-          });
-          setFilteredItems(filtered);
+          console.warn('Supabase search failed:', error);
+          // Set empty results instead of fallback
+          setFilteredItems([]);
         }
       })();
     } else {

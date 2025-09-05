@@ -1,5 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { ICareerNode, ICareerPath, IndustryCategory } from '@/types/career';
+import { dataVersioningService } from './dataVersioningService';
 
 // Supabase configuration
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co';
@@ -41,21 +42,30 @@ class SupabaseCareerService {
   private cacheTimestamps: Map<string, number> = new Map();
 
   /**
-   * Get all careers from Supabase with caching
+   * Get all careers from Supabase with versioning
    */
   async getAllCareers(): Promise<SupabaseCareerData[]> {
-    const cacheKey = 'all_careers';
-    const now = Date.now();
-    
-    // Check cache first
-    if (this.cache.has(cacheKey) && this.cacheTimestamps.has(cacheKey)) {
-      const cacheTime = this.cacheTimestamps.get(cacheKey)!;
-      if (now - cacheTime < this.CACHE_TTL) {
-        return this.cache.get(cacheKey)!;
+    // Check if we have fresh cached data
+    const cachedData = dataVersioningService.getCachedData();
+    if (cachedData?.careerData && dataVersioningService.isDataFresh('careers')) {
+      console.log('Using cached career data');
+      return cachedData.careerData;
+    }
+
+    // Check if update is needed
+    if (!dataVersioningService.isUpdateNeeded('careers')) {
+      // Use cached data even if not "fresh" but not needing update
+      if (cachedData?.careerData) {
+        console.log('Using cached career data (update not needed)');
+        return cachedData.careerData;
       }
     }
 
+    // Attempt to fetch fresh data
     try {
+      console.log('Fetching fresh career data from Supabase');
+      dataVersioningService.updateDataVersion('careers', 'pending');
+
       const { data, error } = await supabase
         .from('careers')
         .select('*')
@@ -63,19 +73,39 @@ class SupabaseCareerService {
 
       if (error) {
         console.error('Error fetching careers from Supabase:', error);
-        return this.cache.get(cacheKey) || [];
+        dataVersioningService.updateDataVersion('careers', 'failed', error.message);
+        
+        // Return cached data if available
+        if (cachedData?.careerData) {
+          console.log('Using cached career data due to fetch error');
+          return cachedData.careerData;
+        }
+        return [];
       }
 
       if (data) {
-        this.cache.set(cacheKey, data);
-        this.cacheTimestamps.set(cacheKey, now);
+        // Cache the successful result
+        dataVersioningService.cacheData('careers', data);
+        console.log('Successfully fetched and cached career data');
         return data;
       }
 
       return [];
     } catch (error) {
       console.error('Failed to fetch careers from Supabase:', error);
-      return this.cache.get(cacheKey) || [];
+      
+      // Log the failure
+      dataVersioningService.updateDataVersion('careers', 'failed', error instanceof Error ? error.message : 'Unknown error');
+      
+      // Return cached data if available
+      if (cachedData?.careerData) {
+        console.log('Using cached career data due to fetch failure');
+        return cachedData.careerData;
+      }
+      
+      // Return empty array instead of fallback
+      console.log('No cached data available, returning empty career data');
+      return [];
     }
   }
 

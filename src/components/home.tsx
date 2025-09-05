@@ -49,6 +49,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useIndustryBrowser } from "@/hooks/useCareerData";
+import { useBookmarks } from "@/hooks/useBookmarks";
 import RealTimeJobFeed from "./RealTimeJobFeed";
 import { NotificationService, Notification } from "@/services/notificationService";
 
@@ -63,6 +64,9 @@ const HomePage = React.memo(() => {
     error,
     total
   } = useIndustryBrowser();
+
+  // Use bookmarks hook
+  const { getBookmarkCount } = useBookmarks();
 
 
 
@@ -259,12 +263,20 @@ const HomePage = React.memo(() => {
               <span className="text-xs font-medium">Search</span>
             </Link>
 
-            {/* Saved Careers Button */}
-            <Link to="/my-paths" className="flex flex-col items-center space-y-1">
+            {/* Bookmarks Button */}
+            <Link to="/bookmarks" className="flex flex-col items-center space-y-1 relative">
               <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
                 <Bookmark className="h-5 w-5" />
+                {getBookmarkCount() > 0 && (
+                  <Badge 
+                    variant="destructive" 
+                    className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs p-0"
+                  >
+                    {getBookmarkCount()}
+                  </Badge>
+                )}
               </div>
-              <span className="text-xs font-medium">Saved</span>
+              <span className="text-xs font-medium">Bookmarks</span>
             </Link>
 
             {/* Skill Assessment Button */}

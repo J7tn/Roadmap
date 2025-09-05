@@ -1,4 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { dataVersioningService } from './dataVersioningService';
 
 // Supabase configuration
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co';
@@ -60,21 +61,30 @@ class SupabaseTrendingService {
   private cacheTimestamps: Map<string, number> = new Map();
 
   /**
-   * Get all trending data from Supabase with caching
+   * Get all trending data from Supabase with versioning
    */
   async getAllTrendingData(): Promise<TrendingData> {
-    const cacheKey = 'all_trending_data';
-    const now = Date.now();
-    
-    // Check cache first
-    if (this.cache.has(cacheKey) && this.cacheTimestamps.has(cacheKey)) {
-      const cacheTime = this.cacheTimestamps.get(cacheKey)!;
-      if (now - cacheTime < this.CACHE_TTL) {
-        return this.cache.get(cacheKey)!;
+    // Check if we have fresh cached data
+    const cachedData = dataVersioningService.getCachedData();
+    if (cachedData?.trendingData && dataVersioningService.isDataFresh('trending')) {
+      console.log('Using cached trending data');
+      return cachedData.trendingData;
+    }
+
+    // Check if update is needed
+    if (!dataVersioningService.isUpdateNeeded('trending')) {
+      // Use cached data even if not "fresh" but not needing update
+      if (cachedData?.trendingData) {
+        console.log('Using cached trending data (update not needed)');
+        return cachedData.trendingData;
       }
     }
 
+    // Attempt to fetch fresh data
     try {
+      console.log('Fetching fresh trending data from Supabase');
+      dataVersioningService.updateDataVersion('trending', 'pending');
+
       // Fetch all trending data in parallel
       const [trendingSkillsResult, decliningSkillsResult, trendingIndustriesResult, decliningIndustriesResult, emergingRolesResult] = await Promise.all([
         supabase.from('trending_skills').select('*').eq('is_trending', true).order('demand', { ascending: false }),
@@ -92,14 +102,32 @@ class SupabaseTrendingService {
         emergingRoles: emergingRolesResult.data || []
       };
 
-      // Cache the result
-      this.cache.set(cacheKey, trendingData);
-      this.cacheTimestamps.set(cacheKey, now);
+      // Cache the successful result
+      dataVersioningService.cacheData('trending', trendingData);
+      console.log('Successfully fetched and cached trending data');
 
       return trendingData;
     } catch (error) {
       console.error('Failed to fetch trending data from Supabase:', error);
-      return this.cache.get(cacheKey) || this.getFallbackData();
+      
+      // Log the failure
+      dataVersioningService.updateDataVersion('trending', 'failed', error instanceof Error ? error.message : 'Unknown error');
+      
+      // Return cached data if available, otherwise return empty data
+      if (cachedData?.trendingData) {
+        console.log('Using cached trending data due to fetch failure');
+        return cachedData.trendingData;
+      }
+      
+      // Return empty data structure instead of fallback
+      console.log('No cached data available, returning empty trending data');
+      return {
+        trendingSkills: [],
+        decliningSkills: [],
+        trendingIndustries: [],
+        decliningIndustries: [],
+        emergingRoles: []
+      };
     }
   }
 

@@ -14,18 +14,25 @@ This document explains the new architecture where `chat2api` updates career data
 ## Components
 
 ### 1. Chat2API Backend (`chat2api_app/`)
-- **Monthly Scheduler** (`scheduler.py`): Automatically updates career data every 30 days
-- **Supabase Service** (`supabase_career_service.py`): Manages data synchronization with Supabase
+- **Monthly Scheduler** (`scheduler.py`): Automatically updates career and trending data every 30 days
+- **Supabase Career Service** (`supabase_career_service.py`): Manages career data synchronization with Supabase
+- **Supabase Trending Service** (`supabase_trending_service.py`): Manages trending data synchronization with Supabase
 - **Career API Endpoints**: Provides career data and management endpoints
+- **Trending API Endpoints**: Provides trending data and management endpoints
 
 ### 2. Supabase Database
 - **careers table**: Stores all career information
-- **career_update_log table**: Tracks update history
+- **career_update_log table**: Tracks career update history
+- **trending_skills table**: Stores trending and declining skills data
+- **trending_industries table**: Stores trending and declining industries data
+- **emerging_roles table**: Stores emerging job roles data
+- **trending_update_log table**: Tracks trending data update history
 - **Full-text search**: Optimized search capabilities
 - **Row Level Security**: Secure data access
 
 ### 3. Mobile App (`src/services/`)
-- **Supabase Career Service** (`supabaseCareerService.ts`): Fetches data from Supabase
+- **Supabase Career Service** (`supabaseCareerService.ts`): Fetches career data from Supabase
+- **Supabase Trending Service** (`supabaseTrendingService.ts`): Fetches trending data from Supabase
 - **Caching**: 1-hour local cache for performance
 - **Fallback**: Hardcoded data if Supabase is unavailable
 

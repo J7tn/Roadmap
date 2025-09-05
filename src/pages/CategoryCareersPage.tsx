@@ -18,6 +18,8 @@ import {
   Target,
   BookOpen,
   TrendingDown,
+  Bookmark,
+  BookmarkCheck,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -29,6 +31,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { INDUSTRY_CATEGORIES } from "@/data/industries";
 import { useCareerData } from "@/hooks/useCareerData";
+import { useBookmarks } from "@/hooks/useBookmarks";
 
 const CategoryCareersPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
@@ -36,6 +39,9 @@ const CategoryCareersPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "salary" | "level" | "experience">("name");
   const [expandedCareer, setExpandedCareer] = useState<string | null>(null);
+  
+  // Bookmark functionality
+  const { isBookmarked, toggleBookmark } = useBookmarks();
 
   // Use the career data hook with the specific category
   const { useCareerPathsByIndustry } = useCareerData();
@@ -364,7 +370,12 @@ const CategoryCareersPage = () => {
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
-                          <CardTitle className="text-sm md:text-base mb-1 truncate">{career.t}</CardTitle>
+                          <div className="flex items-center gap-2 mb-1">
+                            <CardTitle className="text-sm md:text-base truncate flex-1">{career.t}</CardTitle>
+                            {isBookmarked(career.id) && (
+                              <BookmarkCheck className="h-4 w-4 text-primary flex-shrink-0" />
+                            )}
+                          </div>
                           <div className="flex items-center gap-2 mb-2">
                             <Badge 
                               variant={career.l === 'X' ? 'default' : 'secondary'} 
@@ -484,6 +495,31 @@ const CategoryCareersPage = () => {
                               </div>
                             </div>
                           )}
+
+                          {/* Bookmark Button */}
+                          <div className="pt-2 border-t">
+                            <Button
+                              variant={isBookmarked(career.id) ? "default" : "outline"}
+                              size="sm"
+                              className="w-full"
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent card expansion/collapse
+                                toggleBookmark(career, career.category, career.pathName, career.pathId);
+                              }}
+                            >
+                              {isBookmarked(career.id) ? (
+                                <>
+                                  <BookmarkCheck className="h-4 w-4 mr-2" />
+                                  Bookmarked
+                                </>
+                              ) : (
+                                <>
+                                  <Bookmark className="h-4 w-4 mr-2" />
+                                  Bookmark Job
+                                </>
+                              )}
+                            </Button>
+                          </div>
                         </motion.div>
                       )}
                     </CardContent>

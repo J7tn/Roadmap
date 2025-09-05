@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { supabaseTrendingService, TrendingData } from '@/services/supabaseTrendingService';
+import DataStatusIndicator from './DataStatusIndicator';
 
 const RealTimeJobFeed: React.FC = React.memo(() => {
   const navigate = useNavigate();
@@ -19,31 +20,14 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
         const data = await supabaseTrendingService.getAllTrendingData();
         setTrendingData(data);
       } catch (error) {
-        console.warn('Failed to load trending data from Supabase, using fallback:', error);
-        // Fallback to mock data
+        console.warn('Failed to load trending data from Supabase:', error);
+        // Set empty data instead of fallback
         setTrendingData({
-          trendingSkills: [
-            { id: 1, skill: 'AI/ML', demand: 95, growth: 25, salary: 120000, category: 'tech', created_at: '', updated_at: '', is_trending: true, is_declining: false },
-            { id: 2, skill: 'Cybersecurity', demand: 90, growth: 20, salary: 110000, category: 'tech', created_at: '', updated_at: '', is_trending: true, is_declining: false },
-            { id: 3, skill: 'Cloud Computing', demand: 85, growth: 18, salary: 105000, category: 'tech', created_at: '', updated_at: '', is_trending: true, is_declining: false }
-          ],
-          decliningSkills: [
-            { id: 4, skill: 'Flash Development', demand: 15, growth: -35, salary: 45000, category: 'tech', created_at: '', updated_at: '', is_trending: false, is_declining: true },
-            { id: 5, skill: 'Silverlight', demand: 8, growth: -45, salary: 40000, category: 'tech', created_at: '', updated_at: '', is_trending: false, is_declining: true },
-            { id: 6, skill: 'ColdFusion', demand: 12, growth: -25, salary: 50000, category: 'tech', created_at: '', updated_at: '', is_trending: false, is_declining: true }
-          ],
-          trendingIndustries: [
-            { id: 1, industry: 'Technology', growth: 15, job_count: 50000, avg_salary: 95000, category: 'tech', created_at: '', updated_at: '', is_trending: true, is_declining: false },
-            { id: 2, industry: 'Healthcare', growth: 12, job_count: 30000, avg_salary: 85000, category: 'healthcare', created_at: '', updated_at: '', is_trending: true, is_declining: false }
-          ],
-          decliningIndustries: [
-            { id: 3, industry: 'Print Media', growth: -12, job_count: 8000, avg_salary: 55000, category: 'media', created_at: '', updated_at: '', is_trending: false, is_declining: true },
-            { id: 4, industry: 'Traditional Retail', growth: -8, job_count: 15000, avg_salary: 45000, category: 'retail', created_at: '', updated_at: '', is_trending: false, is_declining: true }
-          ],
-          emergingRoles: [
-            { id: 1, title: 'AI Engineer', description: 'Build and deploy AI models', growth: 30, skills: ['Python', 'TensorFlow', 'ML'], industry: 'tech', salary_range: '$90,000 - $150,000', experience_level: '2-5 years', created_at: '', updated_at: '' },
-            { id: 2, title: 'DevOps Engineer', description: 'Automate deployment processes', growth: 25, skills: ['Docker', 'Kubernetes', 'CI/CD'], industry: 'tech', salary_range: '$85,000 - $140,000', experience_level: '2-5 years', created_at: '', updated_at: '' }
-          ]
+          trendingSkills: [],
+          decliningSkills: [],
+          trendingIndustries: [],
+          decliningIndustries: [],
+          emergingRoles: []
         });
       } finally {
         setLoading(false);
@@ -106,6 +90,74 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
     return <BarChart3 className="h-4 w-4 text-red-600" />;
   };
 
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Market Trends</h2>
+          <div className="text-sm text-gray-500 dark:text-gray-400">Loading...</div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} className="h-64">
+              <CardContent className="p-6">
+                <div className="animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                  <div className="space-y-3">
+                    <div className="h-3 bg-gray-200 rounded"></div>
+                    <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+                    <div className="h-3 bg-gray-200 rounded w-4/6"></div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Check if we have any data to display
+  const hasData = trendingData && (
+    trendingData.trendingSkills.length > 0 ||
+    trendingData.decliningSkills.length > 0 ||
+    trendingData.trendingIndustries.length > 0 ||
+    trendingData.decliningIndustries.length > 0 ||
+    trendingData.emergingRoles.length > 0
+  );
+
+  if (!hasData) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center space-y-2">
+          <h2 className="text-2xl font-bold text-foreground">Career Market Trends</h2>
+          <p className="text-muted-foreground">
+            Stay updated with the latest career opportunities and market insights
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <DataStatusIndicator />
+          <span>Last updated: {formattedTime}</span>
+        </div>
+
+        <div className="text-center py-12">
+          <BarChart3 className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-xl font-semibold mb-2">No Market Data Available</h3>
+          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+            Market trend data is currently unavailable. This may be due to a network issue or the data is being updated.
+          </p>
+          <Button 
+            variant="outline" 
+            onClick={() => window.location.reload()}
+          >
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -118,7 +170,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
 
       {/* Status Bar */}
       <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <span>Real-time market data</span>
+        <DataStatusIndicator />
         <span>Last updated: {formattedTime}</span>
       </div>
 
@@ -314,7 +366,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {trends.emergingRoles.slice(0, 2).map((role, index) => (
+              {emergingRoles.map((role, index) => (
                 <motion.div
                   key={role.title}
                   initial={{ opacity: 0, x: -20 }}
