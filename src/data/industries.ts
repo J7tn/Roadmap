@@ -202,5 +202,5 @@ export const getAverageSalary = (): string => {
     return total + salary;
   }, 0);
   const average = Math.round(totalSalary / INDUSTRY_CATEGORIES.length);
-  return `$${average.toLocaleString()}`;
+  return `$${average?.toLocaleString() || '0'}`;
 };

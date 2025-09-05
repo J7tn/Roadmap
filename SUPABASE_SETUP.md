@@ -23,7 +23,7 @@
 ## 🗄️ Step 3: Set Up Database Tables
 
 1. **Go to SQL Editor** in your Supabase dashboard
-2. **Copy the contents** of `database-setup.sql`
+2. **Copy the contents** of `database-careers-schema.sql`
 3. **Paste and run** the SQL script
 4. **Verify tables are created** in the Table Editor
 
@@ -33,8 +33,8 @@
 2. **Add your Supabase credentials:**
 
 ```bash
-REACT_APP_SUPABASE_URL=https://your-project-id.supabase.co
-REACT_APP_SUPABASE_ANON_KEY=your-anon-public-key
+VITE_SUPABASE_URL=https://your-project-id.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-public-key
 ```
 
 3. **Restart your development server**

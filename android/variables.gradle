@@ -1,7 +1,7 @@
 ext {
-    minSdkVersion = 22
-    compileSdkVersion = 34
-    targetSdkVersion = 34
+    minSdkVersion = 22  // Android 5.1 - supports 99.9% of Google devices
+    compileSdkVersion = 34  // Android 14 - latest stable
+    targetSdkVersion = 34  // Target latest for best performance and security
     androidxActivityVersion = '1.8.0'
     androidxAppCompatVersion = '1.6.1'
     androidxCoordinatorLayoutVersion = '1.2.0'

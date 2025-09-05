@@ -23,10 +23,11 @@ function App() {
   }, []);
 
   return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <>
-        <ScrollToTop />
-        <Routes>
+    <div className="min-h-screen bg-white app-content" id="app-content">
+      <Suspense fallback={<p>Loading...</p>}>
+        <>
+          <ScrollToTop />
+          <Routes>
           <Route path="/" element={<WelcomePage />} />
           <Route path="/home" element={<Home />} />
           <Route path="/search" element={<SearchPage />} />
@@ -40,10 +41,11 @@ function App() {
           <Route path="/branching" element={<CareerBranchingPage />} />
           <Route path="/category/:categoryId" element={<CategoryCareersPage />} />
         </Routes>
-        {/* Temporarily disable Tempo routes for mobile debugging */}
-        {/* {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)} */}
-      </>
-    </Suspense>
+          {/* Temporarily disable Tempo routes for mobile debugging */}
+          {/* {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)} */}
+        </>
+      </Suspense>
+    </div>
   );
 }
 

@@ -2,6 +2,22 @@
   @tailwind components;
   @tailwind utilities;
 
+  /* Ensure smooth white background transition from splash screen */
+  html, body, #root {
+    background-color: #ffffff !important;
+    transition: background-color 0.5s ease-in-out;
+  }
+
+  /* Ensure app content is hidden until splash screen is dismissed */
+  .app-content {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .app-content.loaded {
+    opacity: 1;
+  }
+
   @layer base {
     :root {
       --background: 0 0% 100%;

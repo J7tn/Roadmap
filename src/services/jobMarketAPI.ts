@@ -61,10 +61,18 @@ class JobMarketAPIService {
   }
 
   private loadConfig() {
-    this.chat2apiKey = process.env.REACT_APP_CHAT2API_KEY || '';
-    this.chat2apiUrl = process.env.REACT_APP_CHAT2API_URL || 'https://api.chat2api.com';
-    this.supabaseUrl = process.env.REACT_APP_SUPABASE_URL || '';
-    this.supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || '';
+    this.chat2apiKey = process.env.VITE_CHAT2API_KEY || '';
+    this.chat2apiUrl = process.env.VITE_CHAT2API_URL || 'https://api.chat2api.com';
+    this.supabaseUrl = process.env.VITE_SUPABASE_URL || '';
+    this.supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || '';
+    
+    // Log configuration status
+    if (!this.supabaseUrl || !this.supabaseAnonKey) {
+      console.warn('Supabase configuration missing. Some features may not work.');
+    }
+    if (!this.chat2apiKey) {
+      console.warn('Chat2API key missing. Real-time updates may not work.');
+    }
   }
 
   // Fetch real-time job market data

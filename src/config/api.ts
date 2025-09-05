@@ -2,13 +2,13 @@
 export const API_CONFIG = {
   // API Keys (should be stored in environment variables)
   KEYS: {
-    LINKEDIN: process.env.REACT_APP_LINKEDIN_API_KEY || '',
-    INDEED: process.env.REACT_APP_INDEED_API_KEY || '',
-    GLASSDOOR: process.env.REACT_APP_GLASSDOOR_API_KEY || '',
-    BLS: process.env.REACT_APP_BLS_API_KEY || '',
-    ONET: process.env.REACT_APP_ONET_API_KEY || '',
-    ADZUNA: process.env.REACT_APP_ADZUNA_API_KEY || '',
-    LIGHTCAST: process.env.REACT_APP_LIGHTCAST_API_KEY || '',
+    LINKEDIN: process.env.VITE_LINKEDIN_API_KEY || '',
+    INDEED: process.env.VITE_INDEED_API_KEY || '',
+    GLASSDOOR: process.env.VITE_GLASSDOOR_API_KEY || '',
+    BLS: process.env.VITE_BLS_API_KEY || '',
+    ONET: process.env.VITE_ONET_API_KEY || '',
+    ADZUNA: process.env.VITE_ADZUNA_API_KEY || '',
+    LIGHTCAST: process.env.VITE_LIGHTCAST_API_KEY || '',
   },
 
   // API Endpoints

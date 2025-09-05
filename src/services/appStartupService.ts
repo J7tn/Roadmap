@@ -24,6 +24,8 @@ class AppStartupService {
       this.isInitialized = true;
     } catch (error) {
       console.error('❌ App startup checks failed:', error);
+      // Don't throw the error, just log it and continue
+      this.isInitialized = true;
     }
   }
 

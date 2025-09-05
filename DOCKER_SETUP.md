@@ -57,8 +57,8 @@ In your main `.env` file, update these lines:
 
 ```env
 # Chat2API Configuration
-REACT_APP_CHAT2API_KEY=local-docker-key
-REACT_APP_CHAT2API_URL=http://localhost:8000
+VITE_CHAT2API_KEY=local-docker-key
+VITE_CHAT2API_URL=http://localhost:8000
 ```
 
 ## How It Works

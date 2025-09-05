@@ -393,7 +393,7 @@ class CareerService {
     if (salaries.length === 0) return "$0";
     
     const average = Math.round(salaries.reduce((sum, salary) => sum + salary, 0) / salaries.length);
-    return `$${average.toLocaleString()}`;
+    return `$${average?.toLocaleString() || '0'}`;
   }
 }
 

@@ -1,13 +1,7 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { ICareerNode, ICareerPath, IndustryCategory } from '@/types/career';
 import { dataVersioningService } from './dataVersioningService';
-
-// Supabase configuration
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
-
-// Initialize Supabase client
-const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+import { supabase } from '@/lib/supabase';
 
 export interface SupabaseCareerData {
   id: string;

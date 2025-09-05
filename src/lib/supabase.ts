@@ -1,21 +1,23 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || ''
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || ''
+// Fallback values for development
+const supabaseUrl = process.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key'
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Missing Supabase environment variables. Please check your .env file.')
+if (!process.env.VITE_SUPABASE_URL || !process.env.VITE_SUPABASE_ANON_KEY) {
+  console.warn('Missing Supabase environment variables. Using placeholder values for development.')
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// Database table names
+// Database table names - Updated to match new schema
 export const TABLES = {
-  SKILLS: 'skills',
-  INDUSTRIES: 'industries', 
-  ROLES: 'roles',
-  JOBS: 'jobs',
-  MARKET_TRENDS: 'market_trends'
+  CAREERS: 'careers',
+  CAREER_UPDATE_LOG: 'career_update_log',
+  TRENDING_SKILLS: 'trending_skills',
+  TRENDING_INDUSTRIES: 'trending_industries',
+  EMERGING_ROLES: 'emerging_roles',
+  TRENDING_UPDATE_LOG: 'trending_update_log'
 } as const
 
 // Types for our database tables

@@ -8,10 +8,12 @@ You are an expert in React, TypeScript, and scalable web application development
 2. **Always write down component names/interface names** so that new components don't re-use names that are already in use.
 3. **Always organize code into logical modules** to make development faster and improve maintainability.
 4. **Always hide sensitive information** by updating environment variables and .gitignore to prevent committing any sensitive data.
-5. **Always use a phased initialization system** for data loading and component mounting to prevent dependency errors.
-6. **Always use the latest React patterns** - prefer hooks over class components, use modern state management patterns.
-7. **Always ensure proper type safety** - use TypeScript interfaces and types consistently throughout the application.
-8. **ALWAYS design for mobile-first** - All UI components, layouts, and interactions must be optimized for Google/Android devices first, then adapted for desktop.
+5. **ALWAYS use VITE_ prefixed environment variables** - This project uses Vite, not Create React App, so all environment variables must use the `VITE_` prefix (e.g., `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_CHAT2API_URL`). Never use `REACT_APP_` prefixed variables.
+6. **Always use a phased initialization system** for data loading and component mounting to prevent dependency errors.
+7. **Always use the latest React patterns** - prefer hooks over class components, use modern state management patterns.
+8. **Always ensure proper type safety** - use TypeScript interfaces and types consistently throughout the application.
+9. **ALWAYS design for mobile-first** - All UI components, layouts, and interactions must be optimized for Google/Android devices first, then adapted for desktop.
+10. **ALWAYS ensure Google device compatibility** - The app must run on all Google devices including newer devices with latest Android APIs. Support Android API 22+ (Android 5.1) through API 34+ (Android 14+). Test on both older and newer Google devices to ensure compatibility across the entire Android ecosystem.
 
 ## Mobile-First Design Rules (Google/Android Optimization)
 

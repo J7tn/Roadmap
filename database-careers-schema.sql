@@ -24,9 +24,9 @@ CREATE INDEX IF NOT EXISTS idx_careers_industry ON careers(industry);
 CREATE INDEX IF NOT EXISTS idx_careers_level ON careers(level);
 CREATE INDEX IF NOT EXISTS idx_careers_updated_at ON careers(updated_at);
 
--- Full-text search index
+-- Full-text search index (simplified to avoid immutability issues)
 CREATE INDEX IF NOT EXISTS idx_careers_search ON careers USING gin(
-    to_tsvector('english', title || ' ' || description || ' ' || array_to_string(skills, ' ') || ' ' || array_to_string(job_titles, ' '))
+    to_tsvector('english', title || ' ' || description)
 );
 
 -- Career update log table
@@ -49,7 +49,7 @@ END;
 $$ language 'plpgsql';
 
 -- Trigger to automatically update updated_at
-CREATE TRIGGER update_careers_updated_at 
+CREATE OR REPLACE TRIGGER update_careers_updated_at 
     BEFORE UPDATE ON careers 
     FOR EACH ROW 
     EXECUTE FUNCTION update_updated_at_column();
@@ -59,18 +59,22 @@ ALTER TABLE careers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE career_update_log ENABLE ROW LEVEL SECURITY;
 
 -- Allow public read access to careers (for the app)
+DROP POLICY IF EXISTS "Allow public read access to careers" ON careers;
 CREATE POLICY "Allow public read access to careers" ON careers
     FOR SELECT USING (true);
 
 -- Allow service role to manage careers (for chat2api)
+DROP POLICY IF EXISTS "Allow service role to manage careers" ON careers;
 CREATE POLICY "Allow service role to manage careers" ON careers
     FOR ALL USING (auth.role() = 'service_role');
 
 -- Allow public read access to update log
+DROP POLICY IF EXISTS "Allow public read access to career_update_log" ON career_update_log;
 CREATE POLICY "Allow public read access to career_update_log" ON career_update_log
     FOR SELECT USING (true);
 
 -- Allow service role to manage update log
+DROP POLICY IF EXISTS "Allow service role to manage career_update_log" ON career_update_log;
 CREATE POLICY "Allow service role to manage career_update_log" ON career_update_log
     FOR ALL USING (auth.role() = 'service_role');
 
@@ -213,17 +217,17 @@ CREATE INDEX IF NOT EXISTS idx_trending_industries_declining ON trending_industr
 CREATE INDEX IF NOT EXISTS idx_emerging_roles_industry ON emerging_roles(industry);
 
 -- Triggers for trending data
-CREATE TRIGGER update_trending_skills_updated_at 
+CREATE OR REPLACE TRIGGER update_trending_skills_updated_at 
     BEFORE UPDATE ON trending_skills 
     FOR EACH ROW 
     EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_trending_industries_updated_at 
+CREATE OR REPLACE TRIGGER update_trending_industries_updated_at 
     BEFORE UPDATE ON trending_industries 
     FOR EACH ROW 
     EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_emerging_roles_updated_at 
+CREATE OR REPLACE TRIGGER update_emerging_roles_updated_at 
     BEFORE UPDATE ON emerging_roles 
     FOR EACH ROW 
     EXECUTE FUNCTION update_updated_at_column();
@@ -235,28 +239,36 @@ ALTER TABLE emerging_roles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE trending_update_log ENABLE ROW LEVEL SECURITY;
 
 -- Allow public read access to trending data
+DROP POLICY IF EXISTS "Allow public read access to trending_skills" ON trending_skills;
 CREATE POLICY "Allow public read access to trending_skills" ON trending_skills
     FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "Allow public read access to trending_industries" ON trending_industries;
 CREATE POLICY "Allow public read access to trending_industries" ON trending_industries
     FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "Allow public read access to emerging_roles" ON emerging_roles;
 CREATE POLICY "Allow public read access to emerging_roles" ON emerging_roles
     FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "Allow public read access to trending_update_log" ON trending_update_log;
 CREATE POLICY "Allow public read access to trending_update_log" ON trending_update_log
     FOR SELECT USING (true);
 
 -- Allow service role to manage trending data
+DROP POLICY IF EXISTS "Allow service role to manage trending_skills" ON trending_skills;
 CREATE POLICY "Allow service role to manage trending_skills" ON trending_skills
     FOR ALL USING (auth.role() = 'service_role');
 
+DROP POLICY IF EXISTS "Allow service role to manage trending_industries" ON trending_industries;
 CREATE POLICY "Allow service role to manage trending_industries" ON trending_industries
     FOR ALL USING (auth.role() = 'service_role');
 
+DROP POLICY IF EXISTS "Allow service role to manage emerging_roles" ON emerging_roles;
 CREATE POLICY "Allow service role to manage emerging_roles" ON emerging_roles
     FOR ALL USING (auth.role() = 'service_role');
 
+DROP POLICY IF EXISTS "Allow service role to manage trending_update_log" ON trending_update_log;
 CREATE POLICY "Allow service role to manage trending_update_log" ON trending_update_log
     FOR ALL USING (auth.role() = 'service_role');
 

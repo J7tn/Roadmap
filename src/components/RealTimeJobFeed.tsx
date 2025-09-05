@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Users, BarChart3, Star, Zap, Award, ChevronRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { supabaseTrendingService, TrendingData } from '@/services/supabaseTrendingService';
 import DataStatusIndicator from './DataStatusIndicator';
@@ -17,6 +18,24 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
     const loadTrendingData = async () => {
       try {
         setLoading(true);
+        
+        // Check if Supabase is configured
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+        
+        if (!supabaseUrl || !supabaseKey || supabaseUrl.includes('your-project') || supabaseKey.includes('your-anon')) {
+          console.warn('Supabase not configured, using empty data');
+          setTrendingData({
+            trendingSkills: [],
+            decliningSkills: [],
+            trendingIndustries: [],
+            decliningIndustries: [],
+            emergingRoles: []
+          });
+          setLoading(false);
+          return;
+        }
+        
         const data = await supabaseTrendingService.getAllTrendingData();
         setTrendingData(data);
       } catch (error) {
@@ -42,7 +61,14 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
   const industryInsights = useMemo(() => trendingData?.trendingIndustries.slice(0, 2) || [], [trendingData]);
   const decliningIndustries = useMemo(() => trendingData?.decliningIndustries.slice(0, 2) || [], [trendingData]);
   const emergingRoles = useMemo(() => trendingData?.emergingRoles.slice(0, 2) || [], [trendingData]);
-  const formattedTime = useMemo(() => new Date().toLocaleTimeString(), []);
+  const formattedTime = useMemo(() => {
+    try {
+      return new Date().toLocaleTimeString();
+    } catch (error) {
+      console.warn('Error formatting time:', error);
+      return new Date().toString();
+    }
+  }, []);
 
   // Click handlers for navigation
   const handleSkillClick = (skill: string) => {
@@ -89,6 +115,10 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
     if (demand >= 80) return <Star className="h-4 w-4 text-yellow-600" />;
     return <BarChart3 className="h-4 w-4 text-red-600" />;
   };
+
+  // Debug logging
+  console.log('RealTimeJobFeed - loading:', loading);
+  console.log('RealTimeJobFeed - trendingData:', trendingData);
 
   if (loading) {
     return (
@@ -297,7 +327,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                         +{industry.growth}%
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {industry.jobCount.toLocaleString()} jobs
+                        {industry.jobCount?.toLocaleString() || '0'} jobs
                       </div>
                     </div>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -341,7 +371,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                         {industry.growth}%
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {industry.jobCount.toLocaleString()} jobs
+                        {industry.jobCount?.toLocaleString() || '0'} jobs
                       </div>
                     </div>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -411,7 +441,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {trends.trendingSkills.slice(0, 3).map((skill, index) => (
+                {trendingData?.trendingSkills.slice(0, 3).map((skill, index) => (
                   <div key={skill.skill} className="flex items-center justify-between">
                     <span className="text-sm">{skill.skill}</span>
                     <div className="flex items-center space-x-2">
@@ -442,7 +472,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {trends.industryInsights.map((industry, index) => (
+                {trendingData?.trendingIndustries.map((industry, index) => (
                   <div key={industry.industry} className="flex items-center justify-between">
                     <span className="text-sm">{industry.industry}</span>
                     <div className="flex items-center space-x-2">
@@ -473,7 +503,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {trends.emergingRoles.slice(0, 3).map((role, index) => (
+                {trendingData?.emergingRoles.slice(0, 3).map((role, index) => (
                   <div key={role.title} className="flex items-center justify-between">
                     <span className="text-sm">{role.title}</span>
                     <div className="flex items-center space-x-2">

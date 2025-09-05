@@ -1,12 +1,10 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { SplashScreen } from '@capacitor/splash-screen';
 import {
   Search,
   MapPin,
-  BookOpen,
-  Grid3X3,
-  Target,
   TrendingUp,
   Users,
   BarChart3,
@@ -32,6 +30,8 @@ import {
   Shield,
   Check,
   Trash2,
+  X,
+  Target,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -49,8 +49,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useIndustryBrowser } from "@/hooks/useCareerData";
-import { useBookmarks } from "@/hooks/useBookmarks";
 import RealTimeJobFeed from "./RealTimeJobFeed";
+import ErrorBoundary from "./ErrorBoundary";
 import { NotificationService, Notification } from "@/services/notificationService";
 
 const HomePage = React.memo(() => {
@@ -65,8 +65,43 @@ const HomePage = React.memo(() => {
     total
   } = useIndustryBrowser();
 
-  // Use bookmarks hook
-  const { getBookmarkCount } = useBookmarks();
+  // Debug logging
+  useEffect(() => {
+    console.log('Home component - careerData:', careerData);
+    console.log('Home component - loading:', loading);
+    console.log('Home component - error:', error);
+  }, [careerData, loading, error]);
+
+  // Hide splash screen only after data loads
+  useEffect(() => {
+    const hideSplashWhenReady = async () => {
+      // Wait for career data to load (trending data will load independently)
+      if (!loading && (careerData || error)) {
+        console.log('Career data loaded, hiding splash screen');
+        // Add a small delay to ensure smooth transition
+        setTimeout(async () => {
+          try {
+            await SplashScreen.hide();
+            // Show app content after splash screen is hidden
+            const appContent = document.getElementById('app-content');
+            if (appContent) {
+              appContent.classList.add('loaded');
+            }
+          } catch (err) {
+            console.warn('Failed to hide splash screen:', err);
+            // Show app content even if splash screen hide fails
+            const appContent = document.getElementById('app-content');
+            if (appContent) {
+              appContent.classList.add('loaded');
+            }
+          }
+        }, 500);
+      }
+    };
+
+    hideSplashWhenReady();
+  }, [loading, careerData, error]);
+
 
 
 
@@ -239,7 +274,49 @@ const HomePage = React.memo(() => {
       <main className="flex-1 overflow-y-auto">
         {/* Career Market Trends */}
         <div className="container mx-auto px-4 py-6">
-          <RealTimeJobFeed />
+          {/* Debug Info */}
+          {error && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <h3 className="text-red-800 font-semibold">Error Loading Data</h3>
+              <p className="text-red-600 text-sm">{error}</p>
+            </div>
+          )}
+          
+          {loading && (
+            <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-blue-600">Loading career data...</p>
+            </div>
+          )}
+
+
+          {/* Welcome Section */}
+          <div className="text-center py-8 mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Welcome to Career Atlas</h1>
+            <p className="text-lg text-gray-600 mb-6">Discover your perfect career path with real-time market insights</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                <Search className="mr-2 h-4 w-4" />
+                Explore Careers
+              </Button>
+              <Button size="lg" variant="outline">
+                <TrendingUp className="mr-2 h-4 w-4" />
+                View Trends
+              </Button>
+            </div>
+          </div>
+
+          <ErrorBoundary fallback={<div className="text-center py-8">
+            <h3 className="text-lg font-semibold mb-2">Unable to load market trends</h3>
+            <p className="text-muted-foreground mb-4">There was an error loading the market trends data.</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>}>
+            <RealTimeJobFeed />
+          </ErrorBoundary>
         </div>
       </main>
 
@@ -264,17 +341,9 @@ const HomePage = React.memo(() => {
             </Link>
 
             {/* Bookmarks Button */}
-            <Link to="/bookmarks" className="flex flex-col items-center space-y-1 relative">
+            <Link to="/bookmarks" className="flex flex-col items-center space-y-1">
               <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
                 <Bookmark className="h-5 w-5" />
-                {getBookmarkCount() > 0 && (
-                  <Badge 
-                    variant="destructive" 
-                    className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs p-0"
-                  >
-                    {getBookmarkCount()}
-                  </Badge>
-                )}
               </div>
               <span className="text-xs font-medium">Bookmarks</span>
             </Link>

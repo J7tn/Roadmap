@@ -140,7 +140,7 @@ export class NotificationService {
             this.addNotification({
               type: 'market',
               title: 'High-Growth Skill Alert',
-              message: `${topSkill.skill} is experiencing ${topSkill.growth}% growth with $${topSkill.salary.toLocaleString()} average salary`,
+              message: `${topSkill.skill} is experiencing ${topSkill.growth}% growth with $${topSkill.salary?.toLocaleString() || '0'} average salary`,
               action: 'explore',
               priority: 'high',
               data: { skill: topSkill.skill, growth: topSkill.growth, salary: topSkill.salary }
@@ -205,7 +205,7 @@ export class NotificationService {
             this.addNotification({
               type: 'market',
               title: 'Industry Growth Alert',
-              message: `${insight.industry} industry shows ${insight.growth}% growth with ${insight.jobCount.toLocaleString()} active jobs`,
+              message: `${insight.industry} industry shows ${insight.growth}% growth with ${insight.jobCount?.toLocaleString() || '0'} active jobs`,
               action: 'view',
               priority: 'medium',
               data: { industry: insight.industry, growth: insight.growth, jobCount: insight.jobCount }

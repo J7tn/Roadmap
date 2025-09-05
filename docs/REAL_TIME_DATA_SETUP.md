@@ -52,13 +52,13 @@ Create a `.env` file in your project root:
 
 ```bash
 # Job Market APIs
-REACT_APP_LINKEDIN_API_KEY=your_linkedin_api_key_here
-REACT_APP_INDEED_API_KEY=your_indeed_api_key_here
-REACT_APP_GLASSDOOR_API_KEY=your_glassdoor_api_key_here
-REACT_APP_BLS_API_KEY=your_bls_api_key_here
-REACT_APP_ONET_API_KEY=your_onet_api_key_here
-REACT_APP_ADZUNA_API_KEY=your_adzuna_api_key_here
-REACT_APP_LIGHTCAST_API_KEY=your_lightcast_api_key_here
+VITE_LINKEDIN_API_KEY=your_linkedin_api_key_here
+VITE_INDEED_API_KEY=your_indeed_api_key_here
+VITE_GLASSDOOR_API_KEY=your_glassdoor_api_key_here
+VITE_BLS_API_KEY=your_bls_api_key_here
+VITE_ONET_API_KEY=your_onet_api_key_here
+VITE_ADZUNA_API_KEY=your_adzuna_api_key_here
+VITE_LIGHTCAST_API_KEY=your_lightcast_api_key_here
 
 # Environment
 NODE_ENV=development

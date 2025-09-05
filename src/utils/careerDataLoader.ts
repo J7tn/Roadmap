@@ -284,7 +284,7 @@ const calculateAverageSalary = (paths: ICareerPath[]): string => {
   if (salaryCount === 0) return '$0';
   
   const average = Math.round(totalSalary / salaryCount);
-  return `$${average.toLocaleString()}`;
+  return `$${average?.toLocaleString() || '0'}`;
 };
 
 /**
