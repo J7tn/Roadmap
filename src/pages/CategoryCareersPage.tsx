@@ -34,7 +34,8 @@ const CategoryCareersPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"name" | "salary" | "growth" | "demand">("name");
+  const [sortBy, setSortBy] = useState<"name" | "salary" | "level" | "experience">("name");
+  const [expandedCareer, setExpandedCareer] = useState<string | null>(null);
 
   // Use the career data hook with the specific category
   const { useCareerPathsByIndustry } = useCareerData();
@@ -43,7 +44,7 @@ const CategoryCareersPage = () => {
     loading,
     error,
     total
-  } = useCareerPathsByIndustry(categoryId as any, 1, 100); // Get more items
+  } = useCareerPathsByIndustry(categoryId as any, 1, 200); // Get more items
 
   // Get category information
   const category = useMemo(() => {
@@ -92,13 +93,20 @@ const CategoryCareersPage = () => {
           const aSalary = parseInt(a.sr?.replace(/[^0-9]/g, '') || '0');
           const bSalary = parseInt(b.sr?.replace(/[^0-9]/g, '') || '0');
           return bSalary - aSalary;
-        case "growth":
+        case "level":
           // Sort by career level (E < I < A < X)
           const levelOrder = { 'E': 1, 'I': 2, 'A': 3, 'X': 4 };
           return (levelOrder[b.l as keyof typeof levelOrder] || 0) - (levelOrder[a.l as keyof typeof levelOrder] || 0);
-        case "demand":
-          // Sort by career level as a proxy for demand
-          return (levelOrder[b.l as keyof typeof levelOrder] || 0) - (levelOrder[a.l as keyof typeof levelOrder] || 0);
+        case "experience":
+          // Sort by experience requirement (extract years from te field)
+          const getExperienceYears = (te: string) => {
+            if (!te) return 0;
+            const match = te.match(/(\d+)/);
+            return match ? parseInt(match[1]) : 0;
+          };
+          const aExp = getExperienceYears(a.te || '');
+          const bExp = getExperienceYears(b.te || '');
+          return aExp - bExp; // Sort from lowest to highest experience requirement
         default:
           return a.t?.localeCompare(b.t || '') || 0;
       }
@@ -282,13 +290,13 @@ const CategoryCareersPage = () => {
               <Filter className="h-4 w-4 text-muted-foreground" />
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
+                onChange={(e) => setSortBy(e.target.value as "name" | "salary" | "level" | "experience")}
                 className="h-11 px-3 border rounded-md bg-background text-sm"
               >
                 <option value="name">Sort by Name</option>
                 <option value="salary">Sort by Salary</option>
-                <option value="growth">Sort by Level</option>
-                <option value="demand">Sort by Experience</option>
+                <option value="level">Sort by Level</option>
+                <option value="experience">Sort by Experience</option>
               </select>
             </div>
           </div>
@@ -337,128 +345,152 @@ const CategoryCareersPage = () => {
           </motion.div>
         ) : (
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4"
             variants={containerVariants}
           >
-            {filteredCareers.map((career, index) => (
-              <motion.div
-                key={career.id}
-                variants={itemVariants}
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="cursor-pointer"
-              >
-                <Card className="hover:shadow-lg transition-all h-full">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <CardTitle className="text-base md:text-lg mb-2">{career.t}</CardTitle>
-                        <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">
-                          {career.d}
-                        </p>
-                      </div>
-                      <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0 ml-2" />
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="space-y-3">
-                      {/* Career Path */}
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">Career Path</span>
-                        <Badge variant="outline" className="text-xs">
-                          {career.pathName}
-                        </Badge>
-                      </div>
-
-                      {/* Salary Range */}
-                      {career.sr && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-muted-foreground">Salary Range</span>
-                          <span className="text-sm font-medium text-green-600">
-                            {career.sr}
-                          </span>
+            {filteredCareers.map((career, index) => {
+              const isExpanded = expandedCareer === career.id;
+              return (
+                <motion.div
+                  key={career.id}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="cursor-pointer"
+                  onClick={() => setExpandedCareer(isExpanded ? null : career.id)}
+                >
+                  <Card className={`hover:shadow-lg transition-all ${isExpanded ? 'ring-2 ring-primary' : ''}`}>
+                    {/* Compact Header */}
+                    <CardHeader className="pb-2">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <CardTitle className="text-sm md:text-base mb-1 truncate">{career.t}</CardTitle>
+                          <div className="flex items-center gap-2 mb-2">
+                            <Badge 
+                              variant={career.l === 'X' ? 'default' : 'secondary'} 
+                              className="text-xs"
+                            >
+                              {career.l === 'E' ? 'Entry' : 
+                               career.l === 'I' ? 'Intermediate' : 
+                               career.l === 'A' ? 'Advanced' : 'Expert'}
+                            </Badge>
+                            {career.sr && (
+                              <span className="text-xs font-medium text-green-600">
+                                {career.sr}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                      )}
-
-                      {/* Career Level */}
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">Level</span>
-                        <Badge 
-                          variant={career.l === 'X' ? 'default' : 'secondary'} 
-                          className="text-xs"
-                        >
-                          {career.l === 'E' ? 'Entry' : 
-                           career.l === 'I' ? 'Intermediate' : 
-                           career.l === 'A' ? 'Advanced' : 'Expert'}
-                        </Badge>
+                        <ChevronRight className={`h-4 w-4 text-muted-foreground flex-shrink-0 ml-2 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
                       </div>
+                    </CardHeader>
 
-                      {/* Time Estimate */}
-                      {career.te && (
+                    {/* Compact Content - Always Visible */}
+                    <CardContent className="pt-0">
+                      <div className="space-y-2">
+                        {/* Career Path */}
                         <div className="flex items-center justify-between">
-                          <span className="text-xs text-muted-foreground">Experience</span>
-                          <span className="text-sm font-medium text-blue-600">
-                            {career.te}
-                          </span>
+                          <span className="text-xs text-muted-foreground">Path</span>
+                          <Badge variant="outline" className="text-xs">
+                            {career.pathName}
+                          </Badge>
                         </div>
-                      )}
 
-                      {/* Skills */}
-                      {career.s && career.s.length > 0 && (
-                        <div>
-                          <span className="text-xs text-muted-foreground block mb-2">Key Skills</span>
-                          <div className="flex flex-wrap gap-1">
-                            {career.s.slice(0, 3).map((skill, skillIndex) => (
-                              <motion.div
-                                key={skillIndex}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: skillIndex * 0.05 }}
-                              >
-                                <Badge variant="outline" className="text-xs">
+                        {/* Experience */}
+                        {career.te && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-muted-foreground">Experience</span>
+                            <span className="text-xs font-medium text-blue-600">
+                              {career.te}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Key Skills - Show only 2 in compact mode */}
+                        {career.s && career.s.length > 0 && (
+                          <div>
+                            <span className="text-xs text-muted-foreground block mb-1">Skills</span>
+                            <div className="flex flex-wrap gap-1">
+                              {career.s.slice(0, 2).map((skill, skillIndex) => (
+                                <Badge key={skillIndex} variant="outline" className="text-xs">
                                   {skill}
                                 </Badge>
-                              </motion.div>
-                            ))}
-                            {career.s.length > 3 && (
-                              <Badge variant="outline" className="text-xs">
-                                +{career.s.length - 3} more
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Job Titles */}
-                      {career.jt && career.jt.length > 0 && (
-                        <div>
-                          <span className="text-xs text-muted-foreground block mb-2">Job Titles</span>
-                          <div className="flex flex-wrap gap-1">
-                            {career.jt.slice(0, 2).map((title, titleIndex) => (
-                              <motion.div
-                                key={titleIndex}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: titleIndex * 0.05 }}
-                              >
+                              ))}
+                              {career.s.length > 2 && (
                                 <Badge variant="outline" className="text-xs">
-                                  {title}
+                                  +{career.s.length - 2}
                                 </Badge>
-                              </motion.div>
-                            ))}
-                            {career.jt.length > 2 && (
-                              <Badge variant="outline" className="text-xs">
-                                +{career.jt.length - 2} more
-                              </Badge>
-                            )}
+                              )}
+                            </div>
                           </div>
-                        </div>
+                        )}
+                      </div>
+
+                      {/* Expanded Content */}
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="mt-4 pt-4 border-t space-y-3"
+                        >
+                          {/* Full Description */}
+                          <div>
+                            <span className="text-xs text-muted-foreground block mb-1">Description</span>
+                            <p className="text-xs text-muted-foreground">
+                              {career.d}
+                            </p>
+                          </div>
+
+                          {/* All Skills */}
+                          {career.s && career.s.length > 0 && (
+                            <div>
+                              <span className="text-xs text-muted-foreground block mb-1">All Skills</span>
+                              <div className="flex flex-wrap gap-1">
+                                {career.s.map((skill, skillIndex) => (
+                                  <Badge key={skillIndex} variant="outline" className="text-xs">
+                                    {skill}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Job Titles */}
+                          {career.jt && career.jt.length > 0 && (
+                            <div>
+                              <span className="text-xs text-muted-foreground block mb-1">Job Titles</span>
+                              <div className="flex flex-wrap gap-1">
+                                {career.jt.map((title, titleIndex) => (
+                                  <Badge key={titleIndex} variant="outline" className="text-xs">
+                                    {title}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Certifications */}
+                          {career.c && career.c.length > 0 && (
+                            <div>
+                              <span className="text-xs text-muted-foreground block mb-1">Certifications</span>
+                              <div className="flex flex-wrap gap-1">
+                                {career.c.map((cert, certIndex) => (
+                                  <Badge key={certIndex} variant="secondary" className="text-xs">
+                                    {cert}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </motion.div>
                       )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </motion.div>
         )}
       </main>

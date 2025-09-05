@@ -69,50 +69,8 @@ export class SkillsAssessmentService {
     } catch (error) {
       console.error('Error fetching assessment recommendations:', error);
       
-      // Return fallback data if API fails
-      return {
-        careerPaths: [
-          {
-            title: "Software Engineer",
-            match: "90%",
-            description: "Strong technical skills match your background",
-            salary: "$80,000 - $120,000",
-            growth: "High growth potential",
-            requiredSkills: ["JavaScript", "React", "Node.js"],
-            nextSteps: ["Build portfolio projects", "Learn system design"]
-          },
-          {
-            title: "Product Manager",
-            match: "85%",
-            description: "Good mix of technical and business skills",
-            salary: "$90,000 - $140,000",
-            growth: "Strong career progression",
-            requiredSkills: ["Project Management", "Communication", "Technical Understanding"],
-            nextSteps: ["Take product management courses", "Gain stakeholder experience"]
-          }
-        ],
-        skillDevelopment: [
-          {
-            skill: "Advanced JavaScript",
-            priority: "High",
-            timeline: "3-6 months",
-            description: "Essential for modern web development",
-            resources: ["Eloquent JavaScript", "You Don't Know JS"]
-          },
-          {
-            skill: "System Design",
-            priority: "Medium",
-            timeline: "6-12 months",
-            description: "Important for senior engineering roles",
-            resources: ["System Design Primer", "Grokking the System Design Interview"]
-          }
-        ],
-        roadmap: {
-          shortTerm: ["Master current skill set", "Build portfolio projects"],
-          mediumTerm: ["Learn advanced concepts", "Gain leadership experience"],
-          longTerm: ["Become a technical leader", "Mentor others"]
-        }
-      };
+      // Throw error instead of returning fallback data
+      throw new Error('Assessment service is currently unavailable. Please try again later.');
     }
   }
 }

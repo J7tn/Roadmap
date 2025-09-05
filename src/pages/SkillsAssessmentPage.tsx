@@ -57,6 +57,7 @@ const SkillsAssessmentPage = () => {
 
   const [recommendations, setRecommendations] = useState<AssessmentRecommendations | null>(null);
   const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
+  const [assessmentError, setAssessmentError] = useState<string | null>(null);
 
 
 
@@ -74,6 +75,7 @@ const SkillsAssessmentPage = () => {
 
   const generateRecommendations = async () => {
     setIsLoadingRecommendations(true);
+    setAssessmentError(null);
     try {
       const recs = await SkillsAssessmentService.getRecommendations(assessmentData);
       setRecommendations(recs);
@@ -87,6 +89,7 @@ const SkillsAssessmentPage = () => {
       });
     } catch (error) {
       console.error('Failed to generate recommendations:', error);
+      setAssessmentError(error instanceof Error ? error.message : 'Failed to generate recommendations');
     } finally {
       setIsLoadingRecommendations(false);
     }
@@ -537,6 +540,26 @@ const SkillsAssessmentPage = () => {
                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
                  <p className="text-muted-foreground">Generating personalized recommendations...</p>
                </div>
+             ) : assessmentError ? (
+               <div className="text-center py-8">
+                 <div className="mx-auto w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+                   <svg className="h-8 w-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                   </svg>
+                 </div>
+                 <h3 className="text-lg font-semibold mb-2 text-amber-800">Assessment Unavailable</h3>
+                 <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+                   {assessmentError}
+                 </p>
+                 <div className="space-y-3">
+                   <Button onClick={generateRecommendations} className="w-full sm:w-auto">
+                     Try Again
+                   </Button>
+                   <p className="text-sm text-muted-foreground">
+                     You can still save your assessment data and try again later.
+                   </p>
+                 </div>
+               </div>
              ) : recommendations ? (
                <div className="space-y-4">
                  <div>
@@ -644,9 +667,9 @@ const SkillsAssessmentPage = () => {
                </div>
              ) : (
                <div className="text-center py-8">
-                 <p className="text-muted-foreground">Failed to load recommendations. Please try again.</p>
+                 <p className="text-muted-foreground">No recommendations available. Please try again.</p>
                  <Button onClick={generateRecommendations} className="mt-2">
-                   Retry
+                   Generate Recommendations
                  </Button>
                </div>
              )}
@@ -666,12 +689,17 @@ const SkillsAssessmentPage = () => {
                      alert('Assessment saved! You can now view your detailed roadmap.');
                    }
                  }}
-                 disabled={!recommendations}
+                 disabled={!recommendations || !!assessmentError}
                >
                  <Target className="h-4 w-4 mr-2" />
                  View Detailed Roadmap
                </Button>
-               <Button variant="outline" className="flex-1 h-11" onClick={saveAssessment}>
+               <Button 
+                 variant="outline" 
+                 className="flex-1 h-11" 
+                 onClick={saveAssessment}
+                 disabled={!!assessmentError}
+               >
                  <BookOpen className="h-4 w-4 mr-2" />
                  Save Assessment
                </Button>

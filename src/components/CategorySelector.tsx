@@ -82,11 +82,8 @@ const CategorySelector: React.FC<CategorySelectorProps> = memo(({
   return (
     <div className="space-y-4">
       {showStats && (
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <div className="text-sm text-muted-foreground">
           <span>Browse {totalJobs} career paths across {sortedIndustries.length} industries</span>
-          <Badge variant="secondary">
-            {sortedIndustries.filter(i => i.growthRate === 'High').length} High Growth
-          </Badge>
         </div>
       )}
       
@@ -103,14 +100,14 @@ const CategorySelector: React.FC<CategorySelectorProps> = memo(({
             >
               <Link to={`/category/${industry.id}`}>
                 <Card
-                  className={`cursor-pointer transition-all duration-200 ${
+                  className={`cursor-pointer transition-all duration-200 h-48 ${
                     isSelected
                       ? "ring-2 ring-primary bg-primary/5 border-primary"
                       : "hover:border-primary/50 hover:shadow-md"
                   }`}
                 >
-                <CardContent className="p-4">
-                  <div className="flex flex-col items-center text-center space-y-3">
+                <CardContent className="p-4 h-full">
+                  <div className="flex flex-col items-center text-center space-y-3 h-full">
                     <div className={`p-3 rounded-full ${
                       isSelected 
                         ? "bg-primary text-primary-foreground" 
@@ -119,8 +116,8 @@ const CategorySelector: React.FC<CategorySelectorProps> = memo(({
                       <IconComponent className="h-6 w-6" />
                     </div>
                     
-                    <div className="space-y-1">
-                      <h3 className="font-semibold text-sm">{industry.name}</h3>
+                    <div className="space-y-1 flex-1 flex flex-col justify-center min-h-[3rem]">
+                      <h3 className="font-semibold text-sm leading-tight">{industry.name}</h3>
                       <p className="text-xs text-muted-foreground line-clamp-2">
                         {industry.description}
                       </p>

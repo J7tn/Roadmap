@@ -2,6 +2,9 @@ import { ICareerPath, IndustryCategory } from '@/types/career';
 
 // Career path data imports
 import techSoftwareDev from '@/data/careerPaths/tech.json';
+import globalTechSoftwareDev from '@/data/careerPaths/global-tech.json';
+import techCybersecurity from '@/data/careerPaths/tech-cybersecurity.json';
+import techDataScience from '@/data/careerPaths/tech-data-science.json';
 import healthcareNursing from '@/data/careerPaths/healthcare.json';
 import businessManagement from '@/data/careerPaths/business.json';
 import financeAnalyst from '@/data/careerPaths/finance.json';
@@ -20,6 +23,9 @@ import mediaCareers from '@/data/careerPaths/media.json';
 // Data mapping for efficient loading
 const CAREER_PATH_DATA: Record<string, ICareerPath> = {
   'software-development': techSoftwareDev as ICareerPath,
+  'global-software-development': globalTechSoftwareDev as ICareerPath,
+  'cybersecurity-careers': techCybersecurity as ICareerPath,
+  'data-science-careers': techDataScience as ICareerPath,
   'nursing-career-path': healthcareNursing as ICareerPath,
   'business-management-path': businessManagement as ICareerPath,
   'finance-analyst-path': financeAnalyst as ICareerPath,
@@ -36,9 +42,9 @@ const CAREER_PATH_DATA: Record<string, ICareerPath> = {
   'media-careers': mediaCareers as ICareerPath,
 };
 
-// Industry to career paths mapping
+// Industry to career paths mapping - expanded to include multiple paths per industry
 const INDUSTRY_CAREER_PATHS: Record<IndustryCategory, string[]> = {
-  tech: ['software-development'],
+  tech: ['software-development', 'global-software-development', 'cybersecurity-careers', 'data-science-careers'],
   healthcare: ['nursing-career-path'],
   business: ['business-management-path'],
   finance: ['finance-analyst-path'],

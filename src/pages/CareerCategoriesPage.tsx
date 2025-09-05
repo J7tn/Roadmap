@@ -154,6 +154,21 @@ const CareerCategoriesPage = () => {
             className="text-center mb-8"
             variants={itemVariants}
           >
+            <motion.div
+              className="flex items-center justify-center mb-4"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <img 
+                src="/logo.png" 
+                alt="Careering Logo" 
+                className="h-16 w-16 mr-3"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </motion.div>
             <motion.h2 
               className="text-2xl md:text-3xl font-bold mb-3"
               initial={{ opacity: 0, y: -20 }}
@@ -265,49 +280,6 @@ const CareerCategoriesPage = () => {
             </motion.div>
           )}
 
-          {/* Quick Actions */}
-          <motion.div 
-            className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4"
-            variants={itemVariants}
-          >
-            {[
-              {
-                icon: Target,
-                title: "Find Your Path",
-                description: "Discover careers that match your skills",
-                color: "text-blue-600"
-              },
-              {
-                icon: TrendingUp,
-                title: "Growth Areas",
-                description: "Explore high-demand career fields",
-                color: "text-green-600"
-              },
-              {
-                icon: BookOpen,
-                title: "Learn Skills",
-                description: "Build the skills you need to succeed",
-                color: "text-purple-600"
-              }
-            ].map((action, index) => (
-              <motion.div
-                key={action.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + index * 0.1 }}
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Card className="hover:shadow-md transition-all cursor-pointer">
-                  <CardContent className="p-4 text-center">
-                    <action.icon className={`h-8 w-8 mx-auto mb-2 ${action.color}`} />
-                    <h3 className="font-medium text-sm mb-1">{action.title}</h3>
-                    <p className="text-xs text-muted-foreground">{action.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
         </div>
       </main>
 

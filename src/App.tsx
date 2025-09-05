@@ -11,12 +11,14 @@ import SkillsAssessmentPage from "./pages/SkillsAssessmentPage";
 import CareerBranchingPage from "./pages/CareerBranchingPage";
 import CategoryCareersPage from "./pages/CategoryCareersPage";
 import WelcomePage from "./pages/WelcomePage";
+import ScrollToTop from "./components/ScrollToTop";
 import routes from "tempo-routes";
 
 function App() {
   return (
     <Suspense fallback={<p>Loading...</p>}>
       <>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<WelcomePage />} />
           <Route path="/home" element={<Home />} />
@@ -30,7 +32,8 @@ function App() {
           <Route path="/branching" element={<CareerBranchingPage />} />
           <Route path="/category/:categoryId" element={<CategoryCareersPage />} />
         </Routes>
-        {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
+        {/* Temporarily disable Tempo routes for mobile debugging */}
+        {/* {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)} */}
       </>
     </Suspense>
   );

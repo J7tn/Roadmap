@@ -1,0 +1,71 @@
+{
+  "id": "data-science-careers",
+  "n": "Data Science Career Path",
+  "cat": "tech",
+  "nodes": [
+    {
+      "id": "data-analyst",
+      "t": "Data Analyst",
+      "l": "E",
+      "s": ["SQL", "Excel", "Data Visualization", "Statistical Analysis", "Python/R"],
+      "c": ["Google Analytics", "Tableau", "Microsoft Excel"],
+      "sr": "$50,000 - $70,000",
+      "te": "0-2 years",
+      "d": "Entry-level position analyzing data to help organizations make informed decisions.",
+      "jt": ["Data Analyst", "Business Analyst", "Junior Data Scientist"],
+      "r": {
+        "e": ["Bachelor's in Statistics", "Mathematics", "Computer Science"],
+        "exp": "0-2 years",
+        "sk": ["Data Analysis", "Statistics", "Data Visualization"]
+      }
+    },
+    {
+      "id": "data-scientist",
+      "t": "Data Scientist",
+      "l": "I",
+      "s": ["Machine Learning", "Python", "R", "Statistics", "Data Mining"],
+      "c": ["AWS Machine Learning", "Google Cloud ML", "Microsoft Azure ML"],
+      "sr": "$80,000 - $120,000",
+      "te": "2-5 years",
+      "d": "Develops and applies machine learning models to solve complex business problems.",
+      "jt": ["Data Scientist", "ML Engineer", "Research Scientist"],
+      "r": {
+        "e": ["Master's in Data Science", "Statistics", "Computer Science"],
+        "exp": "2-5 years",
+        "sk": ["Machine Learning", "Statistics", "Programming"]
+      }
+    },
+    {
+      "id": "senior-data-scientist",
+      "t": "Senior Data Scientist",
+      "l": "A",
+      "s": ["Advanced ML", "Deep Learning", "Big Data", "Team Leadership", "Research"],
+      "c": ["AWS Solutions Architect", "Google Professional ML Engineer"],
+      "sr": "$120,000 - $180,000",
+      "te": "5+ years",
+      "d": "Leads data science projects and mentors junior team members.",
+      "jt": ["Senior Data Scientist", "Principal Data Scientist", "ML Team Lead"],
+      "r": {
+        "e": ["PhD or Master's", "Advanced Certifications"],
+        "exp": "5+ years",
+        "sk": ["Advanced ML", "Team Leadership", "Research"]
+      }
+    },
+    {
+      "id": "chief-data-officer",
+      "t": "Chief Data Officer",
+      "l": "X",
+      "s": ["Data Strategy", "Executive Leadership", "Governance", "Compliance", "Innovation"],
+      "c": ["CDO Certification", "Executive Leadership"],
+      "sr": "$180,000 - $300,000",
+      "te": "10+ years",
+      "d": "Executive role responsible for data strategy and governance across the organization.",
+      "jt": ["CDO", "VP of Data", "Chief Analytics Officer"],
+      "r": {
+        "e": ["PhD or Master's", "Executive Experience"],
+        "exp": "10+ years",
+        "sk": ["Data Strategy", "Executive Leadership", "Governance"]
+      }
+    }
+  ]
+}

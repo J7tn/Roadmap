@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -132,8 +132,18 @@ const HomePage = React.memo(() => {
       <header className="border-b bg-background sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <MapPin className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold">Career Atlas</h1>
+            <img 
+              src="/logo-small.png" 
+              alt="Careering Logo" 
+              className="h-8 w-8"
+              onError={(e) => {
+                // Fallback to icon if logo not found
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.nextElementSibling.style.display = 'block';
+              }}
+            />
+            <MapPin className="h-6 w-6 text-primary hidden" />
+            <h1 className="text-xl font-bold">Careering</h1>
           </div>
 
           <div className="flex items-center space-x-3">
@@ -149,7 +159,7 @@ const HomePage = React.memo(() => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="relative">
                     <Bell className="h-5 w-5" />
-                    <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs">{unreadCount}</Badge>
+                    <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs flex items-center justify-center">{unreadCount}</Badge>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-80">

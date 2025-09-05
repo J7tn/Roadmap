@@ -7,6 +7,7 @@ import { DollarSign, Clock, MapPin, Briefcase, ArrowLeft, Home, Search, Target, 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getAllCareerNodes } from "@/services/careerService";
+import { supabaseCareerService, SupabaseCareerData } from "@/services/supabaseCareerService";
 import { ICareerNode, CareerLevel, ICareerPath } from "@/types/career";
 
 const getLevelBadgeColor = (level: CareerLevel): string => {
@@ -33,6 +34,7 @@ const AllJobsPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [items, setItems] = useState<Array<{ node: ICareerNode; path: ICareerPath }>>([]);
+  const [supabaseCareers, setSupabaseCareers] = useState<SupabaseCareerData[]>([]);
   const [filteredItems, setFilteredItems] = useState<Array<{ node: ICareerNode; path: ICareerPath }>>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -43,8 +45,33 @@ const AllJobsPage: React.FC = () => {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const nodes = await getAllCareerNodes();
-      setItems(nodes);
+      try {
+        // Try to get careers from Supabase first
+        const supabaseData = await supabaseCareerService.getAllCareers();
+        if (supabaseData.length > 0) {
+          setSupabaseCareers(supabaseData);
+          // Convert Supabase careers to the expected format
+          const convertedItems = supabaseData.map(career => ({
+            node: supabaseCareerService.convertToCareerNode(career),
+            path: {
+              id: career.id,
+              n: career.title,
+              cat: career.industry,
+              nodes: [supabaseCareerService.convertToCareerNode(career)]
+            } as ICareerPath
+          }));
+          setItems(convertedItems);
+        } else {
+          // Fallback to hardcoded data
+          const nodes = await getAllCareerNodes();
+          setItems(nodes);
+        }
+      } catch (error) {
+        console.warn('Failed to load careers from Supabase, using fallback:', error);
+        // Fallback to hardcoded data
+        const nodes = await getAllCareerNodes();
+        setItems(nodes);
+      }
       setLoading(false);
     })();
   }, []);
@@ -61,28 +88,50 @@ const AllJobsPage: React.FC = () => {
       return;
     }
 
-    const query = searchQuery.toLowerCase().trim();
-    const filtered = items.filter(({ node, path }) => {
-      // Search in job title
-      if (node.t?.toLowerCase().includes(query)) return true;
-      
-      // Search in job description
-      if (node.d?.toLowerCase().includes(query)) return true;
-      
-      // Search in skills
-      if (node.s && node.s.some(skill => skill.toLowerCase().includes(query))) return true;
-      
-      // Search in job titles
-      if (node.jt && node.jt.some(title => title.toLowerCase().includes(query))) return true;
-      
-      // Search in career path category
-      if (path.cat?.toLowerCase().includes(query)) return true;
-      
-      return false;
-    });
-    
-    setFilteredItems(filtered);
-  }, [items, searchQuery]);
+    // If we have Supabase careers, use the Supabase search
+    if (supabaseCareers.length > 0) {
+      (async () => {
+        try {
+          const searchResult = await supabaseCareerService.searchCareers(searchQuery);
+          const convertedItems = searchResult.careers.map(career => ({
+            node: supabaseCareerService.convertToCareerNode(career),
+            path: {
+              id: career.id,
+              n: career.title,
+              cat: career.industry,
+              nodes: [supabaseCareerService.convertToCareerNode(career)]
+            } as ICareerPath
+          }));
+          setFilteredItems(convertedItems);
+        } catch (error) {
+          console.warn('Supabase search failed, using fallback:', error);
+          // Fallback to local filtering
+          const query = searchQuery.toLowerCase().trim();
+          const filtered = items.filter(({ node, path }) => {
+            if (node.t?.toLowerCase().includes(query)) return true;
+            if (node.d?.toLowerCase().includes(query)) return true;
+            if (node.s && node.s.some(skill => skill.toLowerCase().includes(query))) return true;
+            if (node.jt && node.jt.some(title => title.toLowerCase().includes(query))) return true;
+            if (path.cat?.toLowerCase().includes(query)) return true;
+            return false;
+          });
+          setFilteredItems(filtered);
+        }
+      })();
+    } else {
+      // Use local filtering for hardcoded data
+      const query = searchQuery.toLowerCase().trim();
+      const filtered = items.filter(({ node, path }) => {
+        if (node.t?.toLowerCase().includes(query)) return true;
+        if (node.d?.toLowerCase().includes(query)) return true;
+        if (node.s && node.s.some(skill => skill.toLowerCase().includes(query))) return true;
+        if (node.jt && node.jt.some(title => title.toLowerCase().includes(query))) return true;
+        if (path.cat?.toLowerCase().includes(query)) return true;
+        return false;
+      });
+      setFilteredItems(filtered);
+    }
+  }, [items, searchQuery, supabaseCareers]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();

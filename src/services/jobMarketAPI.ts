@@ -487,91 +487,18 @@ class JobMarketAPIService {
 
   // Fallback data when APIs fail
   private getFallbackData(): JobMarketData[] {
-    return [
-      {
-        id: 'fallback-1',
-        title: 'Software Engineer',
-        company: 'Tech Company',
-        location: 'Remote',
-        salary: { min: 80000, max: 120000, currency: 'USD' },
-        skills: ['JavaScript', 'React', 'Node.js'],
-        experience: 'Mid Level',
-        type: 'full-time',
-        postedDate: new Date().toISOString(),
-        demand: 'high',
-        growthRate: 15,
-        industry: 'Technology',
-        description: 'Fallback job data when APIs are unavailable.',
-      },
-      {
-        id: 'fallback-2',
-        title: 'Data Scientist',
-        company: 'Analytics Corp',
-        location: 'Remote',
-        salary: { min: 90000, max: 140000, currency: 'USD' },
-        skills: ['Python', 'Machine Learning', 'SQL'],
-        experience: 'Mid Level',
-        type: 'full-time',
-        postedDate: new Date().toISOString(),
-        demand: 'high',
-        growthRate: 20,
-        industry: 'Technology',
-        description: 'Fallback job data when APIs are unavailable.',
-      },
-    ];
+    // No fallback data - throw error instead
+    throw new Error('Job market data service is currently unavailable. Please try again later.');
   }
 
   private getFallbackTrends(): MarketTrends {
-    return {
-      trendingSkills: [
-        { skill: 'AI/ML', demand: 95, growth: 25, salary: 120000 },
-        { skill: 'Cybersecurity', demand: 90, growth: 20, salary: 110000 },
-        { skill: 'Cloud Computing', demand: 85, growth: 18, salary: 105000 },
-        { skill: 'Data Science', demand: 88, growth: 22, salary: 115000 },
-        { skill: 'DevOps', demand: 82, growth: 16, salary: 100000 },
-      ],
-      emergingRoles: [
-        { title: 'AI Engineer', description: 'Build and deploy AI models', growth: 30, skills: ['Python', 'TensorFlow', 'ML'] },
-        { title: 'DevOps Engineer', description: 'Automate deployment processes', growth: 25, skills: ['Docker', 'Kubernetes', 'CI/CD'] },
-        { title: 'Data Engineer', description: 'Build data pipelines and infrastructure', growth: 28, skills: ['Python', 'SQL', 'Big Data'] },
-        { title: 'Security Engineer', description: 'Protect systems and data', growth: 22, skills: ['Cybersecurity', 'Networking', 'Incident Response'] },
-      ],
-      industryInsights: [
-        { industry: 'Technology', growth: 15, jobCount: 50000, avgSalary: 95000 },
-        { industry: 'Healthcare', growth: 12, jobCount: 30000, avgSalary: 85000 },
-        { industry: 'Finance', growth: 8, jobCount: 25000, avgSalary: 90000 },
-        { industry: 'Manufacturing', growth: 5, jobCount: 20000, avgSalary: 75000 },
-      ],
-    };
+    // No fallback data - throw error instead
+    throw new Error('Market trends service is currently unavailable. Please try again later.');
   }
 
   private getFallbackSkillsData(): SkillsData[] {
-    return [
-      {
-        skill: 'JavaScript',
-        demand: 90,
-        salary: 95000,
-        growth: 15,
-        relatedSkills: ['TypeScript', 'React', 'Node.js'],
-        certifications: ['AWS Certified Developer', 'Microsoft Certified: Azure Developer'],
-      },
-      {
-        skill: 'Python',
-        demand: 92,
-        salary: 98000,
-        growth: 18,
-        relatedSkills: ['Data Science', 'Machine Learning', 'Django'],
-        certifications: ['Google Cloud Professional Data Engineer', 'AWS Machine Learning Specialty'],
-      },
-      {
-        skill: 'React',
-        demand: 88,
-        salary: 92000,
-        growth: 12,
-        relatedSkills: ['JavaScript', 'TypeScript', 'Next.js'],
-        certifications: ['Meta Front-End Developer', 'React Developer Certification'],
-      },
-    ];
+    // No fallback data - throw error instead
+    throw new Error('Skills data service is currently unavailable. Please try again later.');
   }
 
   // Data refresh methods - these are now just aliases to the main methods

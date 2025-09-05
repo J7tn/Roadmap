@@ -54,113 +54,17 @@ const MyCareerPathsPage = () => {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Mock data for saved career paths (career types, not specific jobs)
-  const [savedCareerPaths, setSavedCareerPaths] = useState([
-    {
-      id: 1,
-      title: "Software Engineer",
-      category: "Technology",
-      level: "Mid-Level",
-      interest: "High",
-      nextStep: "Senior Software Engineer",
-      timeline: "6-12 months",
-      salary: "$85,000 - $120,000",
-      skills: ["JavaScript", "React", "Node.js", "Python", "AWS"],
-      description: "Building scalable web applications and software solutions",
-      icon: Code,
-      color: "text-blue-600",
-      bgColor: "bg-blue-100",
-      savedDate: "2 weeks ago"
-    },
-    {
-      id: 2,
-      title: "Data Scientist",
-      category: "Technology",
-      level: "Entry-Level",
-      interest: "Medium",
-      nextStep: "Junior Data Scientist",
-      timeline: "1-2 years",
-      salary: "$70,000 - $90,000",
-      skills: ["Python", "SQL", "Machine Learning", "Statistics", "Data Visualization"],
-      description: "Analyzing data to extract insights and build predictive models",
-      icon: BarChart3,
-      color: "text-green-600",
-      bgColor: "bg-green-100",
-      savedDate: "1 week ago"
-    },
-    {
-      id: 3,
-      title: "Product Manager",
-      category: "Business",
-      level: "Senior",
-      interest: "High",
-      nextStep: "Director of Product",
-      timeline: "8-12 months",
-      salary: "$120,000 - $160,000",
-      skills: ["Product Strategy", "User Research", "Agile", "Data Analysis", "Leadership"],
-      description: "Leading product development and strategy for digital products",
-      icon: Target,
-      color: "text-purple-600",
-      bgColor: "bg-purple-100",
-      savedDate: "3 days ago"
-    },
-    {
-      id: 4,
-      title: "UX Designer",
-      category: "Creative",
-      level: "Mid-Level",
-      interest: "Medium",
-      nextStep: "Senior UX Designer",
-      timeline: "1-2 years",
-      salary: "$80,000 - $110,000",
-      skills: ["User Research", "Wireframing", "Prototyping", "User Testing", "Design Systems"],
-      description: "Creating intuitive and engaging user experiences",
-      icon: CreativeIcon,
-      color: "text-orange-600",
-      bgColor: "bg-orange-100",
-      savedDate: "5 days ago"
-    }
-  ]);
+  // Load saved career paths from localStorage or API
+  const [savedCareerPaths, setSavedCareerPaths] = useState(() => {
+    const saved = localStorage.getItem('savedCareerPaths');
+    return saved ? JSON.parse(saved) : [];
+  });
 
-  // Mock data for career interests (career types user is exploring)
-  const careerInterests = [
-    {
-      id: 1,
-      title: "AI Engineer",
-      category: "Technology",
-      description: "Building and deploying artificial intelligence models",
-      interest: "High",
-      skills: ["Python", "TensorFlow", "Machine Learning", "Deep Learning"],
-      icon: Lightbulb,
-      color: "text-indigo-600",
-      bgColor: "bg-indigo-100",
-      savedDate: "1 day ago"
-    },
-    {
-      id: 2,
-      title: "DevOps Engineer",
-      category: "Technology",
-      description: "Automating deployment and infrastructure management",
-      interest: "Medium",
-      skills: ["Docker", "Kubernetes", "CI/CD", "Cloud Platforms"],
-      icon: Zap,
-      color: "text-teal-600",
-      bgColor: "bg-teal-100",
-      savedDate: "2 days ago"
-    },
-    {
-      id: 3,
-      title: "Business Analyst",
-      category: "Business",
-      description: "Analyzing business processes and recommending improvements",
-      interest: "Medium",
-      skills: ["Data Analysis", "SQL", "Excel", "Business Process Modeling"],
-      icon: Calculator,
-      color: "text-pink-600",
-      bgColor: "bg-pink-100",
-      savedDate: "4 days ago"
-    }
-  ];
+  // Load career interests from localStorage or API
+  const [careerInterests, setCareerInterests] = useState(() => {
+    const saved = localStorage.getItem('careerInterests');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   // Function to remove a saved career path
   const removeCareerPath = useCallback((id: number) => {
@@ -169,8 +73,11 @@ const MyCareerPathsPage = () => {
 
   // Function to remove a career interest
   const removeCareerInterest = useCallback((id: number) => {
-    // This would update the careerInterests state in a real app
-  }, []);
+    setCareerInterests(prev => prev.filter(interest => interest.id !== id));
+    // Save to localStorage
+    const updated = careerInterests.filter(interest => interest.id !== id);
+    localStorage.setItem('careerInterests', JSON.stringify(updated));
+  }, [careerInterests]);
 
   // Function to remove a saved assessment
   const removeAssessment = useCallback((id: string) => {

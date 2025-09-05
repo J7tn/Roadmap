@@ -1,0 +1,71 @@
+{
+  "id": "cybersecurity-careers",
+  "n": "Cybersecurity Career Path",
+  "cat": "tech",
+  "nodes": [
+    {
+      "id": "security-analyst",
+      "t": "Security Analyst",
+      "l": "E",
+      "s": ["Network Security", "Vulnerability Assessment", "Security Monitoring", "Incident Response", "Risk Analysis"],
+      "c": ["CompTIA Security+", "CEH", "GSEC"],
+      "sr": "$60,000 - $80,000",
+      "te": "0-2 years",
+      "d": "Entry-level position monitoring and analyzing security threats and vulnerabilities.",
+      "jt": ["Security Analyst", "Cybersecurity Analyst", "Information Security Analyst"],
+      "r": {
+        "e": ["Bachelor's in Cybersecurity", "IT Degree", "Security Certifications"],
+        "exp": "0-2 years",
+        "sk": ["Network Security", "Security Tools", "Risk Assessment"]
+      }
+    },
+    {
+      "id": "penetration-tester",
+      "t": "Penetration Tester",
+      "l": "I",
+      "s": ["Ethical Hacking", "Vulnerability Testing", "Security Auditing", "Report Writing", "Tool Usage"],
+      "c": ["CEH", "OSCP", "CISSP"],
+      "sr": "$80,000 - $120,000",
+      "te": "2-5 years",
+      "d": "Tests systems and networks for security vulnerabilities through authorized hacking attempts.",
+      "jt": ["Penetration Tester", "Ethical Hacker", "Security Consultant"],
+      "r": {
+        "e": ["Bachelor's Degree", "Security Certifications"],
+        "exp": "2-5 years",
+        "sk": ["Ethical Hacking", "Security Testing", "Vulnerability Assessment"]
+      }
+    },
+    {
+      "id": "security-engineer",
+      "t": "Security Engineer",
+      "l": "A",
+      "s": ["Security Architecture", "System Design", "Implementation", "Security Policies", "Team Leadership"],
+      "c": ["CISSP", "CISM", "CISSP-ISSAP"],
+      "sr": "$100,000 - $150,000",
+      "te": "5+ years",
+      "d": "Designs and implements security systems and architectures for organizations.",
+      "jt": ["Security Engineer", "Security Architect", "Senior Security Engineer"],
+      "r": {
+        "e": ["Bachelor's Degree", "Advanced Certifications"],
+        "exp": "5+ years",
+        "sk": ["Security Architecture", "System Design", "Team Leadership"]
+      }
+    },
+    {
+      "id": "chief-security-officer",
+      "t": "Chief Security Officer",
+      "l": "X",
+      "s": ["Strategic Planning", "Risk Management", "Compliance", "Executive Leadership", "Budget Management"],
+      "c": ["CISSP", "CISM", "CGEIT"],
+      "sr": "$150,000 - $250,000",
+      "te": "10+ years",
+      "d": "Executive role responsible for overall security strategy and governance.",
+      "jt": ["CSO", "CISO", "VP of Security"],
+      "r": {
+        "e": ["Master's Degree", "Executive Certifications"],
+        "exp": "10+ years",
+        "sk": ["Strategic Planning", "Executive Leadership", "Risk Management"]
+      }
+    }
+  ]
+}
