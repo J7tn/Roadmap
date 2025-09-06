@@ -53,6 +53,15 @@ const CategorySelector: React.FC<CategorySelectorProps> = memo(({
   onSelectCategory,
   showStats = true,
 }) => {
+  // Add error handling for missing data
+  if (!INDUSTRY_CATEGORIES || INDUSTRY_CATEGORIES.length === 0) {
+    return (
+      <div className="text-center p-6">
+        <p className="text-muted-foreground">No industry categories available</p>
+      </div>
+    );
+  }
+
   // Memoize the sorted industries for performance
   const sortedIndustries = useMemo(() => {
     return [...INDUSTRY_CATEGORIES].sort((a, b) => {

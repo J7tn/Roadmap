@@ -151,7 +151,7 @@ const MyBookmarksPage: React.FC = () => {
     >
       {/* Header */}
       <motion.header 
-        className="border-b bg-background sticky top-0 z-50"
+        className="border-b bg-background sticky top-0 z-50 safe-area-top"
         initial={{ y: -50 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}

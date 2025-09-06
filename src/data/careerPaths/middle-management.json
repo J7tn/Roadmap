@@ -1,0 +1,119 @@
+{
+  "id": "middle-management-careers",
+  "n": "Middle Management Career Path",
+  "cat": "middle-management",
+  "nodes": [
+    {
+      "id": "team-lead",
+      "t": "Team Lead",
+      "l": "E",
+      "s": ["Team Leadership", "Project Coordination", "Communication", "Problem Solving", "Mentoring"],
+      "c": ["Leadership Training", "Project Management"],
+      "sr": "$45,000 - $65,000",
+      "te": "2-4 years",
+      "d": "Entry-level management position responsible for leading small teams and coordinating projects.",
+      "jt": ["Team Lead", "Project Coordinator", "Supervisor"],
+      "r": {
+        "e": ["Bachelor's Degree", "Leadership Training", "Industry Experience"],
+        "exp": "2-4 years",
+        "sk": ["Team Leadership", "Project Coordination", "Communication"]
+      }
+    },
+    {
+      "id": "department-manager",
+      "t": "Department Manager",
+      "l": "I",
+      "s": ["Department Management", "Budget Management", "Staff Development", "Strategic Planning", "Performance Management"],
+      "c": ["Management Training", "Budget Management"],
+      "sr": "$60,000 - $90,000",
+      "te": "4-7 years",
+      "d": "Middle management position responsible for managing department operations and staff development.",
+      "jt": ["Department Manager", "Operations Manager", "Section Manager"],
+      "r": {
+        "e": ["Bachelor's Degree", "Management Training", "Industry Experience"],
+        "exp": "4-7 years",
+        "sk": ["Department Management", "Budget Management", "Staff Development"]
+      }
+    },
+    {
+      "id": "regional-manager",
+      "t": "Regional Manager",
+      "l": "A",
+      "s": ["Regional Operations", "Multi-location Management", "Strategic Planning", "Team Leadership", "Performance Optimization"],
+      "c": ["Regional Management", "Strategic Planning"],
+      "sr": "$80,000 - $120,000",
+      "te": "6-10 years",
+      "d": "Senior management position responsible for overseeing operations across multiple locations or regions.",
+      "jt": ["Regional Manager", "Area Manager", "District Manager"],
+      "r": {
+        "e": ["Bachelor's Degree", "MBA", "Management Experience"],
+        "exp": "6-10 years",
+        "sk": ["Regional Operations", "Multi-location Management", "Strategic Planning"]
+      }
+    },
+    {
+      "id": "operations-manager",
+      "t": "Operations Manager",
+      "l": "A",
+      "s": ["Operations Management", "Process Improvement", "Quality Control", "Team Leadership", "Budget Management"],
+      "c": ["Operations Management", "Process Improvement"],
+      "sr": "$70,000 - $110,000",
+      "te": "5-10 years",
+      "d": "Management professional responsible for optimizing operations and improving efficiency.",
+      "jt": ["Operations Manager", "Process Manager", "Efficiency Manager"],
+      "r": {
+        "e": ["Bachelor's Degree", "Operations Management", "Industry Experience"],
+        "exp": "5-10 years",
+        "sk": ["Operations Management", "Process Improvement", "Quality Control"]
+      }
+    },
+    {
+      "id": "general-manager",
+      "t": "General Manager",
+      "l": "A",
+      "s": ["General Management", "Strategic Planning", "Financial Management", "Team Leadership", "Business Development"],
+      "c": ["General Management", "Business Administration"],
+      "sr": "$90,000 - $150,000",
+      "te": "8-12 years",
+      "d": "Senior management position responsible for overall business operations and strategic direction.",
+      "jt": ["General Manager", "Business Manager", "Operations Director"],
+      "r": {
+        "e": ["Bachelor's Degree", "MBA", "Management Experience"],
+        "exp": "8-12 years",
+        "sk": ["General Management", "Strategic Planning", "Financial Management"]
+      }
+    },
+    {
+      "id": "vice-president",
+      "t": "Vice President",
+      "l": "X",
+      "s": ["Executive Leadership", "Strategic Planning", "Board Relations", "Team Leadership", "Business Development"],
+      "c": ["Executive Leadership", "Strategic Management"],
+      "sr": "$120,000 - $300,000+",
+      "te": "10+ years",
+      "d": "Senior executive responsible for major business functions and strategic decision-making.",
+      "jt": ["Vice President", "Executive Director", "Senior Director"],
+      "r": {
+        "e": ["Master's Degree", "Executive Experience", "Leadership Training"],
+        "exp": "10+ years",
+        "sk": ["Executive Leadership", "Strategic Planning", "Board Relations"]
+      }
+    },
+    {
+      "id": "chief-operating-officer",
+      "t": "Chief Operating Officer",
+      "l": "X",
+      "s": ["Executive Leadership", "Operations Strategy", "Team Leadership", "Financial Management", "Crisis Management"],
+      "c": ["Executive Leadership", "Operations Management"],
+      "sr": "$200,000 - $500,000+",
+      "te": "15+ years",
+      "d": "Senior executive responsible for overall operations and day-to-day management of the organization.",
+      "jt": ["Chief Operating Officer", "COO", "Operations Executive"],
+      "r": {
+        "e": ["Master's Degree", "Executive Experience", "Operations Management"],
+        "exp": "15+ years",
+        "sk": ["Executive Leadership", "Operations Strategy", "Team Leadership"]
+      }
+    }
+  ]
+}

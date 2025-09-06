@@ -215,7 +215,7 @@ const CategoryCareersPage = () => {
     >
       {/* Mobile-Optimized Navigation Header */}
       <motion.header 
-        className="border-b bg-background sticky top-0 z-50"
+        className="border-b bg-background sticky top-0 z-50 safe-area-top"
         variants={headerVariants}
       >
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">

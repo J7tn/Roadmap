@@ -5,7 +5,12 @@ export type CareerLevel = 'E' | 'I' | 'A' | 'X'; // Entry, Intermediate, Advance
 export type IndustryCategory = 
   | 'tech' | 'healthcare' | 'business' | 'education' | 'creative' 
   | 'finance' | 'marketing' | 'engineering' | 'science' | 'legal'
-  | 'government' | 'nonprofit' | 'trades' | 'hospitality' | 'media';
+  | 'government' | 'nonprofit' | 'trades' | 'hospitality' | 'media'
+  | 'digital-creator' | 'public-service' | 'sanitation' | 'military'
+  | 'music' | 'gaming-casino' | 'transportation' | 'retail'
+  | 'agriculture' | 'construction' | 'specialized-trades' | 'drones-aviation'
+  | 'marine-science' | 'investment-finance' | 'middle-management' | 'real-estate'
+  | 'emerging-tech' | 'environmental' | 'space-aerospace';
 
 // Global career data interfaces
 export type CountryCode = 

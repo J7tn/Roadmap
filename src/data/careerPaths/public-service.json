@@ -1,0 +1,103 @@
+{
+  "id": "public-service-careers",
+  "n": "Public Service Career Path",
+  "cat": "public-service",
+  "nodes": [
+    {
+      "id": "government-clerk",
+      "t": "Government Clerk",
+      "l": "E",
+      "s": ["Administrative Tasks", "Record Keeping", "Customer Service", "Data Entry", "Communication"],
+      "c": ["Public Administration", "Office Management"],
+      "sr": "$35,000 - $45,000",
+      "te": "0-2 years",
+      "d": "Entry-level position handling administrative tasks and public service in government offices.",
+      "jt": ["Administrative Assistant", "Clerk", "Office Support"],
+      "r": {
+        "e": ["High School Diploma", "Associate Degree", "Public Administration"],
+        "exp": "0-2 years",
+        "sk": ["Administrative Skills", "Computer Literacy", "Communication"]
+      }
+    },
+    {
+      "id": "city-council-member",
+      "t": "City Council Member",
+      "l": "I",
+      "s": ["Public Policy", "Community Relations", "Budget Management", "Public Speaking", "Leadership"],
+      "c": ["Public Policy", "Local Government"],
+      "sr": "$40,000 - $80,000",
+      "te": "2-5 years",
+      "d": "Elected official representing constituents in local government, making policy decisions and managing city affairs.",
+      "jt": ["Council Member", "Alderman", "City Representative"],
+      "r": {
+        "e": ["Bachelor's Degree", "Political Science", "Public Administration"],
+        "exp": "2-5 years",
+        "sk": ["Public Speaking", "Policy Analysis", "Community Engagement"]
+      }
+    },
+    {
+      "id": "mayor",
+      "t": "Mayor",
+      "l": "A",
+      "s": ["Executive Leadership", "Public Policy", "Budget Management", "Crisis Management", "Strategic Planning"],
+      "c": ["Public Administration", "Leadership"],
+      "sr": "$60,000 - $200,000+",
+      "te": "5-10 years",
+      "d": "Chief executive of a city, responsible for overall governance, policy implementation, and city management.",
+      "jt": ["Mayor", "City Manager", "Chief Executive"],
+      "r": {
+        "e": ["Bachelor's Degree", "Master's in Public Administration", "Law Degree"],
+        "exp": "5-10 years",
+        "sk": ["Executive Leadership", "Public Policy", "Crisis Management"]
+      }
+    },
+    {
+      "id": "state-senator",
+      "t": "State Senator",
+      "l": "A",
+      "s": ["Legislative Process", "Public Policy", "Constituent Services", "Committee Work", "Public Speaking"],
+      "c": ["Political Science", "Public Policy"],
+      "sr": "$50,000 - $150,000",
+      "te": "5-10 years",
+      "d": "Elected representative in state legislature, creating and voting on state laws and policies.",
+      "jt": ["State Senator", "Legislator", "State Representative"],
+      "r": {
+        "e": ["Bachelor's Degree", "Law Degree", "Political Science"],
+        "exp": "5-10 years",
+        "sk": ["Legislative Process", "Policy Analysis", "Public Speaking"]
+      }
+    },
+    {
+      "id": "governor",
+      "t": "Governor",
+      "l": "X",
+      "s": ["Executive Leadership", "State Management", "Public Policy", "Crisis Management", "Intergovernmental Relations"],
+      "c": ["Public Administration", "Leadership"],
+      "sr": "$100,000 - $200,000+",
+      "te": "10+ years",
+      "d": "Chief executive of a state, responsible for state governance, policy implementation, and executive leadership.",
+      "jt": ["Governor", "State Executive", "Chief Executive"],
+      "r": {
+        "e": ["Bachelor's Degree", "Master's in Public Administration", "Law Degree"],
+        "exp": "10+ years",
+        "sk": ["Executive Leadership", "State Management", "Crisis Management"]
+      }
+    },
+    {
+      "id": "us-senator",
+      "t": "US Senator",
+      "l": "X",
+      "s": ["Federal Legislation", "National Policy", "Constituent Services", "Committee Leadership", "Public Speaking"],
+      "c": ["Political Science", "Public Policy"],
+      "sr": "$174,000+",
+      "te": "10+ years",
+      "d": "Elected representative in the US Senate, creating and voting on federal laws and representing state interests.",
+      "jt": ["US Senator", "Federal Legislator", "Senator"],
+      "r": {
+        "e": ["Bachelor's Degree", "Law Degree", "Political Science"],
+        "exp": "10+ years",
+        "sk": ["Federal Legislation", "National Policy", "Public Speaking"]
+      }
+    }
+  ]
+}

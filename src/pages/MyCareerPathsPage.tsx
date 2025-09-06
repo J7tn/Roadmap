@@ -1,6 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { bookmarkService, BookmarkedCareer } from "@/services/bookmarkService";
 import {
   Search,
   MapPin,
@@ -47,6 +48,28 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const MyCareerPathsPage = () => {
   const [activeTab, setActiveTab] = useState("my-career");
   const [searchQuery, setSearchQuery] = useState("");
+  const [bookmarkedCareers, setBookmarkedCareers] = useState<BookmarkedCareer[]>([]);
+  
+  // Load bookmarks and listen for updates
+  useEffect(() => {
+    const loadBookmarks = () => {
+      setBookmarkedCareers(bookmarkService.getAllBookmarks());
+    };
+    
+    // Load initial bookmarks
+    loadBookmarks();
+    
+    // Listen for bookmark updates
+    const handleBookmarkUpdate = () => {
+      loadBookmarks();
+    };
+    
+    window.addEventListener('bookmarksUpdated', handleBookmarkUpdate);
+    
+    return () => {
+      window.removeEventListener('bookmarksUpdated', handleBookmarkUpdate);
+    };
+  }, []);
   
   // State for saved assessments
   const [savedAssessments, setSavedAssessments] = useState(() => {
@@ -162,11 +185,11 @@ const MyCareerPathsPage = () => {
     path.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  // Filter career interests based on search
-  const filteredCareerInterests = careerInterests.filter(interest =>
-    interest.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    interest.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    interest.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))
+  // Filter bookmarked careers based on search
+  const filteredBookmarkedCareers = bookmarkedCareers.filter(bookmark =>
+    bookmark.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    bookmark.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    bookmark.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   // Filter assessments based on search
@@ -185,7 +208,7 @@ const MyCareerPathsPage = () => {
     >
       {/* Top Header - Fixed */}
       <motion.header 
-        className="border-b bg-background sticky top-0 z-50"
+        className="border-b bg-background sticky top-0 z-50 safe-area-top"
         variants={headerVariants}
       >
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -239,7 +262,7 @@ const MyCareerPathsPage = () => {
                 size="sm"
                 onClick={() => setActiveTab("career-interests")}
               >
-                Career Interests ({filteredCareerInterests.length})
+                Career Interests ({filteredBookmarkedCareers.length})
               </Button>
               <Button 
                 variant={activeTab === "my-assessments" ? "default" : "ghost"} 
@@ -368,17 +391,17 @@ const MyCareerPathsPage = () => {
 
             {/* Career Interests Tab */}
             <TabsContent value="career-interests" className="space-y-6">
-              {filteredCareerInterests.length === 0 ? (
+              {filteredBookmarkedCareers.length === 0 ? (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                   className="text-center py-12"
                 >
-                  <Lightbulb className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No career interests yet</h3>
+                  <Bookmark className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No bookmarked careers yet</h3>
                   <p className="text-muted-foreground mb-4">
-                    Save career types you're interested in exploring
+                    Bookmark careers you're interested in to see them here
                   </p>
                   <Button asChild>
                     <Link to="/categories">Explore Careers</Link>
@@ -386,9 +409,9 @@ const MyCareerPathsPage = () => {
                 </motion.div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredCareerInterests.map((interest, index) => (
+                  {filteredBookmarkedCareers.map((bookmark, index) => (
                     <motion.div
-                      key={interest.id}
+                      key={bookmark.id}
                       variants={itemVariants}
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
@@ -399,7 +422,7 @@ const MyCareerPathsPage = () => {
                           variant="ghost"
                           size="icon"
                           className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-100 hover:text-red-600"
-                          onClick={() => removeCareerInterest(interest.id)}
+                          onClick={() => bookmarkService.removeBookmark(bookmark.id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -407,32 +430,42 @@ const MyCareerPathsPage = () => {
                         <CardContent className="p-4 h-full flex flex-col">
                           {/* Header */}
                           <div className="text-center mb-4">
-                            <div className={`p-3 rounded-full ${interest.bgColor} mx-auto mb-3`}>
-                              <interest.icon className={`h-6 w-6 ${interest.color}`} />
+                            <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900 mx-auto mb-3">
+                              <Briefcase className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                             </div>
-                            <h3 className="font-semibold text-base mb-1">{interest.title}</h3>
+                            <h3 className="font-semibold text-base mb-1">{bookmark.title}</h3>
                             <Badge variant="outline" className="text-xs">
-                              {interest.category}
+                              {bookmark.category}
                             </Badge>
                           </div>
 
                           {/* Description */}
                           <p className="text-sm text-muted-foreground mb-4 flex-1 text-center">
-                            {interest.description}
+                            {bookmark.description}
                           </p>
+
+                          {/* Salary and Experience */}
+                          <div className="mb-4 text-center">
+                            <div className="text-sm font-medium text-green-600 dark:text-green-400 mb-1">
+                              {bookmark.salary}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {bookmark.experience}
+                            </div>
+                          </div>
 
                           {/* Skills */}
                           <div className="mb-4">
-                            <h4 className="text-xs font-medium mb-2 text-center">Skills to Learn</h4>
+                            <h4 className="text-xs font-medium mb-2 text-center">Key Skills</h4>
                             <div className="flex flex-wrap gap-1 justify-center">
-                              {interest.skills.slice(0, 3).map((skill, skillIndex) => (
+                              {bookmark.skills.slice(0, 3).map((skill, skillIndex) => (
                                 <Badge key={skillIndex} variant="outline" className="text-xs">
                                   {skill}
                                 </Badge>
                               ))}
-                              {interest.skills.length > 3 && (
+                              {bookmark.skills.length > 3 && (
                                 <Badge variant="outline" className="text-xs">
-                                  +{interest.skills.length - 3} more
+                                  +{bookmark.skills.length - 3} more
                                 </Badge>
                               )}
                             </div>
@@ -440,11 +473,13 @@ const MyCareerPathsPage = () => {
 
                           {/* Footer */}
                           <div className="text-center">
-                            <Badge className={getInterestColor(interest.interest)}>
-                              {interest.interest} Interest
-                            </Badge>
-                            <div className="text-xs text-muted-foreground mt-2">
-                              Saved {interest.savedDate}
+                            <Button asChild variant="outline" size="sm" className="w-full mb-2">
+                              <Link to={`/jobs/${bookmark.id}`}>
+                                View Details
+                              </Link>
+                            </Button>
+                            <div className="text-xs text-muted-foreground">
+                              Bookmarked {new Date(bookmark.bookmarkedAt).toLocaleDateString()}
                             </div>
                           </div>
                         </CardContent>

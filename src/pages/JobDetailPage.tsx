@@ -3,21 +3,39 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Home, Search, Target, BookOpen } from "lucide-react";
 import CareerDetailsContent from "@/components/CareerDetailsContent";
-import { getCareerNode } from "@/services/careerService";
-import { ICareerNode } from "@/types/career";
+import { getAllCareerNodes } from "@/services/careerService";
+import { ICareerNode, ICareerPath } from "@/types/career";
 
 const JobDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [career, setCareer] = useState<ICareerNode | null>(null);
+  const [careerPath, setCareerPath] = useState<ICareerPath | null>(null);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       if (!id) return;
       setLoading(true);
-      const node = await getCareerNode(id);
-      setCareer(node);
+      
+      try {
+        // Get all career nodes to find the path containing this node
+        const allNodes = await getAllCareerNodes();
+        const nodeWithPath = allNodes.find(item => item.node.id === id);
+        
+        if (nodeWithPath) {
+          setCareer(nodeWithPath.node);
+          setCareerPath(nodeWithPath.path);
+          
+          // Find the current node's index in the path
+          const index = nodeWithPath.path.nodes.findIndex(node => node.id === id);
+          setCurrentIndex(index);
+        }
+      } catch (error) {
+        console.error('Failed to load career data:', error);
+      }
+      
       setLoading(false);
     })();
   }, [id]);
@@ -25,7 +43,7 @@ const JobDetailPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation Header */}
-      <header className="border-b bg-background sticky top-0 z-50">
+      <header className="border-b bg-background sticky top-0 z-50 safe-area-top">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Button 
@@ -49,9 +67,18 @@ const JobDetailPage: React.FC = () => {
         </div>
       </header>
 
-      {!loading && career && (
+      {!loading && career && careerPath && (
         <div className="container mx-auto px-4 pb-12">
-          <CareerDetailsContent career={career} />
+          <CareerDetailsContent 
+            career={career} 
+            careerPath={careerPath}
+            currentIndex={currentIndex}
+            onNavigate={(newIndex) => {
+              if (careerPath.nodes[newIndex]) {
+                navigate(`/job/${careerPath.nodes[newIndex].id}`);
+              }
+            }}
+          />
         </div>
       )}
       {!loading && !career && (

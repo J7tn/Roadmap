@@ -63,20 +63,20 @@ DROP POLICY IF EXISTS "Allow public read access to careers" ON careers;
 CREATE POLICY "Allow public read access to careers" ON careers
     FOR SELECT USING (true);
 
--- Allow service role to manage careers (for chat2api)
+-- Allow service role to manage careers (for chat2api) - Optimized for performance
 DROP POLICY IF EXISTS "Allow service role to manage careers" ON careers;
 CREATE POLICY "Allow service role to manage careers" ON careers
-    FOR ALL USING (auth.role() = 'service_role');
+    FOR ALL USING ((select auth.role()) = 'service_role');
 
 -- Allow public read access to update log
 DROP POLICY IF EXISTS "Allow public read access to career_update_log" ON career_update_log;
 CREATE POLICY "Allow public read access to career_update_log" ON career_update_log
     FOR SELECT USING (true);
 
--- Allow service role to manage update log
+-- Allow service role to manage update log - Optimized for performance
 DROP POLICY IF EXISTS "Allow service role to manage career_update_log" ON career_update_log;
 CREATE POLICY "Allow service role to manage career_update_log" ON career_update_log
-    FOR ALL USING (auth.role() = 'service_role');
+    FOR ALL USING ((select auth.role()) = 'service_role');
 
 -- Insert some sample data
 INSERT INTO careers (
@@ -255,22 +255,22 @@ DROP POLICY IF EXISTS "Allow public read access to trending_update_log" ON trend
 CREATE POLICY "Allow public read access to trending_update_log" ON trending_update_log
     FOR SELECT USING (true);
 
--- Allow service role to manage trending data
+-- Allow service role to manage trending data - Optimized for performance
 DROP POLICY IF EXISTS "Allow service role to manage trending_skills" ON trending_skills;
 CREATE POLICY "Allow service role to manage trending_skills" ON trending_skills
-    FOR ALL USING (auth.role() = 'service_role');
+    FOR ALL USING ((select auth.role()) = 'service_role');
 
 DROP POLICY IF EXISTS "Allow service role to manage trending_industries" ON trending_industries;
 CREATE POLICY "Allow service role to manage trending_industries" ON trending_industries
-    FOR ALL USING (auth.role() = 'service_role');
+    FOR ALL USING ((select auth.role()) = 'service_role');
 
 DROP POLICY IF EXISTS "Allow service role to manage emerging_roles" ON emerging_roles;
 CREATE POLICY "Allow service role to manage emerging_roles" ON emerging_roles
-    FOR ALL USING (auth.role() = 'service_role');
+    FOR ALL USING ((select auth.role()) = 'service_role');
 
 DROP POLICY IF EXISTS "Allow service role to manage trending_update_log" ON trending_update_log;
 CREATE POLICY "Allow service role to manage trending_update_log" ON trending_update_log
-    FOR ALL USING (auth.role() = 'service_role');
+    FOR ALL USING ((select auth.role()) = 'service_role');
 
 -- Insert sample trending data
 INSERT INTO trending_skills (skill, demand, growth, salary, category, is_trending, is_declining) VALUES

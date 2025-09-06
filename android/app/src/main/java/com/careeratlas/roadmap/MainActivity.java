@@ -17,7 +17,7 @@ public class MainActivity extends BridgeActivity {
             android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         );
         
-        // Prevent system UI animations
+        // Enable edge-to-edge display and prevent system UI animations
         getWindow().setFlags(
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS

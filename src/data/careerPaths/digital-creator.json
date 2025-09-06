@@ -1,0 +1,151 @@
+{
+  "id": "digital-creator-careers",
+  "n": "Digital Creator Career Path",
+  "cat": "digital-creator",
+  "nodes": [
+    {
+      "id": "content-creator-beginner",
+      "t": "Content Creator (Beginner)",
+      "l": "E",
+      "s": ["Content Creation", "Social Media", "Basic Video Editing", "Photography", "Writing"],
+      "c": ["Social Media Marketing", "Content Creation Basics"],
+      "sr": "$20,000 - $35,000",
+      "te": "0-1 years",
+      "d": "Starting out as a content creator, learning the basics of social media and content production.",
+      "jt": ["Content Creator", "Social Media Creator", "Digital Creator"],
+      "r": {
+        "e": ["Self-taught", "Online courses", "Creative background"],
+        "exp": "0-1 years",
+        "sk": ["Content Creation", "Social Media", "Basic Editing"]
+      }
+    },
+    {
+      "id": "youtuber",
+      "t": "YouTuber",
+      "l": "I",
+      "s": ["Video Production", "YouTube SEO", "Audience Building", "Monetization", "Analytics"],
+      "c": ["YouTube Creator Academy", "Video Production"],
+      "sr": "$30,000 - $100,000+",
+      "te": "1-3 years",
+      "d": "Creates and publishes video content on YouTube, building an audience and monetizing through ads, sponsorships, and merchandise.",
+      "jt": ["YouTube Creator", "Video Content Creator", "Online Educator"],
+      "r": {
+        "e": ["Self-taught", "Video production courses", "Marketing knowledge"],
+        "exp": "1-3 years",
+        "sk": ["Video Editing", "YouTube SEO", "Audience Engagement", "Monetization"]
+      }
+    },
+    {
+      "id": "social-media-influencer",
+      "t": "Social Media Influencer",
+      "l": "I",
+      "s": ["Brand Partnerships", "Content Strategy", "Audience Engagement", "Photography", "Storytelling"],
+      "c": ["Influencer Marketing", "Social Media Strategy"],
+      "sr": "$25,000 - $150,000+",
+      "te": "1-2 years",
+      "d": "Builds a following on social media platforms and partners with brands for sponsored content and collaborations.",
+      "jt": ["Influencer", "Brand Ambassador", "Social Media Personality"],
+      "r": {
+        "e": ["Self-taught", "Marketing courses", "Photography skills"],
+        "exp": "1-2 years",
+        "sk": ["Social Media", "Brand Partnerships", "Content Creation", "Photography"]
+      }
+    },
+    {
+      "id": "blogger",
+      "t": "Blogger",
+      "l": "I",
+      "s": ["Writing", "SEO", "Content Marketing", "WordPress", "Analytics"],
+      "c": ["Content Writing", "SEO Certification"],
+      "sr": "$25,000 - $80,000",
+      "te": "1-3 years",
+      "d": "Creates written content for blogs, covering various topics and monetizing through ads, affiliate marketing, and sponsored posts.",
+      "jt": ["Blogger", "Content Writer", "Digital Writer"],
+      "r": {
+        "e": ["Writing background", "Journalism", "Self-taught"],
+        "exp": "1-3 years",
+        "sk": ["Writing", "SEO", "Content Strategy", "WordPress"]
+      }
+    },
+    {
+      "id": "podcaster",
+      "t": "Podcaster",
+      "l": "I",
+      "s": ["Audio Production", "Interviewing", "Storytelling", "Marketing", "Networking"],
+      "c": ["Audio Production", "Podcasting"],
+      "sr": "$30,000 - $100,000+",
+      "te": "1-2 years",
+      "d": "Creates and hosts podcast episodes, building an audience through audio content and monetizing through sponsorships and premium content.",
+      "jt": ["Podcast Host", "Audio Content Creator", "Radio Personality"],
+      "r": {
+        "e": ["Communication skills", "Audio production", "Self-taught"],
+        "exp": "1-2 years",
+        "sk": ["Audio Editing", "Interviewing", "Marketing", "Storytelling"]
+      }
+    },
+    {
+      "id": "digital-artist",
+      "t": "Digital Artist",
+      "l": "I",
+      "s": ["Digital Art", "Graphic Design", "Illustration", "Social Media", "Client Communication"],
+      "c": ["Digital Art", "Graphic Design"],
+      "sr": "$35,000 - $80,000",
+      "te": "2-4 years",
+      "d": "Creates digital artwork and illustrations, selling through online platforms, commissions, and merchandise.",
+      "jt": ["Digital Artist", "Freelance Illustrator", "Concept Artist"],
+      "r": {
+        "e": ["Art education", "Self-taught", "Design courses"],
+        "exp": "2-4 years",
+        "sk": ["Digital Art Software", "Illustration", "Client Communication", "Marketing"]
+      }
+    },
+    {
+      "id": "online-educator",
+      "t": "Online Educator",
+      "l": "A",
+      "s": ["Teaching", "Course Creation", "Video Production", "Marketing", "Student Engagement"],
+      "c": ["Online Teaching", "Course Creation"],
+      "sr": "$40,000 - $120,000+",
+      "te": "3-5 years",
+      "d": "Creates and sells online courses, teaching skills and knowledge through digital platforms and learning management systems.",
+      "jt": ["Online Instructor", "Course Creator", "Educational Content Creator"],
+      "r": {
+        "e": ["Subject expertise", "Teaching experience", "Online education"],
+        "exp": "3-5 years",
+        "sk": ["Teaching", "Course Development", "Video Production", "Marketing"]
+      }
+    },
+    {
+      "id": "digital-entrepreneur",
+      "t": "Digital Entrepreneur",
+      "l": "A",
+      "s": ["Business Strategy", "Digital Marketing", "Product Development", "Leadership", "Financial Management"],
+      "c": ["Entrepreneurship", "Digital Business"],
+      "sr": "$50,000 - $500,000+",
+      "te": "3-7 years",
+      "d": "Builds and runs digital businesses, creating products, services, or platforms that serve online audiences.",
+      "jt": ["Digital Entrepreneur", "Online Business Owner", "Startup Founder"],
+      "r": {
+        "e": ["Business education", "Entrepreneurship", "Self-taught"],
+        "exp": "3-7 years",
+        "sk": ["Business Strategy", "Digital Marketing", "Product Development", "Leadership"]
+      }
+    },
+    {
+      "id": "content-agency-owner",
+      "t": "Content Agency Owner",
+      "l": "X",
+      "s": ["Team Management", "Business Development", "Client Relations", "Strategy", "Scaling"],
+      "c": ["Business Management", "Agency Operations"],
+      "sr": "$100,000 - $1,000,000+",
+      "te": "5+ years",
+      "d": "Owns and operates a content creation agency, managing teams of creators and serving multiple clients with content strategies.",
+      "jt": ["Agency Owner", "Content Director", "Creative Director"],
+      "r": {
+        "e": ["Business degree", "Management experience", "Industry expertise"],
+        "exp": "5+ years",
+        "sk": ["Team Management", "Business Development", "Client Relations", "Strategy"]
+      }
+    }
+  ]
+}

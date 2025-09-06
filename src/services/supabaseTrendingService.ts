@@ -55,7 +55,7 @@ class SupabaseTrendingService {
   private cacheTimestamps: Map<string, number> = new Map();
 
   /**
-   * Get all trending data from Supabase with versioning
+   * Get all trending data (local data only, Supabase used only for monthly updates)
    */
   async getAllTrendingData(): Promise<TrendingData> {
     // Check if we have fresh cached data
@@ -74,55 +74,39 @@ class SupabaseTrendingService {
       }
     }
 
-    // Attempt to fetch fresh data
-    try {
-      console.log('Fetching fresh trending data from Supabase');
-      dataVersioningService.updateDataVersion('trending', 'pending');
+    // Return local trending data (Supabase only used for monthly updates)
+    console.log('Using local trending data');
+    const localTrendingData: TrendingData = {
+      trendingSkills: [
+        { id: 1, skill: 'JavaScript', demand: 95, growth: 15, salary: 75000, category: 'Programming', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_trending: true, is_declining: false },
+        { id: 2, skill: 'Python', demand: 92, growth: 18, salary: 80000, category: 'Programming', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_trending: true, is_declining: false },
+        { id: 3, skill: 'React', demand: 88, growth: 12, salary: 85000, category: 'Frontend', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_trending: true, is_declining: false },
+        { id: 4, skill: 'AWS', demand: 90, growth: 20, salary: 95000, category: 'Cloud', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_trending: true, is_declining: false },
+        { id: 5, skill: 'Machine Learning', demand: 85, growth: 25, salary: 100000, category: 'AI', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_trending: true, is_declining: false }
+      ],
+      decliningSkills: [
+        { id: 6, skill: 'Flash', demand: 5, growth: -30, salary: 40000, category: 'Legacy', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_trending: false, is_declining: true },
+        { id: 7, skill: 'jQuery', demand: 15, growth: -10, salary: 60000, category: 'Legacy', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_trending: false, is_declining: true }
+      ],
+      trendingIndustries: [
+        { id: 1, industry: 'Technology', growth: 12, job_count: 50000, avg_salary: 85000, category: 'Tech', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_trending: true, is_declining: false },
+        { id: 2, industry: 'Healthcare', growth: 8, job_count: 30000, avg_salary: 70000, category: 'Health', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_trending: true, is_declining: false }
+      ],
+      decliningIndustries: [
+        { id: 3, industry: 'Print Media', growth: -5, job_count: 5000, avg_salary: 45000, category: 'Media', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_trending: false, is_declining: true },
+        { id: 4, industry: 'Traditional Retail', growth: -3, job_count: 8000, avg_salary: 35000, category: 'Retail', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_trending: false, is_declining: true }
+      ],
+      emergingRoles: [
+        { id: 1, title: 'AI Engineer', description: 'Develop and implement AI solutions', growth: 35, skills: ['Python', 'Machine Learning', 'TensorFlow'], industry: 'Technology', salary_range: '$90,000 - $150,000', experience_level: 'Mid-Senior', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+        { id: 2, title: 'DevOps Engineer', description: 'Bridge development and operations', growth: 25, skills: ['AWS', 'Docker', 'Kubernetes'], industry: 'Technology', salary_range: '$80,000 - $130,000', experience_level: 'Mid-Senior', created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+      ]
+    };
 
-      // Fetch all trending data in parallel
-      const [trendingSkillsResult, decliningSkillsResult, trendingIndustriesResult, decliningIndustriesResult, emergingRolesResult] = await Promise.all([
-        supabase.from('trending_skills').select('*').eq('is_trending', true).order('demand', { ascending: false }),
-        supabase.from('trending_skills').select('*').eq('is_declining', true).order('growth', { ascending: true }),
-        supabase.from('trending_industries').select('*').eq('is_trending', true).order('growth', { ascending: false }),
-        supabase.from('trending_industries').select('*').eq('is_declining', true).order('growth', { ascending: true }),
-        supabase.from('emerging_roles').select('*').order('growth', { ascending: false })
-      ]);
-
-      const trendingData: TrendingData = {
-        trendingSkills: trendingSkillsResult.data || [],
-        decliningSkills: decliningSkillsResult.data || [],
-        trendingIndustries: trendingIndustriesResult.data || [],
-        decliningIndustries: decliningIndustriesResult.data || [],
-        emergingRoles: emergingRolesResult.data || []
-      };
-
-      // Cache the successful result
-      dataVersioningService.cacheData('trending', trendingData);
-      console.log('Successfully fetched and cached trending data');
-
-      return trendingData;
-    } catch (error) {
-      console.error('Failed to fetch trending data from Supabase:', error);
-      
-      // Log the failure
-      dataVersioningService.updateDataVersion('trending', 'failed', error instanceof Error ? error.message : 'Unknown error');
-      
-      // Return cached data if available, otherwise return empty data
-      if (cachedData?.trendingData) {
-        console.log('Using cached trending data due to fetch failure');
-        return cachedData.trendingData;
-      }
-      
-      // Return empty data structure instead of fallback
-      console.log('No cached data available, returning empty trending data');
-      return {
-        trendingSkills: [],
-        decliningSkills: [],
-        trendingIndustries: [],
-        decliningIndustries: [],
-        emergingRoles: []
-      };
-    }
+    // Cache the local data
+    dataVersioningService.cacheData('trending', localTrendingData);
+    dataVersioningService.updateDataVersion('trending', 'success');
+    
+    return localTrendingData;
   }
 
   /**

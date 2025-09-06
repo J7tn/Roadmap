@@ -167,6 +167,215 @@ export const INDUSTRY_CATEGORIES: IIndustryCategory[] = [
     growthRate: 'Low',
     globalDemand: 'medium',
     topCountries: ['US', 'UK', 'CA', 'AU', 'DE', 'NL', 'SE']
+  },
+  {
+    id: 'digital-creator',
+    name: 'Digital Creator',
+    icon: 'users',
+    description: 'Content creation, social media, and digital entrepreneurship',
+    jobCount: 25,
+    avgSalary: '$45,000',
+    growthRate: 'High',
+    globalDemand: 'high',
+    topCountries: ['US', 'UK', 'CA', 'AU', 'DE', 'NL', 'SE']
+  },
+  {
+    id: 'public-service',
+    name: 'Public Service',
+    icon: 'shield',
+    description: 'Government, politics, public administration, and civic service',
+    jobCount: 30,
+    avgSalary: '$65,000',
+    growthRate: 'Medium',
+    globalDemand: 'medium',
+    topCountries: ['US', 'CA', 'UK', 'AU', 'DE', 'NL', 'SE']
+  },
+  {
+    id: 'sanitation',
+    name: 'Sanitation & Maintenance',
+    icon: 'trash-2',
+    description: 'Waste management, cleaning services, and facility maintenance',
+    jobCount: 20,
+    avgSalary: '$40,000',
+    growthRate: 'Medium',
+    globalDemand: 'high',
+    topCountries: ['US', 'CA', 'UK', 'AU', 'DE', 'NL', 'SE']
+  },
+  {
+    id: 'military',
+    name: 'Military & Defense',
+    icon: 'shield-check',
+    description: 'Armed forces, defense contractors, and security services',
+    jobCount: 25,
+    avgSalary: '$55,000',
+    growthRate: 'Low',
+    globalDemand: 'medium',
+    topCountries: ['US', 'CA', 'UK', 'AU', 'DE', 'FR', 'NL']
+  },
+  {
+    id: 'music',
+    name: 'Music & Audio',
+    icon: 'music',
+    description: 'Music production, performance, audio engineering, and sound design',
+    jobCount: 20,
+    avgSalary: '$50,000',
+    growthRate: 'Medium',
+    globalDemand: 'medium',
+    topCountries: ['US', 'UK', 'CA', 'AU', 'DE', 'NL', 'SE']
+  },
+  {
+    id: 'gaming-casino',
+    name: 'Gaming & Casino',
+    icon: 'dice-6',
+    description: 'Casino operations, gaming development, and entertainment services',
+    jobCount: 15,
+    avgSalary: '$45,000',
+    growthRate: 'Medium',
+    globalDemand: 'medium',
+    topCountries: ['US', 'CA', 'AU', 'SG', 'NL', 'DE', 'UK']
+  },
+  {
+    id: 'transportation',
+    name: 'Transportation & Logistics',
+    icon: 'truck',
+    description: 'Shipping, delivery, logistics, and transportation services',
+    jobCount: 25,
+    avgSalary: '$50,000',
+    growthRate: 'High',
+    globalDemand: 'high',
+    topCountries: ['US', 'CA', 'UK', 'DE', 'NL', 'AU', 'SG']
+  },
+  {
+    id: 'retail',
+    name: 'Retail & Sales',
+    icon: 'shopping-cart',
+    description: 'Retail management, sales, customer service, and merchandising',
+    jobCount: 30,
+    avgSalary: '$45,000',
+    growthRate: 'Medium',
+    globalDemand: 'high',
+    topCountries: ['US', 'CA', 'UK', 'AU', 'DE', 'NL', 'SE']
+  },
+  {
+    id: 'agriculture',
+    name: 'Agriculture & Food',
+    icon: 'wheat',
+    description: 'Farming, food production, agricultural services, and food processing',
+    jobCount: 20,
+    avgSalary: '$40,000',
+    growthRate: 'Medium',
+    globalDemand: 'high',
+    topCountries: ['US', 'CA', 'AU', 'DE', 'NL', 'FR', 'UK']
+  },
+  {
+    id: 'construction',
+    name: 'Construction & Real Estate',
+    icon: 'hammer',
+    description: 'Building, construction, real estate, and property management',
+    jobCount: 25,
+    avgSalary: '$60,000',
+    growthRate: 'Medium',
+    globalDemand: 'high',
+    topCountries: ['US', 'CA', 'AU', 'DE', 'UK', 'NL', 'SE']
+  },
+  {
+    id: 'specialized-trades',
+    name: 'Specialized Trades',
+    icon: 'wrench',
+    description: 'Welding, rope access, specialized construction, and technical trades',
+    jobCount: 20,
+    avgSalary: '$55,000',
+    growthRate: 'High',
+    globalDemand: 'high',
+    topCountries: ['US', 'CA', 'AU', 'DE', 'UK', 'NL', 'SE']
+  },
+  {
+    id: 'drones-aviation',
+    name: 'Drones & Aviation',
+    icon: 'drone',
+    description: 'Drone operations, aviation technology, and unmanned systems',
+    jobCount: 15,
+    avgSalary: '$65,000',
+    growthRate: 'High',
+    globalDemand: 'high',
+    topCountries: ['US', 'CA', 'UK', 'AU', 'DE', 'NL', 'SE']
+  },
+  {
+    id: 'marine-science',
+    name: 'Marine Science',
+    icon: 'waves',
+    description: 'Marine biology, oceanography, and aquatic sciences',
+    jobCount: 12,
+    avgSalary: '$60,000',
+    growthRate: 'Medium',
+    globalDemand: 'medium',
+    topCountries: ['US', 'CA', 'AU', 'UK', 'DE', 'NL', 'SE']
+  },
+  {
+    id: 'investment-finance',
+    name: 'Investment & Finance',
+    icon: 'trending-up',
+    description: 'Stock trading, hedge funds, investment banking, and financial services',
+    jobCount: 18,
+    avgSalary: '$120,000',
+    growthRate: 'Medium',
+    globalDemand: 'high',
+    topCountries: ['US', 'UK', 'CH', 'SG', 'AE', 'DE', 'FR']
+  },
+  {
+    id: 'middle-management',
+    name: 'Middle Management',
+    icon: 'users-cog',
+    description: 'Department managers, team leaders, and operational management',
+    jobCount: 25,
+    avgSalary: '$75,000',
+    growthRate: 'Medium',
+    globalDemand: 'high',
+    topCountries: ['US', 'CA', 'UK', 'AU', 'DE', 'NL', 'SE']
+  },
+  {
+    id: 'real-estate',
+    name: 'Real Estate',
+    icon: 'home',
+    description: 'Real estate sales, property management, and real estate development',
+    jobCount: 20,
+    avgSalary: '$70,000',
+    growthRate: 'Medium',
+    globalDemand: 'high',
+    topCountries: ['US', 'CA', 'UK', 'AU', 'DE', 'NL', 'SE']
+  },
+  {
+    id: 'emerging-tech',
+    name: 'Emerging Technology',
+    icon: 'cpu',
+    description: 'AI, robotics, blockchain, and cutting-edge technology roles',
+    jobCount: 15,
+    avgSalary: '$95,000',
+    growthRate: 'High',
+    globalDemand: 'high',
+    topCountries: ['US', 'CA', 'UK', 'DE', 'NL', 'SG', 'AU']
+  },
+  {
+    id: 'environmental',
+    name: 'Environmental Science',
+    icon: 'leaf',
+    description: 'Environmental protection, conservation, and sustainability',
+    jobCount: 15,
+    avgSalary: '$55,000',
+    growthRate: 'High',
+    globalDemand: 'high',
+    topCountries: ['US', 'CA', 'UK', 'AU', 'DE', 'NL', 'SE']
+  },
+  {
+    id: 'space-aerospace',
+    name: 'Space & Aerospace',
+    icon: 'rocket',
+    description: 'Space exploration, aerospace engineering, and satellite technology',
+    jobCount: 12,
+    avgSalary: '$85,000',
+    growthRate: 'High',
+    globalDemand: 'medium',
+    topCountries: ['US', 'CA', 'UK', 'DE', 'FR', 'NL', 'SE']
   }
 ];
 

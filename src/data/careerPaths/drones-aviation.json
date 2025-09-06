@@ -1,0 +1,119 @@
+{
+  "id": "drones-aviation-careers",
+  "n": "Drones & Aviation Career Path",
+  "cat": "drones-aviation",
+  "nodes": [
+    {
+      "id": "drone-pilot-trainee",
+      "t": "Drone Pilot Trainee",
+      "l": "E",
+      "s": ["Basic Flight Operations", "Safety Procedures", "Equipment Handling", "Weather Assessment", "Navigation"],
+      "c": ["Part 107 License", "Basic Flight Training"],
+      "sr": "$35,000 - $50,000",
+      "te": "0-1 years",
+      "d": "Entry-level position learning drone operations and flight safety procedures.",
+      "jt": ["Drone Trainee", "UAS Operator", "Remote Pilot"],
+      "r": {
+        "e": ["High School Diploma", "Part 107 License", "Flight Training"],
+        "exp": "0-1 years",
+        "sk": ["Basic Flight Operations", "Safety Procedures", "Equipment Handling"]
+      }
+    },
+    {
+      "id": "drone-technician",
+      "t": "Drone Technician",
+      "l": "I",
+      "s": ["Drone Maintenance", "Electronics Repair", "Software Updates", "Equipment Testing", "Troubleshooting"],
+      "c": ["Electronics Certification", "Drone Maintenance"],
+      "sr": "$45,000 - $70,000",
+      "te": "2-4 years",
+      "d": "Technical specialist responsible for maintaining, repairing, and upgrading drone systems.",
+      "jt": ["Drone Tech", "UAS Technician", "Avionics Technician"],
+      "r": {
+        "e": ["Associate Degree", "Electronics Training", "Technical Certification"],
+        "exp": "2-4 years",
+        "sk": ["Drone Maintenance", "Electronics Repair", "Software Updates"]
+      }
+    },
+    {
+      "id": "commercial-drone-pilot",
+      "t": "Commercial Drone Pilot",
+      "l": "I",
+      "s": ["Advanced Flight Operations", "Mission Planning", "Data Collection", "Client Communication", "Regulatory Compliance"],
+      "c": ["Part 107 License", "Advanced Flight Training"],
+      "sr": "$50,000 - $80,000",
+      "te": "2-5 years",
+      "d": "Professional drone pilot providing commercial services including aerial photography, surveying, and inspection.",
+      "jt": ["Commercial Pilot", "Aerial Surveyor", "Drone Operator"],
+      "r": {
+        "e": ["Part 107 License", "Commercial Training", "Industry Experience"],
+        "exp": "2-5 years",
+        "sk": ["Advanced Flight Operations", "Mission Planning", "Data Collection"]
+      }
+    },
+    {
+      "id": "drone-instructor",
+      "t": "Drone Instructor",
+      "l": "A",
+      "s": ["Flight Training", "Curriculum Development", "Safety Management", "Student Assessment", "Regulatory Knowledge"],
+      "c": ["Flight Instructor Certification", "Training Development"],
+      "sr": "$60,000 - $90,000",
+      "te": "5-8 years",
+      "d": "Experienced pilot responsible for training new drone operators and developing training programs.",
+      "jt": ["Flight Instructor", "Training Coordinator", "Safety Manager"],
+      "r": {
+        "e": ["Flight Instructor Certification", "Advanced Training", "Teaching Experience"],
+        "exp": "5-8 years",
+        "sk": ["Flight Training", "Curriculum Development", "Safety Management"]
+      }
+    },
+    {
+      "id": "drone-program-manager",
+      "t": "Drone Program Manager",
+      "l": "A",
+      "s": ["Program Management", "Team Leadership", "Budget Management", "Strategic Planning", "Client Relations"],
+      "c": ["Project Management", "Aviation Management"],
+      "sr": "$70,000 - $110,000",
+      "te": "5-10 years",
+      "d": "Senior professional responsible for managing drone operations, teams, and strategic program development.",
+      "jt": ["Program Manager", "Operations Manager", "Fleet Manager"],
+      "r": {
+        "e": ["Bachelor's Degree", "Project Management", "Aviation Experience"],
+        "exp": "5-10 years",
+        "sk": ["Program Management", "Team Leadership", "Budget Management"]
+      }
+    },
+    {
+      "id": "aviation-engineer",
+      "t": "Aviation Engineer",
+      "l": "A",
+      "s": ["Aircraft Design", "Systems Engineering", "Testing", "Regulatory Compliance", "Technical Leadership"],
+      "c": ["Professional Engineering License", "Aviation Engineering"],
+      "sr": "$80,000 - $130,000",
+      "te": "6-12 years",
+      "d": "Engineering professional responsible for designing and developing aircraft and aviation systems.",
+      "jt": ["Aerospace Engineer", "Aviation Engineer", "Systems Engineer"],
+      "r": {
+        "e": ["Bachelor's in Engineering", "Professional License", "Aviation Experience"],
+        "exp": "6-12 years",
+        "sk": ["Aircraft Design", "Systems Engineering", "Testing"]
+      }
+    },
+    {
+      "id": "aviation-executive",
+      "t": "Aviation Executive",
+      "l": "X",
+      "s": ["Executive Leadership", "Strategic Planning", "Industry Relations", "Crisis Management", "Business Development"],
+      "c": ["MBA", "Aviation Management"],
+      "sr": "$120,000 - $300,000+",
+      "te": "15+ years",
+      "d": "Senior executive responsible for overall aviation operations, strategic planning, and business development.",
+      "jt": ["Aviation Executive", "VP of Operations", "Chief Operating Officer"],
+      "r": {
+        "e": ["Master's Degree", "Aviation Management", "Executive Experience"],
+        "exp": "15+ years",
+        "sk": ["Executive Leadership", "Strategic Planning", "Industry Relations"]
+      }
+    }
+  ]
+}

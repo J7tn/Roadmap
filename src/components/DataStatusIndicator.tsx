@@ -92,9 +92,11 @@ const DataStatusIndicator: React.FC<DataStatusIndicatorProps> = ({
     }
   };
 
+  // Only show "failed" if data is actually outdated (more than a month old)
   const overallStatus = dataStatus.trending.status === 'success' && dataStatus.careers.status === 'success' 
     ? 'success' 
-    : dataStatus.trending.status === 'failed' || dataStatus.careers.status === 'failed'
+    : (dataStatus.trending.status === 'failed' && dataStatus.trending.needsUpdate) || 
+      (dataStatus.careers.status === 'failed' && dataStatus.careers.needsUpdate)
     ? 'failed'
     : 'pending';
 
@@ -103,7 +105,9 @@ const DataStatusIndicator: React.FC<DataStatusIndicatorProps> = ({
       <div className={`flex items-center space-x-2 ${className}`}>
         {getStatusIcon(overallStatus)}
         <span className="text-sm text-muted-foreground">
-          Data {overallStatus === 'success' ? 'up to date' : overallStatus === 'failed' ? 'update failed' : 'updating...'}
+          {overallStatus === 'success' ? 'Data up to date' : 
+           overallStatus === 'failed' ? 'Data outdated' : 
+           'Updating data...'}
         </span>
       </div>
     );
@@ -149,6 +153,11 @@ const DataStatusIndicator: React.FC<DataStatusIndicatorProps> = ({
                 <Badge className={getStatusColor(dataStatus.trending.status || 'unknown')}>
                   {dataStatus.trending.status || 'Unknown'}
                 </Badge>
+                {dataStatus.trending.needsUpdate && (
+                  <Badge variant="outline" className="text-xs">
+                    Needs Update
+                  </Badge>
+                )}
                 <span className="text-xs text-muted-foreground">
                   {formatLastUpdated(dataStatus.trending.lastUpdated)}
                 </span>
@@ -165,6 +174,11 @@ const DataStatusIndicator: React.FC<DataStatusIndicatorProps> = ({
                 <Badge className={getStatusColor(dataStatus.careers.status || 'unknown')}>
                   {dataStatus.careers.status || 'Unknown'}
                 </Badge>
+                {dataStatus.careers.needsUpdate && (
+                  <Badge variant="outline" className="text-xs">
+                    Needs Update
+                  </Badge>
+                )}
                 <span className="text-xs text-muted-foreground">
                   {formatLastUpdated(dataStatus.careers.lastUpdated)}
                 </span>

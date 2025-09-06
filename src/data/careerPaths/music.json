@@ -1,0 +1,135 @@
+{
+  "id": "music-careers",
+  "n": "Music & Audio Career Path",
+  "cat": "music",
+  "nodes": [
+    {
+      "id": "music-student",
+      "t": "Music Student",
+      "l": "E",
+      "s": ["Music Theory", "Instrument Practice", "Performance", "Composition", "Music History"],
+      "c": ["Music Education", "Instrument Training"],
+      "sr": "$0 - $15,000",
+      "te": "0-2 years",
+      "d": "Learning the fundamentals of music through formal education and practice.",
+      "jt": ["Music Student", "Music Apprentice", "Trainee Musician"],
+      "r": {
+        "e": ["Music Education", "Private Lessons", "Self-taught"],
+        "exp": "0-2 years",
+        "sk": ["Music Theory", "Instrument Practice", "Performance"]
+      }
+    },
+    {
+      "id": "session-musician",
+      "t": "Session Musician",
+      "l": "I",
+      "s": ["Instrument Proficiency", "Music Reading", "Adaptability", "Studio Experience", "Collaboration"],
+      "c": ["Music Performance", "Studio Recording"],
+      "sr": "$30,000 - $60,000",
+      "te": "2-5 years",
+      "d": "Professional musician who performs in recording sessions for various artists and projects.",
+      "jt": ["Session Player", "Studio Musician", "Recording Artist"],
+      "r": {
+        "e": ["Music Education", "Performance Training", "Studio Experience"],
+        "exp": "2-5 years",
+        "sk": ["Instrument Proficiency", "Music Reading", "Studio Experience"]
+      }
+    },
+    {
+      "id": "music-producer",
+      "t": "Music Producer",
+      "l": "I",
+      "s": ["Music Production", "Audio Engineering", "Artist Development", "Project Management", "Creative Direction"],
+      "c": ["Music Production", "Audio Engineering"],
+      "sr": "$40,000 - $150,000+",
+      "te": "3-7 years",
+      "d": "Oversees the creation and production of musical recordings, working with artists to develop their sound.",
+      "jt": ["Record Producer", "Music Producer", "Executive Producer"],
+      "r": {
+        "e": ["Music Education", "Audio Engineering", "Production Training"],
+        "exp": "3-7 years",
+        "sk": ["Music Production", "Audio Engineering", "Artist Development"]
+      }
+    },
+    {
+      "id": "audio-engineer",
+      "t": "Audio Engineer",
+      "l": "I",
+      "s": ["Audio Technology", "Sound Mixing", "Recording Techniques", "Equipment Operation", "Problem Solving"],
+      "c": ["Audio Engineering", "Sound Technology"],
+      "sr": "$35,000 - $80,000",
+      "te": "2-6 years",
+      "d": "Technical specialist responsible for recording, mixing, and mastering audio for music and other media.",
+      "jt": ["Sound Engineer", "Recording Engineer", "Mix Engineer"],
+      "r": {
+        "e": ["Audio Engineering", "Sound Technology", "Technical Training"],
+        "exp": "2-6 years",
+        "sk": ["Audio Technology", "Sound Mixing", "Recording Techniques"]
+      }
+    },
+    {
+      "id": "performing-artist",
+      "t": "Performing Artist",
+      "l": "I",
+      "s": ["Live Performance", "Stage Presence", "Musicianship", "Audience Engagement", "Tour Management"],
+      "c": ["Performance Training", "Music Education"],
+      "sr": "$25,000 - $200,000+",
+      "te": "3-10 years",
+      "d": "Professional musician who performs live music for audiences, ranging from local venues to major concerts.",
+      "jt": ["Musician", "Performer", "Artist"],
+      "r": {
+        "e": ["Music Education", "Performance Training", "Self-taught"],
+        "exp": "3-10 years",
+        "sk": ["Live Performance", "Stage Presence", "Musicianship"]
+      }
+    },
+    {
+      "id": "composer",
+      "t": "Composer",
+      "l": "A",
+      "s": ["Music Composition", "Orchestration", "Music Theory", "Creative Writing", "Project Management"],
+      "c": ["Music Composition", "Music Theory"],
+      "sr": "$40,000 - $120,000",
+      "te": "5-10 years",
+      "d": "Creates original musical compositions for various media including film, television, games, and live performance.",
+      "jt": ["Composer", "Songwriter", "Music Arranger"],
+      "r": {
+        "e": ["Music Education", "Composition Training", "Music Theory"],
+        "exp": "5-10 years",
+        "sk": ["Music Composition", "Orchestration", "Music Theory"]
+      }
+    },
+    {
+      "id": "music-director",
+      "t": "Music Director",
+      "l": "A",
+      "s": ["Musical Direction", "Conducting", "Repertoire Selection", "Artist Management", "Budget Management"],
+      "c": ["Conducting", "Music Direction"],
+      "sr": "$60,000 - $150,000",
+      "te": "8-15 years",
+      "d": "Leads musical ensembles, selects repertoire, and oversees all aspects of musical performance and production.",
+      "jt": ["Conductor", "Music Director", "Artistic Director"],
+      "r": {
+        "e": ["Master's in Music", "Conducting Training", "Performance Experience"],
+        "exp": "8-15 years",
+        "sk": ["Musical Direction", "Conducting", "Repertoire Selection"]
+      }
+    },
+    {
+      "id": "record-label-executive",
+      "t": "Record Label Executive",
+      "l": "X",
+      "s": ["Business Strategy", "Artist Development", "Marketing", "Contract Negotiation", "Industry Relations"],
+      "c": ["Music Business", "Entertainment Law"],
+      "sr": "$100,000 - $500,000+",
+      "te": "10+ years",
+      "d": "Senior executive responsible for running record labels, managing artists, and making strategic business decisions.",
+      "jt": ["Label Executive", "A&R Director", "Music Executive"],
+      "r": {
+        "e": ["Bachelor's Degree", "Music Business", "MBA"],
+        "exp": "10+ years",
+        "sk": ["Business Strategy", "Artist Development", "Marketing"]
+      }
+    }
+  ]
+}

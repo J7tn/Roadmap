@@ -1,0 +1,135 @@
+{
+  "id": "gaming-casino-careers",
+  "n": "Gaming & Casino Career Path",
+  "cat": "gaming-casino",
+  "nodes": [
+    {
+      "id": "casino-dealer",
+      "t": "Casino Dealer",
+      "l": "E",
+      "s": ["Game Rules", "Customer Service", "Math Skills", "Hand Coordination", "Stress Management"],
+      "c": ["Casino Dealer Training", "Gaming License"],
+      "sr": "$25,000 - $45,000",
+      "te": "0-1 years",
+      "d": "Operates casino games, deals cards, and manages game play while providing customer service.",
+      "jt": ["Dealer", "Croupier", "Game Operator"],
+      "r": {
+        "e": ["High School Diploma", "Casino Training"],
+        "exp": "0-1 years",
+        "sk": ["Game Rules", "Customer Service", "Math Skills"]
+      }
+    },
+    {
+      "id": "slot-technician",
+      "t": "Slot Technician",
+      "l": "E",
+      "s": ["Electronics Repair", "Troubleshooting", "Preventive Maintenance", "Customer Service", "Safety Procedures"],
+      "c": ["Electronics Training", "Gaming License"],
+      "sr": "$30,000 - $50,000",
+      "te": "1-3 years",
+      "d": "Maintains and repairs slot machines and electronic gaming equipment.",
+      "jt": ["Slot Tech", "Gaming Technician", "Electronics Technician"],
+      "r": {
+        "e": ["High School Diploma", "Electronics Training", "Technical Certification"],
+        "exp": "1-3 years",
+        "sk": ["Electronics Repair", "Troubleshooting", "Preventive Maintenance"]
+      }
+    },
+    {
+      "id": "casino-security",
+      "t": "Casino Security",
+      "l": "E",
+      "s": ["Surveillance", "Security Procedures", "Conflict Resolution", "Emergency Response", "Customer Service"],
+      "c": ["Security Training", "Gaming License"],
+      "sr": "$35,000 - $55,000",
+      "te": "1-3 years",
+      "d": "Maintains security and safety in casino environments, monitors for suspicious activity and ensures compliance.",
+      "jt": ["Security Officer", "Surveillance Operator", "Casino Guard"],
+      "r": {
+        "e": ["High School Diploma", "Security Training", "Gaming License"],
+        "exp": "1-3 years",
+        "sk": ["Surveillance", "Security Procedures", "Conflict Resolution"]
+      }
+    },
+    {
+      "id": "pit-boss",
+      "t": "Pit Boss",
+      "l": "I",
+      "s": ["Game Management", "Staff Supervision", "Customer Relations", "Compliance", "Problem Solving"],
+      "c": ["Gaming Management", "Supervisory Training"],
+      "sr": "$45,000 - $70,000",
+      "te": "3-5 years",
+      "d": "Supervises casino floor operations, manages dealers, and ensures game integrity and customer satisfaction.",
+      "jt": ["Pit Manager", "Floor Supervisor", "Game Supervisor"],
+      "r": {
+        "e": ["High School Diploma", "Gaming Experience", "Management Training"],
+        "exp": "3-5 years",
+        "sk": ["Game Management", "Staff Supervision", "Customer Relations"]
+      }
+    },
+    {
+      "id": "casino-marketing",
+      "t": "Casino Marketing Specialist",
+      "l": "I",
+      "s": ["Marketing Strategy", "Customer Analytics", "Event Planning", "Promotions", "Digital Marketing"],
+      "c": ["Marketing", "Hospitality Management"],
+      "sr": "$40,000 - $70,000",
+      "te": "3-6 years",
+      "d": "Develops and implements marketing strategies to attract and retain casino customers.",
+      "jt": ["Marketing Coordinator", "Promotions Manager", "Customer Development"],
+      "r": {
+        "e": ["Bachelor's Degree", "Marketing", "Hospitality"],
+        "exp": "3-6 years",
+        "sk": ["Marketing Strategy", "Customer Analytics", "Event Planning"]
+      }
+    },
+    {
+      "id": "casino-manager",
+      "t": "Casino Manager",
+      "l": "A",
+      "s": ["Operations Management", "Staff Leadership", "Financial Management", "Regulatory Compliance", "Strategic Planning"],
+      "c": ["Casino Management", "Hospitality Management"],
+      "sr": "$60,000 - $120,000",
+      "te": "5-10 years",
+      "d": "Oversees all aspects of casino operations, manages staff, and ensures profitability and compliance.",
+      "jt": ["Casino Manager", "Operations Manager", "General Manager"],
+      "r": {
+        "e": ["Bachelor's Degree", "Casino Management", "Hospitality Management"],
+        "exp": "5-10 years",
+        "sk": ["Operations Management", "Staff Leadership", "Financial Management"]
+      }
+    },
+    {
+      "id": "gaming-developer",
+      "t": "Gaming Developer",
+      "l": "A",
+      "s": ["Game Development", "Programming", "Game Design", "Mathematics", "Problem Solving"],
+      "c": ["Computer Science", "Game Development"],
+      "sr": "$70,000 - $150,000",
+      "te": "5-10 years",
+      "d": "Creates and develops casino games, slot machines, and gaming software for the gaming industry.",
+      "jt": ["Game Developer", "Software Engineer", "Game Designer"],
+      "r": {
+        "e": ["Bachelor's Degree", "Computer Science", "Game Development"],
+        "exp": "5-10 years",
+        "sk": ["Game Development", "Programming", "Game Design"]
+      }
+    },
+    {
+      "id": "casino-executive",
+      "t": "Casino Executive",
+      "l": "X",
+      "s": ["Executive Leadership", "Strategic Planning", "Financial Management", "Industry Relations", "Crisis Management"],
+      "c": ["Business Administration", "Hospitality Management"],
+      "sr": "$150,000 - $500,000+",
+      "te": "10+ years",
+      "d": "Senior executive responsible for overall casino operations, strategic planning, and business development.",
+      "jt": ["Casino Executive", "VP of Operations", "Chief Operating Officer"],
+      "r": {
+        "e": ["Master's Degree", "Business Administration", "Hospitality Management"],
+        "exp": "10+ years",
+        "sk": ["Executive Leadership", "Strategic Planning", "Financial Management"]
+      }
+    }
+  ]
+}

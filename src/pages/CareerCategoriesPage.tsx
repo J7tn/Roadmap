@@ -41,6 +41,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CategorySelector from "@/components/CategorySelector";
 import CareerRoadmap from "@/components/CareerRoadmap";
 import { useCareerData } from "@/hooks/useCareerData";
+import { INDUSTRY_CATEGORIES } from "@/data/industries";
 
 const CareerCategoriesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -48,7 +49,7 @@ const CareerCategoriesPage = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
   
-  const { useOptimizedSearch } = useCareerData();
+  const { useOptimizedSearch, error, loading } = useCareerData();
   const { data: searchResults } = useOptimizedSearch(searchQuery, {});
 
   // Generate search suggestions based on what user types
@@ -138,17 +139,68 @@ const CareerCategoriesPage = () => {
     }
   };
 
-  return (
-    <motion.div 
-      className="min-h-screen bg-background flex flex-col"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
+  // Add loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center p-6">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading career categories...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Add error handling with fallback
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-6">
+          <div className="text-center mb-8">
+            <h2 className="text-xl font-semibold mb-2">Error Loading Categories</h2>
+            <p className="text-muted-foreground mb-4">{error}</p>
+            <Button onClick={() => window.location.reload()}>
+              Try Again
+            </Button>
+          </div>
+          
+          {/* Fallback: Show industries directly */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {INDUSTRY_CATEGORIES.map((industry) => (
+              <Card key={industry.id} className="hover:shadow-lg transition-shadow">
+                <CardContent className="p-4">
+                  <h3 className="font-semibold mb-2">{industry.name}</h3>
+                  <p className="text-sm text-muted-foreground mb-3">{industry.description}</p>
+                  <div className="flex justify-between items-center">
+                    <Badge variant="outline">{industry.jobCount} jobs</Badge>
+                    <Button asChild size="sm">
+                      <Link to={`/category/${industry.id}`}>
+                        Explore
+                      </Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Wrap the main content in a try-catch to prevent crashes
+  try {
+    return (
+      <motion.div 
+        className="min-h-screen bg-background flex flex-col"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
       {/* Main Content Area - Scrollable */}
       <main className="flex-1 overflow-y-auto">
         {/* Career Categories Content */}
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-4 py-6 safe-area-top">
           {/* Hero Section */}
           <motion.div 
             className="text-center mb-8"
@@ -325,6 +377,20 @@ const CareerCategoriesPage = () => {
               </nav>
     </motion.div>
   );
+  } catch (error) {
+    // Fallback error handling
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center p-6">
+          <h2 className="text-xl font-semibold mb-2">Something went wrong</h2>
+          <p className="text-muted-foreground mb-4">Please try refreshing the page</p>
+          <Button onClick={() => window.location.reload()}>
+            Refresh Page
+          </Button>
+        </div>
+      </div>
+    );
+  }
 };
 
 export default CareerCategoriesPage;

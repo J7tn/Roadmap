@@ -7,7 +7,7 @@ import { DollarSign, Clock, MapPin, Briefcase, ArrowLeft, Home, Search, Target, 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getAllCareerNodes } from "@/services/careerService";
-import { supabaseCareerService, SupabaseCareerData } from "@/services/supabaseCareerService";
+import { unifiedCareerService } from "@/services/unifiedCareerService";
 import { ICareerNode, CareerLevel, ICareerPath } from "@/types/career";
 
 const getLevelBadgeColor = (level: CareerLevel): string => {
@@ -34,7 +34,6 @@ const AllJobsPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [items, setItems] = useState<Array<{ node: ICareerNode; path: ICareerPath }>>([]);
-  const [supabaseCareers, setSupabaseCareers] = useState<SupabaseCareerData[]>([]);
   const [filteredItems, setFilteredItems] = useState<Array<{ node: ICareerNode; path: ICareerPath }>>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -46,28 +45,12 @@ const AllJobsPage: React.FC = () => {
     (async () => {
       setLoading(true);
       try {
-        // Try to get careers from Supabase first
-        const supabaseData = await supabaseCareerService.getAllCareers();
-        if (supabaseData.length > 0) {
-          setSupabaseCareers(supabaseData);
-          // Convert Supabase careers to the expected format
-          const convertedItems = supabaseData.map(career => ({
-            node: supabaseCareerService.convertToCareerNode(career),
-            path: {
-              id: career.id,
-              n: career.title,
-              cat: career.industry,
-              nodes: [supabaseCareerService.convertToCareerNode(career)]
-            } as ICareerPath
-          }));
-          setItems(convertedItems);
-        } else {
-          // No data available, set empty items
-          setItems([]);
-        }
+        // Use unified service which automatically falls back to local data
+        const allNodes = await getAllCareerNodes();
+        setItems(allNodes);
+        console.log('Loaded career data:', allNodes.length, 'items');
       } catch (error) {
-        console.warn('Failed to load careers from Supabase:', error);
-        // Set empty items instead of fallback
+        console.error('Failed to load career data:', error);
         setItems([]);
       }
       setLoading(false);
@@ -86,41 +69,93 @@ const AllJobsPage: React.FC = () => {
       return;
     }
 
-    // If we have Supabase careers, use the Supabase search
-    if (supabaseCareers.length > 0) {
-      (async () => {
-        try {
-          const searchResult = await supabaseCareerService.searchCareers(searchQuery);
-          const convertedItems = searchResult.careers.map(career => ({
-            node: supabaseCareerService.convertToCareerNode(career),
-            path: {
-              id: career.id,
-              n: career.title,
-              cat: career.industry,
-              nodes: [supabaseCareerService.convertToCareerNode(career)]
-            } as ICareerPath
-          }));
-          setFilteredItems(convertedItems);
-        } catch (error) {
-          console.warn('Supabase search failed:', error);
-          // Set empty results instead of fallback
-          setFilteredItems([]);
+    // Use local filtering for all data (unified service handles fallback)
+    const query = searchQuery.toLowerCase().trim();
+    console.log('Searching for:', query, 'in', items.length, 'items');
+    
+    const filtered = items.filter(({ node, path }) => {
+      // Search in title
+      if (node.t?.toLowerCase().includes(query)) {
+        console.log('Match in title:', node.t);
+        return true;
+      }
+      
+      // Search in description
+      if (node.d?.toLowerCase().includes(query)) {
+        console.log('Match in description:', node.t);
+        return true;
+      }
+      
+      // Search in skills (more flexible matching)
+      if (node.s && node.s.some(skill => {
+        const skillLower = skill.toLowerCase();
+        const queryLower = query.toLowerCase();
+        
+        // Exact match
+        if (skillLower === queryLower) return true;
+        
+        // Contains match
+        if (skillLower.includes(queryLower)) return true;
+        
+        // Split by common separators and check each part
+        const skillParts = skillLower.split(/[\/\s\-&,]+/).map(part => part.trim()).filter(part => part.length > 0);
+        const queryParts = queryLower.split(/[\/\s\-&,]+/).map(part => part.trim()).filter(part => part.length > 0);
+        
+        // Check if any skill part contains any query part
+        const matches = skillParts.some(skillPart => 
+          queryParts.some(queryPart => skillPart.includes(queryPart) || queryPart.includes(skillPart))
+        );
+        
+        if (matches) {
+          console.log('Match in skills:', node.t, 'skill:', skill, 'query:', query);
         }
-      })();
-    } else {
-      // Use local filtering for hardcoded data
-      const query = searchQuery.toLowerCase().trim();
-      const filtered = items.filter(({ node, path }) => {
-        if (node.t?.toLowerCase().includes(query)) return true;
-        if (node.d?.toLowerCase().includes(query)) return true;
-        if (node.s && node.s.some(skill => skill.toLowerCase().includes(query))) return true;
-        if (node.jt && node.jt.some(title => title.toLowerCase().includes(query))) return true;
-        if (path.cat?.toLowerCase().includes(query)) return true;
-        return false;
-      });
-      setFilteredItems(filtered);
-    }
-  }, [items, searchQuery, supabaseCareers]);
+        return matches;
+      })) return true;
+      
+      // Search in job titles
+      if (node.jt && node.jt.some(title => title.toLowerCase().includes(query))) {
+        console.log('Match in job titles:', node.t);
+        return true;
+      }
+      
+      // Search in category
+      if (path.cat?.toLowerCase().includes(query)) {
+        console.log('Match in category:', node.t);
+        return true;
+      }
+      
+      // Search in requirements skills (with improved matching)
+      if (node.r?.sk && node.r.sk.some(skill => {
+        const skillLower = skill.toLowerCase();
+        const queryLower = query.toLowerCase();
+        
+        // Exact match
+        if (skillLower === queryLower) return true;
+        
+        // Contains match
+        if (skillLower.includes(queryLower)) return true;
+        
+        // Split by common separators and check each part
+        const skillParts = skillLower.split(/[\/\s\-&,]+/).map(part => part.trim()).filter(part => part.length > 0);
+        const queryParts = queryLower.split(/[\/\s\-&,]+/).map(part => part.trim()).filter(part => part.length > 0);
+        
+        // Check if any skill part contains any query part
+        const matches = skillParts.some(skillPart => 
+          queryParts.some(queryPart => skillPart.includes(queryPart) || queryPart.includes(skillPart))
+        );
+        
+        if (matches) {
+          console.log('Match in requirements skills:', node.t, 'skill:', skill, 'query:', query);
+        }
+        return matches;
+      })) return true;
+      
+      return false;
+    });
+    
+    console.log('Filtered results:', filtered.length, 'out of', items.length);
+    setFilteredItems(filtered);
+  }, [items, searchQuery]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -191,7 +226,7 @@ const AllJobsPage: React.FC = () => {
     >
       {/* Navigation Header */}
       <motion.header 
-        className="border-b bg-background sticky top-0 z-50"
+        className="border-b bg-background sticky top-0 z-50 safe-area-top"
         variants={headerVariants}
       >
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">

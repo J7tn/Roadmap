@@ -19,6 +19,18 @@ import nonprofitCareers from '@/data/careerPaths/nonprofit.json';
 import tradesCareers from '@/data/careerPaths/trades.json';
 import hospitalityCareers from '@/data/careerPaths/hospitality.json';
 import mediaCareers from '@/data/careerPaths/media.json';
+import digitalCreatorCareers from '@/data/careerPaths/digital-creator.json';
+import dronesAviationCareers from '@/data/careerPaths/drones-aviation.json';
+import gamingCasinoCareers from '@/data/careerPaths/gaming-casino.json';
+import investmentFinanceCareers from '@/data/careerPaths/investment-finance.json';
+import marineScienceCareers from '@/data/careerPaths/marine-science.json';
+import middleManagementCareers from '@/data/careerPaths/middle-management.json';
+import militaryCareers from '@/data/careerPaths/military.json';
+import musicCareers from '@/data/careerPaths/music.json';
+import publicServiceCareers from '@/data/careerPaths/public-service.json';
+import realEstateCareers from '@/data/careerPaths/real-estate.json';
+import sanitationCareers from '@/data/careerPaths/sanitation.json';
+import specializedTradesCareers from '@/data/careerPaths/specialized-trades.json';
 
 // Data mapping for efficient loading
 const CAREER_PATH_DATA: Record<string, ICareerPath> = {
@@ -40,23 +52,35 @@ const CAREER_PATH_DATA: Record<string, ICareerPath> = {
   'trades-careers': tradesCareers as ICareerPath,
   'hospitality-careers': hospitalityCareers as ICareerPath,
   'media-careers': mediaCareers as ICareerPath,
+  'digital-creator-careers': digitalCreatorCareers as ICareerPath,
+  'drones-aviation-careers': dronesAviationCareers as ICareerPath,
+  'gaming-casino-careers': gamingCasinoCareers as ICareerPath,
+  'investment-finance-careers': investmentFinanceCareers as ICareerPath,
+  'marine-science-careers': marineScienceCareers as ICareerPath,
+  'middle-management-careers': middleManagementCareers as ICareerPath,
+  'military-careers': militaryCareers as ICareerPath,
+  'music-careers': musicCareers as ICareerPath,
+  'public-service-careers': publicServiceCareers as ICareerPath,
+  'real-estate-careers': realEstateCareers as ICareerPath,
+  'sanitation-careers': sanitationCareers as ICareerPath,
+  'specialized-trades-careers': specializedTradesCareers as ICareerPath,
 };
 
 // Industry to career paths mapping - expanded to include multiple paths per industry
 const INDUSTRY_CAREER_PATHS: Record<IndustryCategory, string[]> = {
-  tech: ['software-development', 'global-software-development', 'cybersecurity-careers', 'data-science-careers'],
+  tech: ['software-development', 'global-software-development', 'cybersecurity-careers', 'data-science-careers', 'digital-creator-careers', 'gaming-casino-careers'],
   healthcare: ['nursing-career-path'],
-  business: ['business-management-path'],
-  finance: ['finance-analyst-path'],
+  business: ['business-management-path', 'middle-management-careers'],
+  finance: ['finance-analyst-path', 'investment-finance-careers', 'real-estate-careers'],
   marketing: ['marketing-careers'],
   education: ['education-careers'],
-  creative: ['creative-careers'],
-  engineering: ['engineering-careers'],
-  science: ['science-careers'],
+  creative: ['creative-careers', 'music-careers'],
+  engineering: ['engineering-careers', 'specialized-trades-careers'],
+  science: ['science-careers', 'marine-science-careers'],
   legal: ['legal-careers'],
-  government: ['government-careers'],
+  government: ['government-careers', 'public-service-careers', 'military-careers'],
   nonprofit: ['nonprofit-careers'],
-  trades: ['trades-careers'],
+  trades: ['trades-careers', 'sanitation-careers'],
   hospitality: ['hospitality-careers'],
   media: ['media-careers'],
 };

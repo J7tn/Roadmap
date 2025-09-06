@@ -1,0 +1,119 @@
+{
+  "id": "sanitation-careers",
+  "n": "Sanitation & Maintenance Career Path",
+  "cat": "sanitation",
+  "nodes": [
+    {
+      "id": "janitor",
+      "t": "Janitor",
+      "l": "E",
+      "s": ["Cleaning", "Maintenance", "Equipment Operation", "Safety Procedures", "Time Management"],
+      "c": ["Cleaning Certification", "Safety Training"],
+      "sr": "$25,000 - $35,000",
+      "te": "0-1 years",
+      "d": "Maintains cleanliness and basic maintenance of buildings and facilities.",
+      "jt": ["Custodian", "Cleaner", "Maintenance Worker"],
+      "r": {
+        "e": ["High School Diploma", "On-the-job training"],
+        "exp": "0-1 years",
+        "sk": ["Cleaning", "Basic Maintenance", "Safety Procedures"]
+      }
+    },
+    {
+      "id": "street-cleaner",
+      "t": "Street Cleaner",
+      "l": "E",
+      "s": ["Equipment Operation", "Safety Procedures", "Route Planning", "Public Service", "Physical Fitness"],
+      "c": ["Commercial Driver's License", "Safety Training"],
+      "sr": "$30,000 - $40,000",
+      "te": "0-2 years",
+      "d": "Maintains cleanliness of streets, sidewalks, and public areas using specialized equipment.",
+      "jt": ["Street Sweeper", "Public Works Worker", "Sanitation Worker"],
+      "r": {
+        "e": ["High School Diploma", "CDL License"],
+        "exp": "0-2 years",
+        "sk": ["Equipment Operation", "Safety Procedures", "Route Planning"]
+      }
+    },
+    {
+      "id": "garbage-collector",
+      "t": "Garbage Collector",
+      "l": "E",
+      "s": ["Equipment Operation", "Physical Fitness", "Safety Procedures", "Route Management", "Customer Service"],
+      "c": ["Commercial Driver's License", "Safety Training"],
+      "sr": "$35,000 - $50,000",
+      "te": "0-2 years",
+      "d": "Collects and transports waste materials from residential and commercial areas.",
+      "jt": ["Waste Collector", "Sanitation Worker", "Refuse Collector"],
+      "r": {
+        "e": ["High School Diploma", "CDL License"],
+        "exp": "0-2 years",
+        "sk": ["Equipment Operation", "Physical Fitness", "Safety Procedures"]
+      }
+    },
+    {
+      "id": "maintenance-supervisor",
+      "t": "Maintenance Supervisor",
+      "l": "I",
+      "s": ["Team Management", "Maintenance Planning", "Equipment Repair", "Safety Management", "Budget Management"],
+      "c": ["Maintenance Management", "Safety Certification"],
+      "sr": "$45,000 - $65,000",
+      "te": "3-5 years",
+      "d": "Supervises maintenance teams and coordinates facility upkeep and repair operations.",
+      "jt": ["Maintenance Supervisor", "Facility Manager", "Maintenance Coordinator"],
+      "r": {
+        "e": ["High School Diploma", "Technical Training", "Management Experience"],
+        "exp": "3-5 years",
+        "sk": ["Team Management", "Maintenance Planning", "Equipment Repair"]
+      }
+    },
+    {
+      "id": "waste-management-specialist",
+      "t": "Waste Management Specialist",
+      "l": "I",
+      "s": ["Waste Processing", "Environmental Compliance", "Equipment Operation", "Safety Management", "Process Optimization"],
+      "c": ["Environmental Certification", "Waste Management"],
+      "sr": "$50,000 - $70,000",
+      "te": "3-5 years",
+      "d": "Manages waste processing operations and ensures environmental compliance in waste handling.",
+      "jt": ["Waste Specialist", "Environmental Technician", "Processing Supervisor"],
+      "r": {
+        "e": ["Associate Degree", "Environmental Science", "Technical Training"],
+        "exp": "3-5 years",
+        "sk": ["Waste Processing", "Environmental Compliance", "Equipment Operation"]
+      }
+    },
+    {
+      "id": "facility-manager",
+      "t": "Facility Manager",
+      "l": "A",
+      "s": ["Facility Management", "Budget Planning", "Vendor Management", "Compliance", "Strategic Planning"],
+      "c": ["Facility Management", "Project Management"],
+      "sr": "$60,000 - $90,000",
+      "te": "5-8 years",
+      "d": "Oversees all aspects of facility operations, maintenance, and management for large buildings or complexes.",
+      "jt": ["Facility Manager", "Building Manager", "Operations Manager"],
+      "r": {
+        "e": ["Bachelor's Degree", "Facility Management", "Business Administration"],
+        "exp": "5-8 years",
+        "sk": ["Facility Management", "Budget Planning", "Vendor Management"]
+      }
+    },
+    {
+      "id": "environmental-manager",
+      "t": "Environmental Manager",
+      "l": "A",
+      "s": ["Environmental Compliance", "Waste Management", "Sustainability", "Regulatory Affairs", "Team Leadership"],
+      "c": ["Environmental Management", "Sustainability"],
+      "sr": "$70,000 - $100,000",
+      "te": "5-10 years",
+      "d": "Manages environmental programs, ensures compliance with regulations, and implements sustainability initiatives.",
+      "jt": ["Environmental Manager", "Sustainability Manager", "Compliance Manager"],
+      "r": {
+        "e": ["Bachelor's Degree", "Environmental Science", "Master's in Environmental Management"],
+        "exp": "5-10 years",
+        "sk": ["Environmental Compliance", "Waste Management", "Sustainability"]
+      }
+    }
+  ]
+}

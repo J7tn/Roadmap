@@ -1,0 +1,119 @@
+{
+  "id": "marine-science-careers",
+  "n": "Marine Science Career Path",
+  "cat": "marine-science",
+  "nodes": [
+    {
+      "id": "marine-biology-student",
+      "t": "Marine Biology Student",
+      "l": "E",
+      "s": ["Marine Biology", "Research Methods", "Data Collection", "Laboratory Skills", "Field Work"],
+      "c": ["Marine Biology Education", "Research Training"],
+      "sr": "$0 - $25,000",
+      "te": "0-2 years",
+      "d": "Student learning marine biology fundamentals through education and research experience.",
+      "jt": ["Research Assistant", "Field Assistant", "Lab Technician"],
+      "r": {
+        "e": ["Marine Biology Education", "Research Training", "Field Experience"],
+        "exp": "0-2 years",
+        "sk": ["Marine Biology", "Research Methods", "Data Collection"]
+      }
+    },
+    {
+      "id": "marine-biologist",
+      "t": "Marine Biologist",
+      "l": "I",
+      "s": ["Marine Research", "Species Identification", "Data Analysis", "Field Work", "Scientific Writing"],
+      "c": ["Marine Biology Degree", "Research Certification"],
+      "sr": "$45,000 - $70,000",
+      "te": "2-5 years",
+      "d": "Scientist studying marine organisms, ecosystems, and ocean environments through research and field work.",
+      "jt": ["Marine Biologist", "Research Scientist", "Field Biologist"],
+      "r": {
+        "e": ["Bachelor's in Marine Biology", "Research Experience", "Field Training"],
+        "exp": "2-5 years",
+        "sk": ["Marine Research", "Species Identification", "Data Analysis"]
+      }
+    },
+    {
+      "id": "oceanographer",
+      "t": "Oceanographer",
+      "l": "I",
+      "s": ["Ocean Science", "Data Collection", "Research Analysis", "Equipment Operation", "Scientific Communication"],
+      "c": ["Oceanography Degree", "Research Certification"],
+      "sr": "$50,000 - $80,000",
+      "te": "3-6 years",
+      "d": "Scientist studying ocean physics, chemistry, geology, and biology to understand ocean systems.",
+      "jt": ["Oceanographer", "Marine Scientist", "Research Oceanographer"],
+      "r": {
+        "e": ["Bachelor's in Oceanography", "Research Experience", "Field Training"],
+        "exp": "3-6 years",
+        "sk": ["Ocean Science", "Data Collection", "Research Analysis"]
+      }
+    },
+    {
+      "id": "marine-conservationist",
+      "t": "Marine Conservationist",
+      "l": "A",
+      "s": ["Conservation Biology", "Policy Development", "Environmental Advocacy", "Project Management", "Public Education"],
+      "c": ["Conservation Biology", "Environmental Policy"],
+      "sr": "$55,000 - $85,000",
+      "te": "5-8 years",
+      "d": "Professional focused on protecting marine ecosystems and developing conservation strategies.",
+      "jt": ["Conservation Biologist", "Environmental Scientist", "Marine Advocate"],
+      "r": {
+        "e": ["Master's in Conservation", "Environmental Science", "Policy Experience"],
+        "exp": "5-8 years",
+        "sk": ["Conservation Biology", "Policy Development", "Environmental Advocacy"]
+      }
+    },
+    {
+      "id": "aquaculture-specialist",
+      "t": "Aquaculture Specialist",
+      "l": "A",
+      "s": ["Fish Farming", "Water Quality Management", "Breeding Programs", "Business Management", "Sustainability"],
+      "c": ["Aquaculture Certification", "Business Management"],
+      "sr": "$60,000 - $90,000",
+      "te": "5-10 years",
+      "d": "Specialist in fish farming and aquatic agriculture, managing breeding and production operations.",
+      "jt": ["Aquaculture Manager", "Fish Farm Manager", "Aquatic Specialist"],
+      "r": {
+        "e": ["Bachelor's in Aquaculture", "Business Training", "Industry Experience"],
+        "exp": "5-10 years",
+        "sk": ["Fish Farming", "Water Quality Management", "Breeding Programs"]
+      }
+    },
+    {
+      "id": "marine-research-director",
+      "t": "Marine Research Director",
+      "l": "A",
+      "s": ["Research Leadership", "Project Management", "Grant Writing", "Team Management", "Scientific Communication"],
+      "c": ["Research Management", "Grant Writing"],
+      "sr": "$70,000 - $120,000",
+      "te": "8-15 years",
+      "d": "Senior researcher responsible for leading marine research programs and managing research teams.",
+      "jt": ["Research Director", "Principal Investigator", "Research Manager"],
+      "r": {
+        "e": ["PhD in Marine Science", "Research Experience", "Management Training"],
+        "exp": "8-15 years",
+        "sk": ["Research Leadership", "Project Management", "Grant Writing"]
+      }
+    },
+    {
+      "id": "marine-science-professor",
+      "t": "Marine Science Professor",
+      "l": "X",
+      "s": ["Teaching", "Research", "Academic Leadership", "Grant Writing", "Scientific Publishing"],
+      "c": ["PhD in Marine Science", "Teaching Certification"],
+      "sr": "$80,000 - $150,000",
+      "te": "10+ years",
+      "d": "Academic professional teaching marine science and conducting research at universities.",
+      "jt": ["Professor", "Academic Researcher", "Department Head"],
+      "r": {
+        "e": ["PhD in Marine Science", "Teaching Experience", "Research Publications"],
+        "exp": "10+ years",
+        "sk": ["Teaching", "Research", "Academic Leadership"]
+      }
+    }
+  ]
+}

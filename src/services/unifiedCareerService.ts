@@ -125,14 +125,10 @@ export class UnifiedCareerService {
   }
 
   private selectStrategy(): ICareerDataStrategy {
-    const config = appConfig.getConfig();
-    
-    if (config.features.enableSupabase && config.supabase.url && config.supabase.anonKey) {
-      return new HybridDataStrategy();
-    } else {
-      console.warn('Supabase not configured, using local data only');
-      return new LocalDataStrategy();
-    }
+    // Always use local data for search operations
+    // Supabase is only used for monthly updates, not real-time search
+    console.log('Using local data strategy for all operations');
+    return new LocalDataStrategy();
   }
 
   // Public API methods

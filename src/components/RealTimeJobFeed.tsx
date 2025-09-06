@@ -13,34 +13,18 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
   const [trendingData, setTrendingData] = useState<TrendingData | null>(null);
   const [loading, setLoading] = useState(true);
   
-  // Load trending data from Supabase
+  // Load trending data from local sources
   useEffect(() => {
     const loadTrendingData = async () => {
       try {
         setLoading(true);
         
-        // Check if Supabase is configured
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-        
-        if (!supabaseUrl || !supabaseKey || supabaseUrl.includes('your-project') || supabaseKey.includes('your-anon')) {
-          console.warn('Supabase not configured, using empty data');
-          setTrendingData({
-            trendingSkills: [],
-            decliningSkills: [],
-            trendingIndustries: [],
-            decliningIndustries: [],
-            emergingRoles: []
-          });
-          setLoading(false);
-          return;
-        }
-        
+        // Use local trending data service (monthly updates only)
         const data = await supabaseTrendingService.getAllTrendingData();
         setTrendingData(data);
       } catch (error) {
-        console.warn('Failed to load trending data from Supabase:', error);
-        // Set empty data instead of fallback
+        console.warn('Failed to load trending data:', error);
+        // Set empty data if no local data available
         setTrendingData({
           trendingSkills: [],
           decliningSkills: [],

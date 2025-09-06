@@ -1,0 +1,119 @@
+{
+  "id": "military-careers",
+  "n": "Military & Defense Career Path",
+  "cat": "military",
+  "nodes": [
+    {
+      "id": "enlisted-soldier",
+      "t": "Enlisted Soldier",
+      "l": "E",
+      "s": ["Military Training", "Physical Fitness", "Teamwork", "Discipline", "Basic Combat Skills"],
+      "c": ["Basic Training", "Military Occupational Specialty"],
+      "sr": "$25,000 - $40,000",
+      "te": "0-2 years",
+      "d": "Entry-level military service member, trained in basic combat skills and military operations.",
+      "jt": ["Private", "Enlisted Member", "Soldier"],
+      "r": {
+        "e": ["High School Diploma", "Military Training"],
+        "exp": "0-2 years",
+        "sk": ["Physical Fitness", "Military Training", "Teamwork"]
+      }
+    },
+    {
+      "id": "non-commissioned-officer",
+      "t": "Non-Commissioned Officer (NCO)",
+      "l": "I",
+      "s": ["Leadership", "Military Training", "Team Management", "Tactical Operations", "Mentoring"],
+      "c": ["NCO Leadership Course", "Advanced Military Training"],
+      "sr": "$35,000 - $60,000",
+      "te": "3-8 years",
+      "d": "Senior enlisted leader responsible for training and leading junior soldiers in military operations.",
+      "jt": ["Sergeant", "Staff Sergeant", "NCO"],
+      "r": {
+        "e": ["High School Diploma", "Military Leadership Training"],
+        "exp": "3-8 years",
+        "sk": ["Leadership", "Military Training", "Team Management"]
+      }
+    },
+    {
+      "id": "commissioned-officer",
+      "t": "Commissioned Officer",
+      "l": "I",
+      "s": ["Officer Leadership", "Strategic Planning", "Military Operations", "Personnel Management", "Decision Making"],
+      "c": ["Officer Training", "Military Academy", "ROTC"],
+      "sr": "$45,000 - $80,000",
+      "te": "4-10 years",
+      "d": "Military officer responsible for leading units, planning operations, and making strategic decisions.",
+      "jt": ["Lieutenant", "Captain", "Officer"],
+      "r": {
+        "e": ["Bachelor's Degree", "Officer Training", "Military Academy"],
+        "exp": "4-10 years",
+        "sk": ["Officer Leadership", "Strategic Planning", "Military Operations"]
+      }
+    },
+    {
+      "id": "special-forces",
+      "t": "Special Forces Operator",
+      "l": "A",
+      "s": ["Advanced Combat", "Special Operations", "Intelligence", "Foreign Languages", "Physical Excellence"],
+      "c": ["Special Forces Training", "Advanced Combat", "Language Training"],
+      "sr": "$60,000 - $100,000",
+      "te": "5-12 years",
+      "d": "Elite military operator specializing in special operations, counter-terrorism, and unconventional warfare.",
+      "jt": ["Special Forces", "Green Beret", "Special Operator"],
+      "r": {
+        "e": ["Military Experience", "Special Forces Training", "Advanced Qualifications"],
+        "exp": "5-12 years",
+        "sk": ["Advanced Combat", "Special Operations", "Intelligence"]
+      }
+    },
+    {
+      "id": "military-pilot",
+      "t": "Military Pilot",
+      "l": "A",
+      "s": ["Aviation", "Flight Operations", "Mission Planning", "Aircraft Systems", "Leadership"],
+      "c": ["Military Flight Training", "Aircraft Certification"],
+      "sr": "$70,000 - $120,000",
+      "te": "6-15 years",
+      "d": "Military aviator responsible for piloting aircraft in combat, transport, and reconnaissance missions.",
+      "jt": ["Military Pilot", "Aviator", "Flight Officer"],
+      "r": {
+        "e": ["Bachelor's Degree", "Military Flight Training", "Aviation Certification"],
+        "exp": "6-15 years",
+        "sk": ["Aviation", "Flight Operations", "Mission Planning"]
+      }
+    },
+    {
+      "id": "field-grade-officer",
+      "t": "Field Grade Officer",
+      "l": "A",
+      "s": ["Strategic Leadership", "Large Unit Command", "Military Planning", "Interagency Coordination", "Crisis Management"],
+      "c": ["Command and Staff College", "Advanced Military Education"],
+      "sr": "$80,000 - $130,000",
+      "te": "10-20 years",
+      "d": "Senior military officer responsible for commanding large units and strategic military planning.",
+      "jt": ["Major", "Lieutenant Colonel", "Colonel"],
+      "r": {
+        "e": ["Bachelor's Degree", "Advanced Military Education", "Command Experience"],
+        "exp": "10-20 years",
+        "sk": ["Strategic Leadership", "Large Unit Command", "Military Planning"]
+      }
+    },
+    {
+      "id": "general-officer",
+      "t": "General Officer",
+      "l": "X",
+      "s": ["Strategic Leadership", "National Defense", "Policy Development", "International Relations", "Crisis Management"],
+      "c": ["War College", "National Security Studies"],
+      "sr": "$120,000 - $200,000+",
+      "te": "20+ years",
+      "d": "Highest-ranking military officers responsible for strategic military leadership and national defense policy.",
+      "jt": ["General", "Admiral", "Flag Officer"],
+      "r": {
+        "e": ["Bachelor's Degree", "War College", "Advanced Military Education"],
+        "exp": "20+ years",
+        "sk": ["Strategic Leadership", "National Defense", "Policy Development"]
+      }
+    }
+  ]
+}

@@ -32,6 +32,7 @@ import {
   Trash2,
   X,
   Target,
+  Map,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -168,8 +169,8 @@ const HomePage = React.memo(() => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Top Header - Fixed */}
-      <header className="border-b bg-background sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+      <header className="border-b bg-background sticky top-0 z-50 safe-area-top">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <img 
               src="/logo-small.png" 
@@ -198,7 +199,11 @@ const HomePage = React.memo(() => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="relative">
                     <Bell className="h-5 w-5" />
-                    <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs flex items-center justify-center">{unreadCount}</Badge>
+                    {unreadCount > 0 && (
+                      <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs flex items-center justify-center bg-red-500 text-white border-red-500">
+                        {unreadCount}
+                      </Badge>
+                    )}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-80">
@@ -302,6 +307,7 @@ const HomePage = React.memo(() => {
           </div>}>
             <RealTimeJobFeed />
           </ErrorBoundary>
+
         </div>
       </main>
 
@@ -325,12 +331,20 @@ const HomePage = React.memo(() => {
               <span className="text-xs font-medium">Search</span>
             </Link>
 
-            {/* Bookmarks Button */}
-            <Link to="/bookmarks" className="flex flex-col items-center space-y-1">
+            {/* Roadmap Button */}
+            <Link to="/roadmap" className="flex flex-col items-center space-y-1">
               <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Bookmark className="h-5 w-5" />
+                <Map className="h-5 w-5" />
               </div>
-              <span className="text-xs font-medium">Bookmarks</span>
+              <span className="text-xs font-medium">Roadmap</span>
+            </Link>
+
+            {/* My Career Button */}
+            <Link to="/my-paths" className="flex flex-col items-center space-y-1">
+              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                <Target className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-medium">My Career</span>
             </Link>
 
             {/* Skill Assessment Button */}

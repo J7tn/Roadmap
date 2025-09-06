@@ -1,0 +1,119 @@
+{
+  "id": "real-estate-careers",
+  "n": "Real Estate Career Path",
+  "cat": "real-estate",
+  "nodes": [
+    {
+      "id": "real-estate-agent",
+      "t": "Real Estate Agent",
+      "l": "E",
+      "s": ["Sales", "Client Relations", "Market Knowledge", "Negotiation", "Marketing"],
+      "c": ["Real Estate License", "Sales Training"],
+      "sr": "$30,000 - $100,000+",
+      "te": "0-2 years",
+      "d": "Entry-level position helping clients buy and sell real estate properties.",
+      "jt": ["Real Estate Agent", "Sales Agent", "Property Agent"],
+      "r": {
+        "e": ["High School Diploma", "Real Estate License", "Sales Training"],
+        "exp": "0-2 years",
+        "sk": ["Sales", "Client Relations", "Market Knowledge"]
+      }
+    },
+    {
+      "id": "realtor",
+      "t": "Realtor",
+      "l": "I",
+      "s": ["Real Estate Sales", "Client Relations", "Market Analysis", "Negotiation", "Business Development"],
+      "c": ["Realtor Certification", "Real Estate License"],
+      "sr": "$40,000 - $150,000+",
+      "te": "2-5 years",
+      "d": "Licensed real estate professional who is a member of the National Association of Realtors.",
+      "jt": ["Realtor", "Real Estate Professional", "Property Specialist"],
+      "r": {
+        "e": ["Real Estate License", "Realtor Certification", "Sales Experience"],
+        "exp": "2-5 years",
+        "sk": ["Real Estate Sales", "Client Relations", "Market Analysis"]
+      }
+    },
+    {
+      "id": "real-estate-broker",
+      "t": "Real Estate Broker",
+      "l": "I",
+      "s": ["Brokerage Management", "Agent Supervision", "Business Development", "Compliance", "Client Relations"],
+      "c": ["Broker License", "Real Estate Management"],
+      "sr": "$60,000 - $200,000+",
+      "te": "3-7 years",
+      "d": "Licensed professional who can work independently and supervise other real estate agents.",
+      "jt": ["Real Estate Broker", "Independent Broker", "Broker Associate"],
+      "r": {
+        "e": ["Broker License", "Real Estate Experience", "Management Training"],
+        "exp": "3-7 years",
+        "sk": ["Brokerage Management", "Agent Supervision", "Business Development"]
+      }
+    },
+    {
+      "id": "property-manager",
+      "t": "Property Manager",
+      "l": "I",
+      "s": ["Property Management", "Tenant Relations", "Maintenance Coordination", "Financial Management", "Legal Compliance"],
+      "c": ["Property Management", "Real Estate License"],
+      "sr": "$45,000 - $80,000",
+      "te": "3-6 years",
+      "d": "Professional responsible for managing rental properties and maintaining tenant relationships.",
+      "jt": ["Property Manager", "Rental Manager", "Building Manager"],
+      "r": {
+        "e": ["Bachelor's Degree", "Property Management", "Real Estate License"],
+        "exp": "3-6 years",
+        "sk": ["Property Management", "Tenant Relations", "Maintenance Coordination"]
+      }
+    },
+    {
+      "id": "real-estate-developer",
+      "t": "Real Estate Developer",
+      "l": "A",
+      "s": ["Project Development", "Financial Analysis", "Market Research", "Construction Management", "Risk Management"],
+      "c": ["Real Estate Development", "Project Management"],
+      "sr": "$80,000 - $300,000+",
+      "te": "5-10 years",
+      "d": "Professional responsible for developing new real estate projects from conception to completion.",
+      "jt": ["Real Estate Developer", "Development Manager", "Project Developer"],
+      "r": {
+        "e": ["Bachelor's Degree", "Real Estate Development", "Project Management"],
+        "exp": "5-10 years",
+        "sk": ["Project Development", "Financial Analysis", "Market Research"]
+      }
+    },
+    {
+      "id": "real-estate-investor",
+      "t": "Real Estate Investor",
+      "l": "A",
+      "s": ["Investment Analysis", "Market Research", "Financial Management", "Risk Assessment", "Portfolio Management"],
+      "c": ["Real Estate Investment", "Financial Analysis"],
+      "sr": "$100,000 - $1,000,000+",
+      "te": "5-15 years",
+      "d": "Professional who invests in real estate properties for income generation and capital appreciation.",
+      "jt": ["Real Estate Investor", "Property Investor", "Investment Manager"],
+      "r": {
+        "e": ["Bachelor's Degree", "Real Estate Investment", "Financial Training"],
+        "exp": "5-15 years",
+        "sk": ["Investment Analysis", "Market Research", "Financial Management"]
+      }
+    },
+    {
+      "id": "real-estate-executive",
+      "t": "Real Estate Executive",
+      "l": "X",
+      "s": ["Executive Leadership", "Strategic Planning", "Business Development", "Team Leadership", "Industry Relations"],
+      "c": ["Executive Leadership", "Real Estate Management"],
+      "sr": "$150,000 - $500,000+",
+      "te": "10+ years",
+      "d": "Senior executive responsible for overall real estate operations and strategic business development.",
+      "jt": ["Real Estate Executive", "VP of Real Estate", "Chief Real Estate Officer"],
+      "r": {
+        "e": ["Master's Degree", "Executive Experience", "Real Estate Management"],
+        "exp": "10+ years",
+        "sk": ["Executive Leadership", "Strategic Planning", "Business Development"]
+      }
+    }
+  ]
+}

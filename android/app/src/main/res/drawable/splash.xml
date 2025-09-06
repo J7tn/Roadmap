@@ -3,10 +3,10 @@
     <!-- Background color -->
     <item android:drawable="@color/splash_background" />
     
-    <!-- Logo centered -->
+    <!-- Logo centered with transparent background -->
     <item android:gravity="center">
         <bitmap
-            android:src="@mipmap/ic_launcher"
+            android:src="@mipmap/ic_launcher_foreground"
             android:gravity="center"
             android:scaleType="centerInside" />
     </item>

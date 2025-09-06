@@ -1,0 +1,119 @@
+{
+  "id": "investment-finance-careers",
+  "n": "Investment & Finance Career Path",
+  "cat": "investment-finance",
+  "nodes": [
+    {
+      "id": "financial-analyst",
+      "t": "Financial Analyst",
+      "l": "E",
+      "s": ["Financial Analysis", "Data Analysis", "Excel", "Financial Modeling", "Research"],
+      "c": ["CFA Level 1", "Financial Analysis"],
+      "sr": "$50,000 - $70,000",
+      "te": "0-2 years",
+      "d": "Entry-level position analyzing financial data and preparing reports for investment decisions.",
+      "jt": ["Financial Analyst", "Investment Analyst", "Research Analyst"],
+      "r": {
+        "e": ["Bachelor's in Finance", "Economics", "Business"],
+        "exp": "0-2 years",
+        "sk": ["Financial Analysis", "Data Analysis", "Excel"]
+      }
+    },
+    {
+      "id": "stock-broker",
+      "t": "Stock Broker",
+      "l": "I",
+      "s": ["Trading", "Client Relations", "Market Analysis", "Sales", "Regulatory Compliance"],
+      "c": ["Series 7 License", "Series 63 License"],
+      "sr": "$60,000 - $150,000+",
+      "te": "2-5 years",
+      "d": "Professional who buys and sells securities for clients and provides investment advice.",
+      "jt": ["Stock Broker", "Securities Broker", "Investment Advisor"],
+      "r": {
+        "e": ["Bachelor's Degree", "Series 7 License", "Financial Training"],
+        "exp": "2-5 years",
+        "sk": ["Trading", "Client Relations", "Market Analysis"]
+      }
+    },
+    {
+      "id": "portfolio-manager",
+      "t": "Portfolio Manager",
+      "l": "A",
+      "s": ["Portfolio Management", "Risk Management", "Investment Strategy", "Client Relations", "Performance Analysis"],
+      "c": ["CFA Charter", "Portfolio Management"],
+      "sr": "$100,000 - $300,000+",
+      "te": "5-10 years",
+      "d": "Professional responsible for managing investment portfolios and making investment decisions for clients.",
+      "jt": ["Portfolio Manager", "Investment Manager", "Fund Manager"],
+      "r": {
+        "e": ["CFA Charter", "MBA", "Investment Experience"],
+        "exp": "5-10 years",
+        "sk": ["Portfolio Management", "Risk Management", "Investment Strategy"]
+      }
+    },
+    {
+      "id": "hedge-fund-manager",
+      "t": "Hedge Fund Manager",
+      "l": "A",
+      "s": ["Alternative Investments", "Risk Management", "Strategy Development", "Team Leadership", "Client Relations"],
+      "c": ["CFA Charter", "Hedge Fund Management"],
+      "sr": "$200,000 - $2,000,000+",
+      "te": "8-15 years",
+      "d": "Senior professional managing hedge funds and alternative investment strategies for high-net-worth clients.",
+      "jt": ["Hedge Fund Manager", "Alternative Investment Manager", "Fund Director"],
+      "r": {
+        "e": ["CFA Charter", "MBA", "Advanced Finance"],
+        "exp": "8-15 years",
+        "sk": ["Alternative Investments", "Risk Management", "Strategy Development"]
+      }
+    },
+    {
+      "id": "investment-banker",
+      "t": "Investment Banker",
+      "l": "A",
+      "s": ["M&A", "Capital Markets", "Financial Modeling", "Client Relations", "Deal Structuring"],
+      "c": ["Investment Banking", "Financial Modeling"],
+      "sr": "$150,000 - $500,000+",
+      "te": "5-12 years",
+      "d": "Professional providing financial advisory services for mergers, acquisitions, and capital raising.",
+      "jt": ["Investment Banker", "M&A Advisor", "Capital Markets Professional"],
+      "r": {
+        "e": ["MBA", "Investment Banking", "Financial Training"],
+        "exp": "5-12 years",
+        "sk": ["M&A", "Capital Markets", "Financial Modeling"]
+      }
+    },
+    {
+      "id": "private-equity-partner",
+      "t": "Private Equity Partner",
+      "l": "X",
+      "s": ["Private Equity", "Deal Sourcing", "Portfolio Management", "Team Leadership", "Business Development"],
+      "c": ["Private Equity", "Advanced Finance"],
+      "sr": "$500,000 - $5,000,000+",
+      "te": "12+ years",
+      "d": "Senior partner responsible for private equity investments, deal sourcing, and portfolio management.",
+      "jt": ["Private Equity Partner", "Managing Director", "Investment Partner"],
+      "r": {
+        "e": ["MBA", "Private Equity Experience", "Advanced Finance"],
+        "exp": "12+ years",
+        "sk": ["Private Equity", "Deal Sourcing", "Portfolio Management"]
+      }
+    },
+    {
+      "id": "chief-investment-officer",
+      "t": "Chief Investment Officer",
+      "l": "X",
+      "s": ["Strategic Leadership", "Investment Strategy", "Risk Management", "Team Leadership", "Board Relations"],
+      "c": ["CFA Charter", "Executive Leadership"],
+      "sr": "$300,000 - $2,000,000+",
+      "te": "15+ years",
+      "d": "Senior executive responsible for overall investment strategy and management of investment organizations.",
+      "jt": ["Chief Investment Officer", "Investment Director", "Head of Investments"],
+      "r": {
+        "e": ["MBA", "CFA Charter", "Executive Experience"],
+        "exp": "15+ years",
+        "sk": ["Strategic Leadership", "Investment Strategy", "Risk Management"]
+      }
+    }
+  ]
+}
