@@ -28,12 +28,15 @@ import {
   Home,
   User,
   Settings,
+  Map,
+  Activity,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import BottomNavigation from "@/components/BottomNavigation";
 import { Progress } from "@/components/ui/progress";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -224,53 +227,6 @@ const SkillsAssessmentPage = () => {
     { value: "analyst", label: "Data/Analytics", icon: TrendingUp, description: "Focus on data and insights" }
   ];
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const headerVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const progressVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.4,
-        ease: "easeOut"
-      }
-    }
-  };
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -278,11 +234,13 @@ const SkillsAssessmentPage = () => {
         return (
           <motion.div 
             className="space-y-6"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
           >
-            <motion.div variants={itemVariants}>
+            <motion.div initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}>
               <h3 className="text-lg md:text-xl font-semibold mb-4">What skills do you currently have?</h3>
               <p className="text-sm md:text-base text-muted-foreground mb-6">
                 Select the skills you're proficient in. You can add custom skills too.
@@ -293,7 +251,9 @@ const SkillsAssessmentPage = () => {
               {skillCategories.map((category, categoryIndex) => (
                 <motion.div
                   key={category.id}
-                  variants={itemVariants}
+                  initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
                   whileHover={{ scale: 1.01, y: -2 }}
                 >
                   <Card className="hover:shadow-md transition-shadow">
@@ -348,7 +308,9 @@ const SkillsAssessmentPage = () => {
               ))}
             </div>
 
-                         <motion.div className="space-y-4" variants={itemVariants}>
+                         <motion.div className="space-y-4" initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}>
                <Label htmlFor="custom-skills" className="text-sm md:text-base font-medium">
                  Add Custom Skills
                </Label>
@@ -379,11 +341,13 @@ const SkillsAssessmentPage = () => {
         return (
           <motion.div 
             className="space-y-6"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
           >
-            <motion.div variants={itemVariants}>
+            <motion.div initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}>
               <h3 className="text-lg md:text-xl font-semibold mb-4">What's your experience level?</h3>
               <p className="text-sm md:text-base text-muted-foreground mb-6">
                 Tell us about your professional experience and background.
@@ -391,7 +355,9 @@ const SkillsAssessmentPage = () => {
             </motion.div>
 
             <div className="space-y-4">
-              <motion.div variants={itemVariants}>
+              <motion.div initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}>
                 <Label htmlFor="current-role" className="text-sm md:text-base font-medium">
                   Current Role (if any)
                 </Label>
@@ -404,7 +370,9 @@ const SkillsAssessmentPage = () => {
                 />
               </motion.div>
 
-              <motion.div variants={itemVariants}>
+              <motion.div initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}>
                 <Label className="text-sm md:text-base font-medium mb-3 block">
                   Years of Professional Experience
                 </Label>
@@ -432,7 +400,9 @@ const SkillsAssessmentPage = () => {
                 </RadioGroup>
               </motion.div>
 
-                             <motion.div variants={itemVariants}>
+                             <motion.div initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}>
                  <Label htmlFor="experience-details" className="text-sm md:text-base font-medium">
                    Additional Experience Details
                  </Label>
@@ -720,14 +690,16 @@ const SkillsAssessmentPage = () => {
   return (
     <motion.div 
       className="min-h-screen bg-background"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
     >
       {/* Mobile-Optimized Navigation Header */}
       <motion.header 
         className="border-b bg-background sticky top-0 z-50 safe-area-top"
-        variants={headerVariants}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -746,7 +718,9 @@ const SkillsAssessmentPage = () => {
              {/* Progress Bar */}
        <motion.div 
          className="border-b bg-muted/50"
-         variants={progressVariants}
+         initial={{ opacity: 0, scale: 0.95 }}
+         animate={{ opacity: 1, scale: 1 }}
+         transition={{ duration: 0.4 }}
        >
          <div className="container mx-auto px-4 py-3">
            <div className="flex items-center justify-between mb-2">
@@ -812,46 +786,7 @@ const SkillsAssessmentPage = () => {
         </div>
       </main>
 
-      {/* Bottom Navigation Dashboard - Fixed */}
-      <nav 
-        className="border-t bg-background sticky bottom-0 z-50"
-      >
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-around py-3">
-            {/* Home Button */}
-            <Link to="/home" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Home className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Home</span>
-            </Link>
-
-            {/* Search Button */}
-            <Link to="/categories" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Search className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Search</span>
-            </Link>
-
-            {/* Saved Careers Button */}
-            <Link to="/my-paths" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <BookOpen className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Saved</span>
-            </Link>
-
-            {/* Skill Assessment Button */}
-            <Link to="/skills" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg bg-primary text-primary-foreground">
-                <Target className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Assessment</span>
-            </Link>
-          </div>
-        </div>
-              </nav>
+      <BottomNavigation />
     </motion.div>
   );
 };

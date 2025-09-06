@@ -53,12 +53,13 @@ import { useIndustryBrowser } from "@/hooks/useCareerData";
 import RealTimeJobFeed from "./RealTimeJobFeed";
 import ErrorBoundary from "./ErrorBoundary";
 import { NotificationService, Notification } from "@/services/notificationService";
+import BottomNavigation from "@/components/BottomNavigation";
 
 const HomePage = React.memo(() => {
+  // Temporarily simplified for debugging
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const notificationService = NotificationService.getInstance();
    
-  // Use the optimized industry browser hook
   const {
     data: careerData,
     loading,
@@ -82,7 +83,7 @@ const HomePage = React.memo(() => {
         // Add a small delay to ensure smooth transition
         setTimeout(async () => {
           try {
-            await SplashScreen.hide();
+            // await SplashScreen.hide();
             // Show app content after splash screen is hidden
             const appContent = document.getElementById('app-content');
             if (appContent) {
@@ -106,7 +107,6 @@ const HomePage = React.memo(() => {
 
 
 
-  // Load notifications on component mount
   useEffect(() => {
     const loadNotifications = () => {
       const notifs = notificationService.getNotifications();
@@ -295,10 +295,11 @@ const HomePage = React.memo(() => {
 
 
 
+          {/* Temporarily disabled for debugging */}
           <ErrorBoundary fallback={<div className="text-center py-8">
             <h3 className="text-lg font-semibold mb-2">Unable to load market trends</h3>
             <p className="text-muted-foreground mb-4">There was an error loading the market trends data.</p>
-            <button 
+            <button
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
             >
@@ -311,52 +312,7 @@ const HomePage = React.memo(() => {
         </div>
       </main>
 
-      {/* Bottom Navigation Dashboard - Fixed */}
-      <nav className="border-t bg-background sticky bottom-0 z-50">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-around py-3">
-            {/* Home Button */}
-            <Link to="/home" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg bg-primary text-primary-foreground">
-                <Home className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Home</span>
-            </Link>
-
-            {/* Search Button */}
-            <Link to="/categories" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Search className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Search</span>
-            </Link>
-
-            {/* Roadmap Button */}
-            <Link to="/roadmap" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Map className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Roadmap</span>
-            </Link>
-
-            {/* My Career Button */}
-            <Link to="/my-paths" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Target className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">My Career</span>
-            </Link>
-
-            {/* Skill Assessment Button */}
-            <Link to="/skills" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Activity className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Assessment</span>
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <BottomNavigation />
     </div>
   );
 });

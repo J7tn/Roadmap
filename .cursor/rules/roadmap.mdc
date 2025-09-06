@@ -124,6 +124,230 @@ You are an expert in React, TypeScript, and scalable web application development
 * Prefer composition over inheritance for component reuse.
 * **Mobile component design**: Design components with touch interactions, proper spacing, and mobile-friendly layouts.
 
+## Reusable Components Rule (CRITICAL)
+
+**ALWAYS create reusable components when the same UI pattern or functionality appears in multiple places.** This is a fundamental principle for maintaining code quality and consistency.
+
+### When to Create Reusable Components:
+* **Repeated UI Patterns**: Page headers, search inputs, loading states, error states, empty states
+* **Common Functionality**: Navigation elements, buttons, cards, forms, modals
+* **Repeated Code Blocks**: Any code that appears 2+ times across different files
+* **Similar Logic**: Data fetching patterns, state management, validation functions
+
+### Reusable Component Requirements:
+* **Single Responsibility**: Each component should do one thing well
+* **Configurable Props**: Use props to make components flexible and customizable
+* **TypeScript Interfaces**: Define clear prop interfaces with proper types
+* **Default Values**: Provide sensible defaults for optional props
+* **Consistent Styling**: Use the same design system and styling patterns
+* **Mobile-First**: All reusable components must be mobile-optimized
+
+### Implementation Guidelines:
+* **Extract Early**: Don't wait for 3+ repetitions - extract after 2 occurrences
+* **Make It Flexible**: Use props for customization rather than hardcoded values
+* **Document Usage**: Add JSDoc comments explaining component purpose and props
+* **Test in Isolation**: Ensure components work independently
+* **Follow Naming**: Use descriptive names (e.g., `PageHeader`, `SearchInput`, `LoadingSpinner`)
+
+### Examples of Reusable Components:
+* `PageHeader` - Back button + icon + title + optional badge
+* `SearchInput` - Search icon + input + suggestions + filter button
+* `LoadingSpinner` - Animated spinner with customizable message and size
+* `ErrorState` - Error icon + message + retry button
+* `EmptyState` - Icon + title + description + optional action button
+* `BottomNavigation` - Consistent navigation across all pages
+
+### Benefits:
+* **Code Reduction**: Eliminates duplicate code (50%+ reduction in codebase size)
+* **Consistency**: Same look and behavior across all pages
+* **Maintainability**: Fix once, applies everywhere
+* **Development Speed**: New pages get common UI automatically
+* **Type Safety**: Better TypeScript support and error catching
+
+## State Management Rules (CRITICAL)
+
+**ALWAYS follow consistent state management patterns to prevent bugs and improve maintainability.**
+
+### State Management Guidelines:
+* **Custom Hooks for Complex State**: Extract complex state logic into custom hooks (e.g., `useBookmarks`, `useCareerData`)
+* **Single Source of Truth**: Each piece of data should have one authoritative source
+* **Immutable Updates**: Always use immutable patterns for state updates (spread operator, functional updates)
+* **State Validation**: Validate data before updating state, especially for user inputs
+* **Loading States**: Always implement loading states for async operations
+* **Error Boundaries**: Wrap components with error boundaries for graceful error handling
+
+### State Structure Rules:
+* **Group Related State**: Keep related state together in objects rather than separate useState calls
+* **Derived State**: Use useMemo for expensive calculations, useCallback for stable function references
+* **State Lifting**: Lift state up to the lowest common ancestor that needs it
+* **Avoid Prop Drilling**: Use Context API or state management libraries for deeply nested state
+
+### Examples:
+```typescript
+// ✅ Good: Grouped related state
+const [assessmentData, setAssessmentData] = useState({
+  skills: [] as string[],
+  experience: "",
+  interests: [] as string[],
+  goals: ""
+});
+
+// ❌ Bad: Separate state for related data
+const [skills, setSkills] = useState<string[]>([]);
+const [experience, setExperience] = useState("");
+const [interests, setInterests] = useState<string[]>([]);
+const [goals, setGoals] = useState("");
+```
+
+## TypeScript Rules (CRITICAL)
+
+**ALWAYS maintain strict type safety to prevent runtime errors and improve developer experience.**
+
+### Type Safety Requirements:
+* **No `any` Types**: Avoid using `any` type - use proper TypeScript interfaces instead
+* **Strict Interfaces**: Define clear interfaces for all props, state, and API responses
+* **Type Guards**: Use type guards for runtime type checking
+* **Generic Types**: Use generics for reusable components and functions
+* **Union Types**: Use union types for controlled values (e.g., `'loading' | 'success' | 'error'`)
+
+### Interface Design:
+* **Descriptive Names**: Use clear, descriptive names for interfaces (e.g., `ICareerNode`, `AssessmentData`)
+* **Optional Properties**: Mark optional properties with `?` operator
+* **Readonly Properties**: Use `readonly` for immutable data
+* **Extend Interfaces**: Use interface extension for related types
+
+### Examples:
+```typescript
+// ✅ Good: Proper interface definition
+interface ICareerNode {
+  id: string;
+  title: string;
+  level: 'entry' | 'mid' | 'senior' | 'executive';
+  skills: string[];
+  salary?: {
+    min: number;
+    max: number;
+  };
+}
+
+// ❌ Bad: Using any type
+const convertToCareerNode = (bookmark: any): ICareerNode => ({
+  // This loses type safety
+});
+```
+
+## Error Handling Rules (CRITICAL)
+
+**ALWAYS implement comprehensive error handling to provide a robust user experience.**
+
+### Error Handling Requirements:
+* **Try-Catch Blocks**: Wrap all async operations in try-catch blocks
+* **User-Friendly Messages**: Display clear, actionable error messages to users
+* **Error Boundaries**: Use React Error Boundaries for component-level error handling
+* **Fallback UI**: Provide fallback UI for error states
+* **Error Logging**: Log errors for debugging while protecting user privacy
+* **Retry Mechanisms**: Provide retry options for recoverable errors
+
+### Error State Management:
+* **Error State**: Always maintain error state in components
+* **Error Clearing**: Clear errors when user takes corrective action
+* **Loading States**: Show loading states during error recovery
+* **Graceful Degradation**: App should continue functioning even with partial failures
+
+### Examples:
+```typescript
+// ✅ Good: Comprehensive error handling
+const [error, setError] = useState<string | null>(null);
+const [loading, setLoading] = useState(false);
+
+const handleAsyncOperation = async () => {
+  setLoading(true);
+  setError(null);
+  try {
+    const result = await someAsyncOperation();
+    setData(result);
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'An error occurred');
+  } finally {
+    setLoading(false);
+  }
+};
+```
+
+## Performance Rules (CRITICAL)
+
+**ALWAYS optimize for performance, especially on mobile devices with limited resources.**
+
+### Performance Requirements:
+* **React.memo**: Use React.memo for components that receive the same props frequently
+* **useMemo**: Use useMemo for expensive calculations
+* **useCallback**: Use useCallback for stable function references passed to child components
+* **Code Splitting**: Use React.lazy and Suspense for route-based code splitting
+* **Bundle Size**: Monitor and optimize bundle size regularly
+* **Mobile Performance**: Optimize for mobile networks and devices
+
+### Optimization Patterns:
+* **Debouncing**: Debounce search inputs and API calls
+* **Virtual Scrolling**: Use virtual scrolling for large lists
+* **Image Optimization**: Use lazy loading and responsive images
+* **Caching**: Implement proper caching strategies for API responses
+
+### Examples:
+```typescript
+// ✅ Good: Optimized component
+const SearchPage = React.memo(() => {
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  const debouncedSearch = useMemo(
+    () => debounce((query: string) => {
+      // Perform search
+    }, 300),
+    []
+  );
+  
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+    debouncedSearch(query);
+  }, [debouncedSearch]);
+  
+  return <SearchInput value={searchQuery} onChange={handleSearch} />;
+});
+```
+
+## Code Quality Rules (CRITICAL)
+
+**ALWAYS maintain high code quality standards for long-term maintainability.**
+
+### Code Quality Requirements:
+* **Remove Debug Code**: Remove all console.log statements before production
+* **Clean Up Comments**: Remove TODO, FIXME, and HACK comments or address them
+* **Consistent Formatting**: Use consistent code formatting and indentation
+* **Meaningful Names**: Use descriptive variable and function names
+* **Single Responsibility**: Each function should do one thing well
+* **DRY Principle**: Don't Repeat Yourself - extract common logic
+
+### Code Review Checklist:
+* **No Console Logs**: Remove all debugging console.log statements
+* **Type Safety**: Ensure all code is properly typed
+* **Error Handling**: Verify proper error handling is implemented
+* **Performance**: Check for performance optimizations
+* **Accessibility**: Ensure components are accessible
+* **Mobile Optimization**: Verify mobile-friendly implementation
+
+### Examples:
+```typescript
+// ❌ Bad: Debug code left in production
+const handleSearch = () => {
+  console.log('Searching for:', searchQuery); // Remove this
+  // Search logic
+};
+
+// ✅ Good: Clean production code
+const handleSearch = () => {
+  // Search logic
+};
+```
+
 ## API Usage Rules
 
 * **Never use deprecated React APIs**: Always check for and use the latest React patterns.

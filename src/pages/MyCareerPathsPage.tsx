@@ -37,6 +37,7 @@ import {
   Globe,
   Zap,
   Lightbulb,
+  Map,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -44,6 +45,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import BottomNavigation from "@/components/BottomNavigation";
 
 const MyCareerPathsPage = () => {
   const [activeTab, setActiveTab] = useState("my-career");
@@ -130,53 +132,6 @@ const MyCareerPathsPage = () => {
     }
   };
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const headerVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const searchVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.4,
-        ease: "easeOut"
-      }
-    }
-  };
 
   // Filter career paths based on search
   const filteredCareerPaths = savedCareerPaths.filter(path =>
@@ -202,14 +157,16 @@ const MyCareerPathsPage = () => {
   return (
     <motion.div 
       className="min-h-screen bg-background flex flex-col"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
     >
       {/* Top Header - Fixed */}
       <motion.header 
         className="border-b bg-background sticky top-0 z-50 safe-area-top"
-        variants={headerVariants}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -227,7 +184,9 @@ const MyCareerPathsPage = () => {
             {/* Search */}
             <motion.div 
               className="relative w-48"
-              variants={searchVariants}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
             >
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input 
@@ -246,7 +205,9 @@ const MyCareerPathsPage = () => {
         {/* Content Navigation Tabs */}
         <motion.div 
           className="border-b bg-muted/50"
-          variants={itemVariants}
+          initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
         >
           <div className="container mx-auto px-4">
             <div className="flex items-center space-x-6 overflow-x-auto">
@@ -301,7 +262,9 @@ const MyCareerPathsPage = () => {
                   {filteredCareerPaths.map((careerPath, index) => (
                     <motion.div
                       key={careerPath.id}
-                      variants={itemVariants}
+                      initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -412,7 +375,9 @@ const MyCareerPathsPage = () => {
                   {filteredBookmarkedCareers.map((bookmark, index) => (
                     <motion.div
                       key={bookmark.id}
-                      variants={itemVariants}
+                      initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -513,7 +478,9 @@ const MyCareerPathsPage = () => {
                   {filteredAssessments.map((assessment, index) => (
                     <motion.div
                       key={assessment.id}
-                      variants={itemVariants}
+                      initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -596,46 +563,7 @@ const MyCareerPathsPage = () => {
         </div>
       </main>
 
-      {/* Bottom Navigation Dashboard - Fixed */}
-      <nav 
-        className="border-t bg-background sticky bottom-0 z-50"
-      >
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-around py-3">
-            {/* Home Button */}
-            <Link to="/home" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Home className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Home</span>
-            </Link>
-
-            {/* Search Button */}
-            <Link to="/categories" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Search className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Search</span>
-            </Link>
-
-            {/* Saved Careers Button */}
-            <Link to="/my-paths" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg bg-primary text-primary-foreground">
-                <Bookmark className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Saved</span>
-            </Link>
-
-            {/* Skill Assessment Button */}
-            <Link to="/skills" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Activity className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Assessment</span>
-            </Link>
-          </div>
-        </div>
-              </nav>
+      <BottomNavigation />
     </motion.div>
   );
 };

@@ -68,7 +68,7 @@ const CAREER_PATH_DATA: Record<string, ICareerPath> = {
 
 // Industry to career paths mapping - expanded to include multiple paths per industry
 const INDUSTRY_CAREER_PATHS: Record<IndustryCategory, string[]> = {
-  tech: ['software-development', 'global-software-development', 'cybersecurity-careers', 'data-science-careers', 'digital-creator-careers', 'gaming-casino-careers'],
+  tech: ['software-development', 'global-software-development', 'cybersecurity-careers', 'data-science-careers', 'digital-creator-careers'],
   healthcare: ['nursing-career-path'],
   business: ['business-management-path', 'middle-management-careers'],
   finance: ['finance-analyst-path', 'investment-finance-careers', 'real-estate-careers'],
@@ -83,6 +83,18 @@ const INDUSTRY_CAREER_PATHS: Record<IndustryCategory, string[]> = {
   trades: ['trades-careers', 'sanitation-careers'],
   hospitality: ['hospitality-careers'],
   media: ['media-careers'],
+  'gaming-casino': ['gaming-casino-careers'],
+  'digital-creator': ['digital-creator-careers'],
+  'public-service': ['public-service-careers'],
+  'sanitation': ['sanitation-careers'],
+  'military': ['military-careers'],
+  'music': ['music-careers'],
+  'investment-finance': ['investment-finance-careers'],
+  'marine-science': ['marine-science-careers'],
+  'middle-management': ['middle-management-careers'],
+  'real-estate': ['real-estate-careers'],
+  'specialized-trades': ['specialized-trades-careers'],
+  'drones-aviation': ['drones-aviation-careers'],
 };
 
 // Cache for loaded data
