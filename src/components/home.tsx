@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { SplashScreen } from '@capacitor/splash-screen';
 import {
@@ -59,6 +59,7 @@ const HomePage = React.memo(() => {
   // Temporarily simplified for debugging
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const notificationService = NotificationService.getInstance();
+  const navigate = useNavigate();
    
   const {
     data: careerData,
@@ -122,9 +123,76 @@ const HomePage = React.memo(() => {
   }, [notificationService]);
 
   const handleNotificationClick = useCallback((notificationId: string) => {
+    const notification = notificationService.getNotifications().find(n => n.id === notificationId);
+    if (!notification) return;
+
+    // Mark as read first
     notificationService.markAsRead(notificationId);
     setNotifications(notificationService.getNotifications());
-  }, [notificationService]);
+
+    // Handle the action based on notification type and action
+    switch (notification.action) {
+      case 'explore':
+        if (notification.data?.skill) {
+          // Navigate to jobs page with skill search
+          navigate(`/jobs?search=${encodeURIComponent(notification.data.skill)}`);
+        } else if (notification.data?.role) {
+          // Navigate to jobs page with role search
+          navigate(`/jobs?search=${encodeURIComponent(notification.data.role)}`);
+        } else {
+          // Default to jobs page
+          navigate('/jobs');
+        }
+        break;
+      
+      case 'view':
+        if (notification.data?.industry) {
+          // Map industry to category and navigate
+          const industryMap: { [key: string]: string } = {
+            'Technology': 'tech',
+            'Healthcare': 'healthcare', 
+            'Finance': 'finance',
+            'Manufacturing': 'trades',
+            'Print Media': 'media',
+            'Traditional Retail': 'business',
+            'Coal Mining': 'trades',
+            'Telemarketing': 'business'
+          };
+          const categoryId = industryMap[notification.data.industry] || 'tech';
+          navigate(`/category/${categoryId}`);
+        } else {
+          navigate('/jobs');
+        }
+        break;
+      
+      case 'review':
+        // Navigate to skills assessment page
+        navigate('/skills');
+        break;
+      
+      case 'learn':
+        if (notification.data?.skill) {
+          // Navigate to jobs page with skill search for learning opportunities
+          navigate(`/jobs?search=${encodeURIComponent(notification.data.skill)}`);
+        } else {
+          navigate('/skills');
+        }
+        break;
+      
+      case 'apply':
+        if (notification.data?.jobId) {
+          // Navigate to specific job detail page
+          navigate(`/jobs/${notification.data.jobId}`);
+        } else {
+          navigate('/jobs');
+        }
+        break;
+      
+      default:
+        // Default action - just mark as read (already done above)
+        break;
+    }
+  }, [notificationService, navigate]);
 
   const handleMarkAllAsRead = useCallback(() => {
     notificationService.markAllAsRead();
@@ -219,7 +287,7 @@ const HomePage = React.memo(() => {
                         <div key={notification.id} className="relative group">
                           <DropdownMenuItem
                             onClick={() => handleNotificationClick(notification.id)}
-                            className={`flex items-start space-x-3 p-3 rounded-lg cursor-pointer w-full ${
+                            className={`flex items-start space-x-3 p-3 rounded-lg cursor-pointer w-full transition-all duration-200 hover:bg-accent hover:scale-[1.02] ${
                               !notification.read ? "bg-muted" : ""
                             } ${getNotificationColor(notification.type)} border-l-4`}
                           >
@@ -229,7 +297,13 @@ const HomePage = React.memo(() => {
                             <div className="flex-1 min-w-0">
                               <p className="font-medium text-sm">{notification.title}</p>
                               <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{notification.message}</p>
-                              <p className="text-xs text-muted-foreground mt-2">{notification.time}</p>
+                              <div className="flex items-center justify-between mt-2">
+                                <p className="text-xs text-muted-foreground">{notification.time}</p>
+                                <div className="flex items-center space-x-1">
+                                  <span className="text-xs text-muted-foreground capitalize">{notification.action}</span>
+                                  <ArrowRight className="h-3 w-3 text-muted-foreground" />
+                                </div>
+                              </div>
                             </div>
                             <Button
                               variant="ghost"

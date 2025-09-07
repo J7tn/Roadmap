@@ -3,12 +3,13 @@ import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, Clock, MapPin, Briefcase, ArrowLeft, Home, Search, Target, BookOpen, X } from "lucide-react";
+import { DollarSign, Clock, MapPin, Briefcase, Home, Search, Target, BookOpen, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getAllCareerNodes } from "@/services/careerService";
 import { unifiedCareerService } from "@/services/unifiedCareerService";
 import { ICareerNode, CareerLevel, ICareerPath } from "@/types/career";
+import BottomNavigation from "@/components/BottomNavigation";
 
 const getLevelBadgeColor = (level: CareerLevel): string => {
   switch (level) {
@@ -65,7 +66,7 @@ const AllJobsPage: React.FC = () => {
   // Filter items based on search query
   useEffect(() => {
     if (!searchQuery.trim()) {
-      setFilteredItems(items);
+      setFilteredItems([]); // Show no items when search bar is empty
       return;
     }
 
@@ -231,14 +232,6 @@ const AllJobsPage: React.FC = () => {
       >
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => navigate('/categories')}
-              className="mr-2"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
             <motion.h1 
               className="text-xl font-bold"
               initial={{ opacity: 0, x: -20 }}
@@ -403,46 +396,7 @@ const AllJobsPage: React.FC = () => {
         )}
       </div>
 
-      {/* Bottom Navigation Dashboard - Fixed */}
-      <nav 
-        className="border-t bg-background sticky bottom-0 z-50"
-      >
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-around py-3">
-            {/* Home Button */}
-            <Link to="/home" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Home className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Home</span>
-            </Link>
-
-            {/* Search Button */}
-            <Link to="/categories" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg bg-primary text-primary-foreground">
-                <Search className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Search</span>
-            </Link>
-
-            {/* Saved Careers Button */}
-            <Link to="/my-paths" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Target className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">My Career</span>
-            </Link>
-
-            {/* Skill Assessment Button */}
-            <Link to="/skills" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <BookOpen className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Assessment</span>
-            </Link>
-          </div>
-        </div>
-              </nav>
+      <BottomNavigation />
     </motion.div>
   );
 };

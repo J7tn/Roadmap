@@ -506,7 +506,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
 
       {/* Auto-refresh indicator */}
       <div className="text-center text-sm text-muted-foreground">
-        Auto-updating career trends weekly
+        Auto-updating career trends monthly
       </div>
     </div>
   );

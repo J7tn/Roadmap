@@ -2,6 +2,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { bookmarkService, BookmarkedCareer } from "@/services/bookmarkService";
+import { careerPathProgressService, CareerPathProgress } from "@/services/careerPathProgressService";
+import { ICareerNode } from "@/types/career";
 import {
   Search,
   MapPin,
@@ -44,6 +46,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import CareerBlock from "@/components/CareerBlock";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BottomNavigation from "@/components/BottomNavigation";
 
@@ -51,6 +54,7 @@ const MyCareerPathsPage = () => {
   const [activeTab, setActiveTab] = useState("my-career");
   const [searchQuery, setSearchQuery] = useState("");
   const [bookmarkedCareers, setBookmarkedCareers] = useState<BookmarkedCareer[]>([]);
+  const [careerPathProgress, setCareerPathProgress] = useState<CareerPathProgress[]>([]);
   
   // Load bookmarks and listen for updates
   useEffect(() => {
@@ -70,6 +74,27 @@ const MyCareerPathsPage = () => {
     
     return () => {
       window.removeEventListener('bookmarksUpdated', handleBookmarkUpdate);
+    };
+  }, []);
+
+  // Load career path progress and listen for updates
+  useEffect(() => {
+    const loadCareerPathProgress = () => {
+      setCareerPathProgress(careerPathProgressService.getAllProgress());
+    };
+    
+    // Load initial progress
+    loadCareerPathProgress();
+    
+    // Listen for progress updates
+    const handleProgressUpdate = () => {
+      loadCareerPathProgress();
+    };
+    
+    window.addEventListener('careerPathProgressUpdated', handleProgressUpdate);
+    
+    return () => {
+      window.removeEventListener('careerPathProgressUpdated', handleProgressUpdate);
     };
   }, []);
   
@@ -104,6 +129,24 @@ const MyCareerPathsPage = () => {
     localStorage.setItem('careerInterests', JSON.stringify(updated));
   }, [careerInterests]);
 
+  // Convert BookmarkedCareer to ICareerNode format
+  const convertToCareerNode = (bookmark: BookmarkedCareer): ICareerNode => ({
+    id: bookmark.id,
+    t: bookmark.title,
+    l: bookmark.level as 'E' | 'I' | 'A' | 'X',
+    s: bookmark.skills,
+    c: bookmark.certifications,
+    sr: bookmark.salary,
+    te: bookmark.experience,
+    d: bookmark.description,
+    jt: bookmark.jobTitles,
+    r: {
+      e: [],
+      exp: bookmark.experience,
+      sk: bookmark.skills
+    }
+  });
+
   // Function to remove a saved assessment
   const removeAssessment = useCallback((id: string) => {
     setSavedAssessments(prev => {
@@ -133,11 +176,14 @@ const MyCareerPathsPage = () => {
   };
 
 
-  // Filter career paths based on search
-  const filteredCareerPaths = savedCareerPaths.filter(path =>
-    path.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    path.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    path.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))
+  // Filter career path progress based on search
+  const filteredCareerPaths = careerPathProgress.filter(progress =>
+    progress.pathName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    progress.pathCategory.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    progress.pathNodes.some(node => 
+      node.t?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      node.s?.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))
+    )
   );
 
   // Filter bookmarked careers based on search
@@ -248,10 +294,10 @@ const MyCareerPathsPage = () => {
                   transition={{ duration: 0.3 }}
                   className="text-center py-12"
                 >
-                  <Bookmark className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No saved career paths yet</h3>
+                  <TrendingUp className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No career path progress yet</h3>
                   <p className="text-muted-foreground mb-4">
-                    Start exploring career paths and save the ones that interest you
+                    Start exploring career paths and save your progress to track your journey
                   </p>
                   <Button asChild>
                     <Link to="/categories">Explore Careers</Link>
@@ -259,12 +305,12 @@ const MyCareerPathsPage = () => {
                 </motion.div>
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {filteredCareerPaths.map((careerPath, index) => (
+                  {filteredCareerPaths.map((progress, index) => (
                     <motion.div
-                      key={careerPath.id}
+                      key={progress.id}
                       initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4 }}
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -274,7 +320,7 @@ const MyCareerPathsPage = () => {
                           variant="ghost"
                           size="icon"
                           className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-100 hover:text-red-600"
-                          onClick={() => removeCareerPath(careerPath.id)}
+                          onClick={() => careerPathProgressService.removeProgress(progress.id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -282,66 +328,82 @@ const MyCareerPathsPage = () => {
                         <CardContent className="p-6 h-full flex flex-col">
                           {/* Header */}
                           <div className="flex items-start space-x-4 mb-4">
-                            <div className={`p-3 rounded-full ${careerPath.bgColor} flex-shrink-0`}>
-                              <careerPath.icon className={`h-6 w-6 ${careerPath.color}`} />
+                            <div className="p-3 rounded-full bg-primary/10 flex-shrink-0">
+                              <TrendingUp className="h-6 w-6 text-primary" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center space-x-2 mb-2">
-                                <h2 className="text-xl font-bold">{careerPath.title}</h2>
+                                <h2 className="text-xl font-bold">{progress.pathName}</h2>
                                 <Badge variant="outline" className="text-xs">
-                                  {careerPath.category}
+                                  {progress.pathCategory}
                                 </Badge>
                               </div>
                               <div className="flex items-center space-x-2">
-                                <Badge className={getLevelColor(careerPath.level)}>
-                                  {careerPath.level}
+                                <Badge variant="secondary">
+                                  Step {progress.currentStep + 1} of {progress.totalSteps}
                                 </Badge>
-                                <Badge className={getInterestColor(careerPath.interest)}>
-                                  {careerPath.interest} Interest
+                                <Badge variant="outline">
+                                  {careerPathProgressService.getProgressPercentage(progress)}% Complete
                                 </Badge>
                               </div>
                             </div>
                           </div>
 
-                          {/* Description */}
-                          <p className="text-muted-foreground mb-4 flex-1">
-                            {careerPath.description}
-                          </p>
-
-                          {/* Next Step */}
-                          <div className="bg-muted/50 rounded-lg p-3 mb-4">
-                            <div className="flex items-center space-x-2 mb-1">
-                              <Target className="h-4 w-4 text-primary" />
-                              <span className="text-sm font-medium">Next Step</span>
+                          {/* Current Career */}
+                          <div className="mb-4 flex-1">
+                            <div className="flex items-center space-x-2 mb-2">
+                              <Briefcase className="h-4 w-4 text-primary" />
+                              <span className="text-sm font-medium">Current Position</span>
                             </div>
-                            <p className="text-sm font-semibold">{careerPath.nextStep}</p>
+                            <p className="text-sm font-semibold">
+                              {progress.pathNodes[progress.currentStep]?.t || 'Unknown'}
+                            </p>
                             <p className="text-xs text-muted-foreground">
-                              Timeline: {careerPath.timeline} • Salary: {careerPath.salary}
+                              Started: {new Date(progress.startedAt).toLocaleDateString()}
                             </p>
                           </div>
 
-                          {/* Skills */}
+                          {/* Progress Bar */}
                           <div className="mb-4">
-                            <h3 className="text-sm font-medium mb-2">Key Skills</h3>
-                            <div className="flex flex-wrap gap-1">
-                              {careerPath.skills.slice(0, 4).map((skill, skillIndex) => (
-                                <Badge key={skillIndex} variant="outline" className="text-xs">
-                                  {skill}
-                                </Badge>
-                              ))}
-                              {careerPath.skills.length > 4 && (
-                                <Badge variant="outline" className="text-xs">
-                                  +{careerPath.skills.length - 4} more
-                                </Badge>
-                              )}
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-sm font-medium">Progress</span>
+                              <span className="text-sm text-muted-foreground">
+                                {progress.completedSteps.length}/{progress.totalSteps} steps
+                              </span>
+                            </div>
+                            <div className="w-full bg-muted rounded-full h-2">
+                              <div 
+                                className="bg-primary h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${careerPathProgressService.getProgressPercentage(progress)}%` }}
+                              ></div>
                             </div>
                           </div>
 
+                          {/* Next Step */}
+                          {progress.currentStep < progress.totalSteps - 1 && (
+                            <div className="mb-4">
+                              <div className="flex items-center space-x-2 mb-2">
+                                <Target className="h-4 w-4 text-primary" />
+                                <span className="text-sm font-medium">Next Step</span>
+                              </div>
+                              <p className="text-sm font-semibold">
+                                {progress.pathNodes[progress.currentStep + 1]?.t || 'Complete'}
+                              </p>
+                            </div>
+                          )}
+
                           {/* Footer */}
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
-                            <span>Saved {careerPath.savedDate}</span>
-                            <Button variant="ghost" size="sm" className="h-7 text-xs">
-                              View Details
+                            <span>Started {new Date(progress.startedAt).toLocaleDateString()}</span>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-7 text-xs"
+                              asChild
+                            >
+                              <Link to={`/jobs/${progress.currentCareerId}`}>
+                                Continue Path
+                              </Link>
                             </Button>
                           </div>
                         </CardContent>
@@ -371,85 +433,25 @@ const MyCareerPathsPage = () => {
                   </Button>
                 </motion.div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="space-y-3">
                   {filteredBookmarkedCareers.map((bookmark, index) => (
-                    <motion.div
-                      key={bookmark.id}
-                      initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-                      whileHover={{ scale: 1.02, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Card className="hover:shadow-lg transition-all relative group h-full">
-                        {/* Remove Button */}
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-100 hover:text-red-600"
-                          onClick={() => bookmarkService.removeBookmark(bookmark.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-
-                        <CardContent className="p-4 h-full flex flex-col">
-                          {/* Header */}
-                          <div className="text-center mb-4">
-                            <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900 mx-auto mb-3">
-                              <Briefcase className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                            </div>
-                            <h3 className="font-semibold text-base mb-1">{bookmark.title}</h3>
-                            <Badge variant="outline" className="text-xs">
-                              {bookmark.category}
-                            </Badge>
-                          </div>
-
-                          {/* Description */}
-                          <p className="text-sm text-muted-foreground mb-4 flex-1 text-center">
-                            {bookmark.description}
-                          </p>
-
-                          {/* Salary and Experience */}
-                          <div className="mb-4 text-center">
-                            <div className="text-sm font-medium text-green-600 dark:text-green-400 mb-1">
-                              {bookmark.salary}
-                            </div>
-                            <div className="text-xs text-muted-foreground">
-                              {bookmark.experience}
-                            </div>
-                          </div>
-
-                          {/* Skills */}
-                          <div className="mb-4">
-                            <h4 className="text-xs font-medium mb-2 text-center">Key Skills</h4>
-                            <div className="flex flex-wrap gap-1 justify-center">
-                              {bookmark.skills.slice(0, 3).map((skill, skillIndex) => (
-                                <Badge key={skillIndex} variant="outline" className="text-xs">
-                                  {skill}
-                                </Badge>
-                              ))}
-                              {bookmark.skills.length > 3 && (
-                                <Badge variant="outline" className="text-xs">
-                                  +{bookmark.skills.length - 3} more
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Footer */}
-                          <div className="text-center">
-                            <Button asChild variant="outline" size="sm" className="w-full mb-2">
-                              <Link to={`/jobs/${bookmark.id}`}>
-                                View Details
-                              </Link>
-                            </Button>
-                            <div className="text-xs text-muted-foreground">
-                              Bookmarked {new Date(bookmark.bookmarkedAt).toLocaleDateString()}
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
+                    <div key={bookmark.id} className="relative group">
+                      {/* Remove Button */}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-100 hover:text-red-600"
+                        onClick={() => bookmarkService.removeBookmark(bookmark.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                      
+                      <CareerBlock
+                        career={convertToCareerNode(bookmark)}
+                        index={index}
+                        className="pr-10" // Add padding for the remove button
+                      />
+                    </div>
                   ))}
                 </div>
               )}

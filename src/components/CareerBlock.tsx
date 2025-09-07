@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { ICareerNode } from "@/types/career";
 
 interface CareerBlockProps {
@@ -16,9 +17,15 @@ const CareerBlock: React.FC<CareerBlockProps> = ({
   index = 0,
   className = "" 
 }) => {
+  const navigate = useNavigate();
+
   const handleClick = () => {
     if (onClick) {
+      // If custom onClick is provided, use it
       onClick(career);
+    } else {
+      // Default behavior: navigate to job details
+      navigate(`/jobs/${career.id}`);
     }
   };
 

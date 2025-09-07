@@ -131,7 +131,7 @@ class DataVersioningService {
   }
 
   /**
-   * Check if data is fresh (less than 7 days old)
+   * Check if data is fresh (less than 30 days old, aligned with monthly update schedule)
    */
   isDataFresh(type: 'trending' | 'careers'): boolean {
     const version = this.getDataVersion(type);
@@ -143,7 +143,7 @@ class DataVersioningService {
     const now = new Date();
     const daysDiff = (now.getTime() - lastUpdated.getTime()) / (1000 * 60 * 60 * 24);
     
-    return daysDiff < 7; // Consider data fresh for 7 days
+    return daysDiff < 30; // Consider data fresh for 30 days (monthly update cycle)
   }
 
   /**

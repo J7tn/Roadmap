@@ -5,6 +5,7 @@ import { ArrowLeft, Home, Search, Target, BookOpen } from "lucide-react";
 import CareerDetailsContent from "@/components/CareerDetailsContent";
 import { getAllCareerNodes } from "@/services/careerService";
 import { ICareerNode, ICareerPath } from "@/types/career";
+import BottomNavigation from "@/components/BottomNavigation";
 
 const JobDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -35,9 +36,12 @@ const JobDetailPage: React.FC = () => {
           // Find the current node's index in the path
           const index = nodeWithPath.path.nodes.findIndex(node => node.id === id);
           console.log('Current index in path:', index);
-          setCurrentIndex(index);
+          setCurrentIndex(index >= 0 ? index : 0);
         } else {
           console.error('Career not found for ID:', id);
+          console.log('Available career IDs:', allNodes.map(item => item.node.id).slice(0, 10));
+          
+          // Try to find a similar career or show error
           setCareer(null);
           setCareerPath(null);
         }
@@ -98,10 +102,15 @@ const JobDetailPage: React.FC = () => {
               if (careerPath.nodes[newIndex]) {
                 const nextCareerId = careerPath.nodes[newIndex].id;
                 console.log('Navigating to career ID:', nextCareerId);
-                navigate(`/job/${nextCareerId}`);
+                navigate(`/jobs/${nextCareerId}`);
               } else {
                 console.error('No career found at index:', newIndex);
               }
+            }}
+            onCareerClick={(careerId) => {
+              console.log('JobDetailPage - Navigating to career:', careerId);
+              console.log('JobDetailPage - Current URL:', window.location.href);
+              navigate(`/jobs/${careerId}`);
             }}
           />
         </div>
@@ -119,44 +128,7 @@ const JobDetailPage: React.FC = () => {
         </div>
       )}
 
-      {/* Bottom Navigation Dashboard - Fixed */}
-      <nav className="border-t bg-background sticky bottom-0 z-50">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-around py-3">
-            {/* Home Button */}
-            <Link to="/home" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Home className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Home</span>
-            </Link>
-
-            {/* Search Button */}
-            <Link to="/categories" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Search className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Search</span>
-            </Link>
-
-            {/* Saved Careers Button */}
-            <Link to="/my-paths" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Target className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">My Career</span>
-            </Link>
-
-            {/* Skill Assessment Button */}
-            <Link to="/skills" className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <BookOpen className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Assessment</span>
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <BottomNavigation />
     </div>
   );
 };

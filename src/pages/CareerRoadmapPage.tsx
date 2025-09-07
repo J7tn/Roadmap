@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Home, Search, Target, BookOpen, Map, Plus, CheckCircle } from "lucide-react";
+import { ArrowLeft, Search, Target, BookOpen, Map, Plus, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import CareerTransitionSuggestions from "@/components/CareerTransitionSuggestions";
 import { getAllCareerNodes } from "@/services/careerService";
@@ -100,14 +100,6 @@ const CareerRoadmapPage: React.FC = () => {
               className="mr-2"
             >
               <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => navigate('/')}
-              className="mr-2"
-            >
-              <Home className="h-5 w-5" />
             </Button>
             <Map className="h-5 w-5 text-primary mr-2" />
             <h1 className="text-xl font-bold">Career Roadmap</h1>

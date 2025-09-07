@@ -19,6 +19,7 @@ import CategorySelector from "./CategorySelector";
 import CareerDetails from "./CareerDetails";
 import { IndustryCategory, ICareerNode } from "@/types/career";
 import { useIndustryBrowser } from "@/hooks/useCareerData";
+import BottomNavigation from "./BottomNavigation";
 
 const MobileOptimizedHome = () => {
   const [selectedCareer, setSelectedCareer] = useState<ICareerNode | null>(null);
@@ -174,44 +175,7 @@ const MobileOptimizedHome = () => {
         </Tabs>
       </main>
 
-      {/* Bottom Navigation Dashboard - Fixed */}
-      <nav className="border-t bg-background sticky bottom-0 z-50">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-around py-3">
-            {/* Home Button */}
-            <div className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg bg-primary text-primary-foreground">
-                <MapPin className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Home</span>
-            </div>
-
-            {/* Search Button */}
-            <div className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Search className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Search</span>
-            </div>
-
-            {/* Saved Careers Button */}
-            <div className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <Briefcase className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">My Career</span>
-            </div>
-
-            {/* Skill Assessment Button */}
-            <div className="flex flex-col items-center space-y-1">
-              <div className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-                <BookOpen className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium">Assessment</span>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <BottomNavigation />
 
       {/* Mobile-Optimized Footer */}
       <footer className="bg-muted py-8 mt-8">

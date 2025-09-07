@@ -2,13 +2,13 @@
 export const API_CONFIG = {
   // API Keys (should be stored in environment variables)
   KEYS: {
-    LINKEDIN: process.env.VITE_LINKEDIN_API_KEY || '',
-    INDEED: process.env.VITE_INDEED_API_KEY || '',
-    GLASSDOOR: process.env.VITE_GLASSDOOR_API_KEY || '',
-    BLS: process.env.VITE_BLS_API_KEY || '',
-    ONET: process.env.VITE_ONET_API_KEY || '',
-    ADZUNA: process.env.VITE_ADZUNA_API_KEY || '',
-    LIGHTCAST: process.env.VITE_LIGHTCAST_API_KEY || '',
+    LINKEDIN: import.meta.env.VITE_LINKEDIN_API_KEY || '',
+    INDEED: import.meta.env.VITE_INDEED_API_KEY || '',
+    GLASSDOOR: import.meta.env.VITE_GLASSDOOR_API_KEY || '',
+    BLS: import.meta.env.VITE_BLS_API_KEY || '',
+    ONET: import.meta.env.VITE_ONET_API_KEY || '',
+    ADZUNA: import.meta.env.VITE_ADZUNA_API_KEY || '',
+    LIGHTCAST: import.meta.env.VITE_LIGHTCAST_API_KEY || '',
   },
 
   // API Endpoints
@@ -107,7 +107,7 @@ export const API_CONFIG = {
 
 // Environment-specific configurations
 export const getEnvironmentConfig = () => {
-  const env = process.env.NODE_ENV || 'development';
+  const env = import.meta.env.MODE || 'development';
   
   switch (env) {
     case 'production':

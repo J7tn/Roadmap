@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { SkillsAssessmentService, AssessmentRecommendations } from "@/services/skillsAssessmentService";
 import { NotificationService } from "@/services/notificationService";
@@ -45,6 +45,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const SkillsAssessmentPage = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [assessmentData, setAssessmentData] = useState({
     skills: [] as string[],
@@ -92,6 +93,7 @@ const SkillsAssessmentPage = () => {
       });
     } catch (error) {
       console.error('Failed to generate recommendations:', error);
+      // The service now provides fallback recommendations, so this should rarely happen
       setAssessmentError(error instanceof Error ? error.message : 'Failed to generate recommendations');
     } finally {
       setIsLoadingRecommendations(false);
@@ -544,11 +546,29 @@ const SkillsAssessmentPage = () => {
                        {recommendations.careerPaths.map((career, index) => (
                          <div
                            key={index}
-                           className="p-3 border rounded-lg space-y-2"
+                           className={`p-4 border rounded-lg space-y-3 transition-all cursor-pointer shadow-sm hover:shadow-lg ${
+                             index % 5 === 0 ? 'card-orange hover:shadow-orange-200' :
+                             index % 5 === 1 ? 'card-blue hover:shadow-blue-200' :
+                             index % 5 === 2 ? 'card-purple hover:shadow-purple-200' :
+                             index % 5 === 3 ? 'card-green hover:shadow-green-200' :
+                             'card-pink hover:shadow-pink-200'
+                           }`}
+                           onClick={() => {
+                             if (career.careerNode) {
+                               console.log('Navigating to career:', career.careerNode.id);
+                               console.log('Career node:', career.careerNode);
+                               // Navigate to career details page using React Router
+                               navigate(`/jobs/${career.careerNode.id}`);
+                             } else {
+                               console.log('No career node found for:', career.title);
+                             }
+                           }}
                          >
                            <div className="flex items-center justify-between">
                              <div className="font-medium text-sm md:text-base">{career.title}</div>
-                             <Badge variant="secondary">{career.match}</Badge>
+                             <Badge variant={parseInt(career.match) >= 70 ? "default" : "secondary"}>
+                               {career.match}
+                             </Badge>
                            </div>
                            <div className="text-xs md:text-sm text-muted-foreground">{career.description}</div>
                            <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -556,10 +576,31 @@ const SkillsAssessmentPage = () => {
                              <span>📈 {career.growth}</span>
                            </div>
                            <div className="text-xs">
-                             <span className="font-medium">Required Skills:</span> {career.requiredSkills.join(', ')}
+                             <span className="font-medium">Required Skills:</span> 
+                             <div className="flex flex-wrap gap-1 mt-1">
+                               {career.requiredSkills.slice(0, 5).map((skill, skillIndex) => (
+                                 <Badge key={skillIndex} variant="outline" className="text-xs">
+                                   {skill}
+                                 </Badge>
+                               ))}
+                               {career.requiredSkills.length > 5 && (
+                                 <Badge variant="outline" className="text-xs">
+                                   +{career.requiredSkills.length - 5} more
+                                 </Badge>
+                               )}
+                             </div>
                            </div>
                            <div className="text-xs">
-                             <span className="font-medium">Next Steps:</span> {career.nextSteps.join(', ')}
+                             <span className="font-medium">Next Steps:</span> 
+                             <ul className="mt-1 space-y-1">
+                               {career.nextSteps.map((step, stepIndex) => (
+                                 <li key={stepIndex} className="text-muted-foreground">• {step}</li>
+                               ))}
+                             </ul>
+                           </div>
+                           <div className="flex items-center justify-between text-xs text-primary font-medium">
+                             <span>Click to view detailed career information</span>
+                             <ChevronRight className="h-4 w-4" />
                            </div>
                          </div>
                        ))}
@@ -579,10 +620,23 @@ const SkillsAssessmentPage = () => {
                        {recommendations.skillDevelopment.map((item, index) => (
                          <div
                            key={index}
-                           className="p-3 border rounded-lg space-y-2"
+                           className={`p-4 border rounded-lg space-y-2 transition-all ${
+                             index % 4 === 0 ? 'bg-gradient-to-r from-orange-50/80 to-yellow-50/80 hover:from-orange-100/80 hover:to-yellow-100/80' :
+                             index % 4 === 1 ? 'bg-gradient-to-r from-blue-50/80 to-cyan-50/80 hover:from-blue-100/80 hover:to-cyan-100/80' :
+                             index % 4 === 2 ? 'bg-gradient-to-r from-purple-50/80 to-pink-50/80 hover:from-purple-100/80 hover:to-pink-100/80' :
+                             'bg-gradient-to-r from-green-50/80 to-emerald-50/80 hover:from-green-100/80 hover:to-emerald-100/80'
+                           }`}
                          >
                            <div className="flex items-center justify-between">
-                             <div className="font-medium text-sm md:text-base">{item.skill}</div>
+                             <div className="flex items-center space-x-2">
+                               <div className={`w-2 h-2 rounded-full ${
+                                 index % 4 === 0 ? 'bg-orange-500' :
+                                 index % 4 === 1 ? 'bg-blue-500' :
+                                 index % 4 === 2 ? 'bg-purple-500' :
+                                 'bg-green-500'
+                               }`}></div>
+                               <div className="font-medium text-sm md:text-base">{item.skill}</div>
+                             </div>
                              <Badge variant={item.priority === "High" ? "default" : "secondary"}>
                                {item.priority}
                              </Badge>
@@ -644,29 +698,10 @@ const SkillsAssessmentPage = () => {
                </div>
              )}
 
-             <div className="flex flex-col sm:flex-row gap-3">
-               <Button 
-                 className="flex-1 h-11" 
-                 onClick={() => {
-                   if (recommendations) {
-                     // Save assessment with recommendations
-                     const assessmentWithRecs = {
-                       ...assessmentData,
-                       recommendations: recommendations
-                     };
-                     localStorage.setItem('currentAssessment', JSON.stringify(assessmentWithRecs));
-                     // You could navigate to a detailed roadmap page here
-                     alert('Assessment saved! You can now view your detailed roadmap.');
-                   }
-                 }}
-                 disabled={!recommendations || !!assessmentError}
-               >
-                 <Target className="h-4 w-4 mr-2" />
-                 View Detailed Roadmap
-               </Button>
+             <div className="flex justify-center">
                <Button 
                  variant="outline" 
-                 className="flex-1 h-11" 
+                 className="h-11 px-8" 
                  onClick={saveAssessment}
                  disabled={!!assessmentError}
                >
@@ -696,7 +731,7 @@ const SkillsAssessmentPage = () => {
     >
       {/* Mobile-Optimized Navigation Header */}
       <motion.header 
-        className="border-b bg-background sticky top-0 z-50 safe-area-top"
+        className="border-b bg-gradient-to-r from-orange-50 to-blue-50 sticky top-0 z-50 safe-area-top"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -717,7 +752,7 @@ const SkillsAssessmentPage = () => {
 
              {/* Progress Bar */}
        <motion.div 
-         className="border-b bg-muted/50"
+         className="border-b bg-gradient-to-r from-blue-50/50 to-purple-50/50"
          initial={{ opacity: 0, scale: 0.95 }}
          animate={{ opacity: 1, scale: 1 }}
          transition={{ duration: 0.4 }}

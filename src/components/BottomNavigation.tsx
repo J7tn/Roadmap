@@ -20,7 +20,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ className = "" }) =
   };
 
   return (
-    <nav className={`border-t bg-background sticky bottom-0 z-50 ${className}`}>
+    <nav className={`border-t bg-background/95 backdrop-blur-sm fixed bottom-0 left-0 right-0 z-50 safe-area-bottom ${className}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-around py-3">
           {/* Home Button */}

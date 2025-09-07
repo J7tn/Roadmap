@@ -61,10 +61,10 @@ class JobMarketAPIService {
   }
 
   private loadConfig() {
-    this.chat2apiKey = process.env.VITE_CHAT2API_KEY || '';
-    this.chat2apiUrl = process.env.VITE_CHAT2API_URL || 'https://api.chat2api.com';
-    this.supabaseUrl = process.env.VITE_SUPABASE_URL || '';
-    this.supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || '';
+    this.chat2apiKey = import.meta.env.VITE_CHAT2API_KEY || '';
+    this.chat2apiUrl = import.meta.env.VITE_CHAT2API_URL || 'https://api.chat2api.com';
+    this.supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+    this.supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
     
     // Log configuration status
     if (!this.supabaseUrl || !this.supabaseAnonKey) {

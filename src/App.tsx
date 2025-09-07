@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
 import WelcomePage from './pages/WelcomePage';
@@ -13,11 +13,19 @@ import CareerRoadmapPage from './pages/CareerRoadmapPage';
 import SkillsAssessmentPage from './pages/SkillsAssessmentPage';
 import CareerBranchingPage from './pages/CareerBranchingPage';
 import CategoryCareersPage from './pages/CategoryCareersPage';
+import { appStartupService } from './services/appStartupService';
 
 function App() {
+  // Initialize app startup service on app load
+  useEffect(() => {
+    appStartupService.initialize().catch(error => {
+      console.warn('App startup initialization failed:', error);
+    });
+  }, []);
+
   return (
     <div className="min-h-screen bg-white app-content" id="app-content">
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><p className="text-lg">Loading...</p></div>}>
         <>
           <ScrollToTop />
           <Routes>

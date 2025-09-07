@@ -70,7 +70,7 @@ const SearchPage: React.FC = React.memo(() => {
   // Filter careers based on search query and filters
   const filteredCareers = useMemo(() => {
     if (!searchQuery.trim() && selectedIndustry === "all" && selectedLevel === "all") {
-      return allCareers.slice(0, 20); // Show first 20 careers by default
+      return []; // Show no careers when search bar is empty
     }
 
     const query = searchQuery.toLowerCase();
@@ -180,7 +180,7 @@ const SearchPage: React.FC = React.memo(() => {
 
   return (
     <motion.div 
-      className="min-h-screen bg-background"
+      className="min-h-screen bg-background flex flex-col"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -188,15 +188,6 @@ const SearchPage: React.FC = React.memo(() => {
       {/* Header */}
       <div className="sticky top-0 z-50 bg-background border-b safe-area-top">
         <div className="flex items-center justify-between p-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2"
-          >
-            <Search className="h-4 w-4" />
-            Back
-          </Button>
           <h1 className="text-lg font-semibold">Search Careers</h1>
           <Button
             variant="ghost"
@@ -210,8 +201,10 @@ const SearchPage: React.FC = React.memo(() => {
         </div>
       </div>
 
-      {/* Search Section */}
-      <div className="p-4">
+      {/* Main Content - flex-1 to take remaining space */}
+      <div className="flex-1 pb-20">
+        {/* Search Section */}
+        <div className="p-4">
         <SearchInput
           value={searchQuery}
           onChange={setSearchQuery}
@@ -305,7 +298,9 @@ const SearchPage: React.FC = React.memo(() => {
           )}
         </div>
       </div>
+      </div>
 
+      {/* Bottom Navigation - positioned at bottom */}
       <BottomNavigation />
     </motion.div>
   );
