@@ -68,7 +68,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ className = "" }) =
             }`}>
               <Target className="h-5 w-5" />
             </div>
-            <span className="text-xs font-medium">My Career</span>
+            <span className="text-xs font-medium">Profile</span>
           </Link>
 
           {/* Skill Assessment Button */}

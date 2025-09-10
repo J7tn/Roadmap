@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Search, Target, BookOpen, Map, Plus, CheckCircle } from "lucide-react";
+import { ArrowLeft, Search, Target, BookOpen, Map, Plus, CheckCircle, Star, ArrowRight, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import CareerTransitionSuggestions from "@/components/CareerTransitionSuggestions";
 import { getAllCareerNodes } from "@/services/careerService";
@@ -15,6 +15,41 @@ const CareerRoadmapPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCareerId, setSelectedCareerId] = useState<string | null>(null);
+  const [nextCareerGoal, setNextCareerGoal] = useState<ICareerNode | null>(null);
+  const [targetCareer, setTargetCareer] = useState<ICareerNode | null>(null);
+
+  // Load saved career selections from localStorage
+  useEffect(() => {
+    const savedNextGoal = localStorage.getItem('nextCareerGoal');
+    const savedTargetCareer = localStorage.getItem('targetCareer');
+    
+    if (savedNextGoal) {
+      try {
+        setNextCareerGoal(JSON.parse(savedNextGoal));
+      } catch (error) {
+        console.error('Error loading next career goal:', error);
+      }
+    }
+    
+    if (savedTargetCareer) {
+      try {
+        setTargetCareer(JSON.parse(savedTargetCareer));
+      } catch (error) {
+        console.error('Error loading target career:', error);
+      }
+    }
+  }, []);
+
+  // Save career selections to localStorage
+  const saveCareerSelection = (career: ICareerNode, type: 'nextGoal' | 'target') => {
+    if (type === 'nextGoal') {
+      setNextCareerGoal(career);
+      localStorage.setItem('nextCareerGoal', JSON.stringify(career));
+    } else {
+      setTargetCareer(career);
+      localStorage.setItem('targetCareer', JSON.stringify(career));
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -51,8 +86,15 @@ const CareerRoadmapPage: React.FC = () => {
 
   const handleCareerSelect = (careerId: string) => {
     setSelectedCareerId(careerId);
-    // Navigate to the career categories page to explore careers
-    navigate('/categories');
+    
+    if (careerId.startsWith('details-')) {
+      // Navigate to career details page
+      const actualCareerId = careerId.replace('details-', '');
+      navigate(`/jobs/${actualCareerId}`);
+    } else {
+      // Navigate to career details page for adding to roadmap
+      navigate(`/jobs/${careerId}`);
+    }
   };
 
   if (loading) {
@@ -137,40 +179,86 @@ const CareerRoadmapPage: React.FC = () => {
             <CareerTransitionSuggestions 
               currentCareer={currentCareer}
               onCareerSelect={handleCareerSelect}
+              onCareerSelection={saveCareerSelection}
             />
 
             {/* Roadmap Progress */}
             <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border">
               <h3 className="text-lg font-semibold mb-4 flex items-center">
-                <CheckCircle className="h-5 w-5 mr-2 text-green-500" />
+                <TrendingUp className="h-5 w-5 mr-2 text-primary" />
                 Your Roadmap Progress
               </h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-950 rounded-lg">
+              <div className="space-y-4">
+                {/* Current Career */}
+                <div className="flex items-center justify-between p-4 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <div>
                       <p className="font-medium">{currentCareer.t}</p>
                       <p className="text-sm text-muted-foreground">Current Position</p>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <Badge variant="outline" className="text-xs">{currentCareer.l}</Badge>
+                        <Badge variant="outline" className="text-xs">{currentCareer.te}</Badge>
+                      </div>
                     </div>
                   </div>
                   <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                     Active
                   </Badge>
                 </div>
-                
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+
+                {/* Next Career Goal */}
+                <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
                   <div className="flex items-center space-x-3">
-                    <div className="h-5 w-5 rounded-full border-2 border-gray-300 dark:border-gray-600"></div>
+                    <ArrowRight className="h-5 w-5 text-blue-500" />
                     <div>
-                      <p className="font-medium text-muted-foreground">Next Career Goal</p>
-                      <p className="text-sm text-muted-foreground">Select a career to add to your roadmap</p>
+                      <p className="font-medium">{nextCareerGoal ? nextCareerGoal.t : 'Next Career Goal'}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {nextCareerGoal ? `Next step: ${nextCareerGoal.t}` : 'Select your next career goal'}
+                      </p>
+                      {nextCareerGoal && (
+                        <div className="flex items-center space-x-2 mt-1">
+                          <Badge variant="outline" className="text-xs">{nextCareerGoal.l}</Badge>
+                          <Badge variant="outline" className="text-xs">{nextCareerGoal.te}</Badge>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <Badge variant="outline" className="text-muted-foreground">
-                    Planned
-                  </Badge>
+                  <div className="flex items-center space-x-2">
+                    {nextCareerGoal && (
+                      <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                        Set
+                      </Badge>
+                    )}
+                  </div>
                 </div>
+
+                {/* Target Career */}
+                <div className="flex items-center justify-between p-4 bg-purple-50 dark:bg-purple-950 rounded-lg border border-purple-200 dark:border-purple-800">
+                  <div className="flex items-center space-x-3">
+                    <Star className="h-5 w-5 text-purple-500" />
+                    <div>
+                      <p className="font-medium">{targetCareer ? targetCareer.t : 'Target Career'}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {targetCareer ? `Target: ${targetCareer.t}` : 'Set your long-term career target'}
+                      </p>
+                      {targetCareer && (
+                        <div className="flex items-center space-x-2 mt-1">
+                          <Badge variant="outline" className="text-xs">{targetCareer.l}</Badge>
+                          <Badge variant="outline" className="text-xs">{targetCareer.te}</Badge>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {targetCareer && (
+                      <Badge variant="outline" className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                        Target Set
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -181,7 +269,7 @@ const CareerRoadmapPage: React.FC = () => {
             <p className="text-muted-foreground mb-6">
               Select your current career to begin planning your professional journey
             </p>
-            <Button onClick={() => navigate('/categories')}>
+            <Button onClick={() => navigate('/search')}>
               <Search className="h-4 w-4 mr-2" />
               Find My Career
             </Button>

@@ -222,7 +222,7 @@ const MyCareerPathsPage = () => {
             </Link>
             <div className="flex items-center space-x-2">
               <Target className="h-5 w-5 text-primary" />
-              <h1 className="text-lg md:text-xl font-bold">My Career</h1>
+              <h1 className="text-lg md:text-xl font-bold">Profile</h1>
             </div>
           </div>
 
@@ -262,7 +262,7 @@ const MyCareerPathsPage = () => {
                 size="sm"
                 onClick={() => setActiveTab("my-career")}
               >
-                My Career Paths ({filteredCareerPaths.length})
+                My Roadmap ({filteredCareerPaths.length})
               </Button>
               <Button 
                 variant={activeTab === "career-interests" ? "default" : "ghost"} 
@@ -295,12 +295,12 @@ const MyCareerPathsPage = () => {
                   className="text-center py-12"
                 >
                   <TrendingUp className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No career path progress yet</h3>
+                  <h3 className="text-lg font-semibold mb-2">No roadmap progress yet</h3>
                   <p className="text-muted-foreground mb-4">
-                    Start exploring career paths and save your progress to track your journey
+                    Start exploring roadmaps and save your progress to track your journey
                   </p>
                   <Button asChild>
-                    <Link to="/categories">Explore Careers</Link>
+                    <Link to="/roadmap">Explore Roadmaps</Link>
                   </Button>
                 </motion.div>
               ) : (
@@ -429,7 +429,7 @@ const MyCareerPathsPage = () => {
                     Bookmark careers you're interested in to see them here
                   </p>
                   <Button asChild>
-                    <Link to="/categories">Explore Careers</Link>
+                    <Link to="/roadmap">Explore Roadmaps</Link>
                   </Button>
                 </motion.div>
               ) : (

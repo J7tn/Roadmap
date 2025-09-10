@@ -1,19 +1,47 @@
-import React, { memo, useMemo } from "react";
+import React, { memo, useMemo, useState, useEffect } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { ArrowRight, TrendingUp, Users, Target } from "lucide-react";
+import { ArrowRight, TrendingUp, Users, Target, ChevronDown, Star } from "lucide-react";
 import { ICareerNode, CareerLevel } from "@/types/career";
+import { getAllCareerNodes } from "@/services/careerService";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 interface CareerTransitionSuggestionsProps {
   currentCareer: ICareerNode;
   onCareerSelect?: (careerId: string) => void;
+  onCareerSelection?: (career: ICareerNode, type: 'nextGoal' | 'target') => void;
 }
 
 const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = memo(({ 
   currentCareer, 
-  onCareerSelect 
+  onCareerSelect,
+  onCareerSelection 
 }) => {
+  const [allCareers, setAllCareers] = useState<ICareerNode[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadCareers = async () => {
+      try {
+        const careerNodes = await getAllCareerNodes();
+        const careers = careerNodes.map(item => item.node);
+        setAllCareers(careers);
+      } catch (error) {
+        console.error('Failed to load careers:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCareers();
+  }, []);
+
   const getLevelDisplayName = useMemo(() => (level: CareerLevel): string => {
     switch (level) {
       case 'E': return 'Entry Level';
@@ -34,57 +62,116 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
     }
   }, []);
 
-  // Mock transition suggestions based on current career
+  // Generate real transition suggestions based on actual career data
   const transitionSuggestions = useMemo(() => {
+    if (loading || allCareers.length === 0) return [];
+
     const suggestions = [];
     
-    // Same level, different industry
-    suggestions.push({
-      id: 'lateral-move',
-      title: 'Lateral Career Move',
-      description: 'Explore similar roles in different industries',
-      careers: [
-        { id: 'project-manager', title: 'Project Manager', industry: 'Business', level: currentCareer.l, salary: '$60,000 - $90,000' },
-        { id: 'team-lead', title: 'Team Lead', industry: 'Tech', level: currentCareer.l, salary: '$55,000 - $85,000' },
-        { id: 'operations-coordinator', title: 'Operations Coordinator', industry: 'Healthcare', level: currentCareer.l, salary: '$50,000 - $75,000' }
-      ],
-      icon: <ArrowRight className="h-4 w-4" />,
-      color: 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950'
-    });
-
-    // Next level up
-    if (currentCareer.l !== 'X') {
-      const nextLevel = currentCareer.l === 'E' ? 'I' : currentCareer.l === 'I' ? 'A' : 'X';
+    // Same level careers (lateral moves)
+    const sameLevelCareers = allCareers
+      .filter(career => career.l === currentCareer.l && career.id !== currentCareer.id)
+      .slice(0, 3);
+    
+    if (sameLevelCareers.length > 0) {
       suggestions.push({
-        id: 'level-up',
-        title: 'Level Up Your Career',
-        description: 'Advance to the next career level',
-        careers: [
-          { id: 'senior-role', title: `Senior ${currentCareer.t}`, industry: 'Current', level: nextLevel, salary: '$70,000 - $120,000' },
-          { id: 'lead-role', title: `Lead ${currentCareer.t}`, industry: 'Current', level: nextLevel, salary: '$80,000 - $130,000' },
-          { id: 'principal-role', title: `Principal ${currentCareer.t}`, industry: 'Current', level: nextLevel, salary: '$90,000 - $150,000' }
-        ],
-        icon: <TrendingUp className="h-4 w-4" />,
-        color: 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950'
+        id: 'lateral-move',
+        title: 'Lateral Career Move',
+        description: 'Explore similar roles at your current level',
+        careers: sameLevelCareers.map(career => ({
+          id: career.id,
+          title: career.t,
+          industry: 'Various',
+          level: career.l,
+          salary: career.sr || 'Salary not specified'
+        })),
+        icon: <ArrowRight className="h-4 w-4" />,
+        color: 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950'
       });
     }
 
-    // Skill-based transitions
-    suggestions.push({
-      id: 'skill-transition',
-      title: 'Skill-Based Transitions',
-      description: 'Leverage your current skills in new areas',
-      careers: [
-        { id: 'consultant', title: 'Consultant', industry: 'Business', level: currentCareer.l, salary: '$65,000 - $110,000' },
-        { id: 'trainer', title: 'Training Specialist', industry: 'Education', level: currentCareer.l, salary: '$45,000 - $75,000' },
-        { id: 'freelancer', title: 'Freelance Professional', industry: 'Creative', level: currentCareer.l, salary: '$40,000 - $100,000+' }
-      ],
-      icon: <Target className="h-4 w-4" />,
-      color: 'border-purple-200 bg-purple-50 dark:border-purple-800 dark:bg-purple-950'
-    });
+    // Next level up careers
+    if (currentCareer.l !== 'X') {
+      const nextLevel = currentCareer.l === 'E' ? 'I' : currentCareer.l === 'I' ? 'A' : 'X';
+      const nextLevelCareers = allCareers
+        .filter(career => career.l === nextLevel)
+        .slice(0, 3);
+      
+      if (nextLevelCareers.length > 0) {
+        suggestions.push({
+          id: 'level-up',
+          title: 'Level Up Your Career',
+          description: 'Advance to the next career level',
+          careers: nextLevelCareers.map(career => ({
+            id: career.id,
+            title: career.t,
+            industry: 'Various',
+            level: career.l,
+            salary: career.sr || 'Salary not specified'
+          })),
+          icon: <TrendingUp className="h-4 w-4" />,
+          color: 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950'
+        });
+      }
+    }
+
+    // Skill-based transitions (careers with similar skills)
+    const skillBasedCareers = allCareers
+      .filter(career => {
+        if (career.id === currentCareer.id || !career.s || !currentCareer.s) return false;
+        // Find careers that share at least one skill
+        return career.s.some(skill => currentCareer.s?.includes(skill));
+      })
+      .slice(0, 3);
+    
+    if (skillBasedCareers.length > 0) {
+      suggestions.push({
+        id: 'skill-transition',
+        title: 'Skill-Based Transitions',
+        description: 'Leverage your current skills in new areas',
+        careers: skillBasedCareers.map(career => ({
+          id: career.id,
+          title: career.t,
+          industry: 'Various',
+          level: career.l,
+          salary: career.sr || 'Salary not specified'
+        })),
+        icon: <Target className="h-4 w-4" />,
+        color: 'border-purple-200 bg-purple-50 dark:border-purple-800 dark:bg-purple-950'
+      });
+    }
 
     return suggestions;
-  }, [currentCareer]);
+  }, [currentCareer, allCareers, loading]);
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <h3 className="text-lg font-semibold mb-2">Your Career Transition Options</h3>
+          <p className="text-sm text-muted-foreground">
+            Loading career suggestions...
+          </p>
+        </div>
+        <div className="flex items-center justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (transitionSuggestions.length === 0) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <h3 className="text-lg font-semibold mb-2">Your Career Transition Options</h3>
+          <p className="text-sm text-muted-foreground">
+            No career transition options found. Try exploring careers manually.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -134,14 +221,51 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
                       </p>
                     </div>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="ml-3 flex-shrink-0"
-                    onClick={() => onCareerSelect?.(career.id)}
-                  >
-                    Explore
-                  </Button>
+                  <div className="flex flex-col space-y-2 ml-3 flex-shrink-0">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="sm" className="justify-between">
+                          Set Career
+                          <ChevronDown className="h-3 w-3 ml-1" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem 
+                          onClick={() => {
+                            // Find the full career object from allCareers
+                            const fullCareer = allCareers.find(c => c.id === career.id);
+                            if (fullCareer) {
+                              onCareerSelection?.(fullCareer, 'nextGoal');
+                            }
+                          }}
+                          className="flex items-center"
+                        >
+                          <ArrowRight className="h-4 w-4 mr-2 text-blue-500" />
+                          Set as Next Goal
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => {
+                            // Find the full career object from allCareers
+                            const fullCareer = allCareers.find(c => c.id === career.id);
+                            if (fullCareer) {
+                              onCareerSelection?.(fullCareer, 'target');
+                            }
+                          }}
+                          className="flex items-center"
+                        >
+                          <Star className="h-4 w-4 mr-2 text-purple-500" />
+                          Set as Target Career
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => onCareerSelect?.(`details-${career.id}`)}
+                    >
+                      Career Details
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -149,18 +273,6 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
         </Card>
       ))}
 
-      <Card className="border-dashed border-2 border-gray-300 dark:border-gray-600">
-        <CardContent className="p-6 text-center">
-          <Users className="h-8 w-8 mx-auto mb-3 text-muted-foreground" />
-          <h4 className="font-medium mb-2">Need Personalized Advice?</h4>
-          <p className="text-sm text-muted-foreground mb-4">
-            Get custom career transition recommendations based on your specific skills and goals
-          </p>
-          <Button variant="outline" size="sm">
-            Get Career Consultation
-          </Button>
-        </CardContent>
-      </Card>
     </div>
   );
 });

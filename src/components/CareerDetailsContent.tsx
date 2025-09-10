@@ -307,7 +307,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
                   className={`flex items-center space-x-4 p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer hover:shadow-md ${
                     index === currentIndex 
                       ? 'border-primary bg-primary/5 shadow-md' 
-                      : index < currentIndex 
+                      : pathProgress && pathProgress.completedSteps.includes(index)
                         ? 'border-green-500 bg-green-50 dark:bg-green-950 hover:border-green-600' 
                         : 'border-border bg-muted/30 hover:border-primary/50'
                   }`}
@@ -320,11 +320,11 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
                   <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
                     index === currentIndex 
                       ? 'bg-primary text-primary-foreground' 
-                      : index < currentIndex 
+                      : pathProgress && pathProgress.completedSteps.includes(index)
                         ? 'bg-green-500 text-white' 
                         : 'bg-muted text-muted-foreground'
                   }`}>
-                    {index < currentIndex ? (
+                    {pathProgress && pathProgress.completedSteps.includes(index) ? (
                       <Check className="h-6 w-6" />
                     ) : index === currentIndex ? (
                       <span className="text-lg font-bold">{index + 1}</span>
@@ -337,11 +337,11 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <h4 className={`font-semibold ${
-                        index <= currentIndex ? 'text-foreground' : 'text-muted-foreground'
+                        index === currentIndex || (pathProgress && pathProgress.completedSteps.includes(index)) ? 'text-foreground' : 'text-muted-foreground'
                       }`}>
                         {node.t}
                       </h4>
-                      {index < currentIndex && (
+                      {pathProgress && pathProgress.completedSteps.includes(index) && (
                         <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                           Completed
                         </Badge>
