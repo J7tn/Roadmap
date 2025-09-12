@@ -1,0 +1,87 @@
+{
+  "id": "agriculture-careers",
+  "n": "Agriculture Career Path",
+  "cat": "agriculture",
+  "nodes": [
+    {
+      "id": "farm-worker",
+      "t": "Farm Worker",
+      "l": "E",
+      "s": ["Crop Cultivation", "Equipment Operation", "Animal Care", "Harvesting", "Basic Maintenance"],
+      "c": ["Agricultural Safety", "Equipment Operation"],
+      "sr": "$25,000 - $35,000",
+      "te": "0-1 years",
+      "d": "Entry-level position performing basic farming tasks and equipment operation.",
+      "jt": ["Agricultural Worker", "Farm Laborer", "Crop Worker"],
+      "r": {
+        "e": ["High School Diploma", "Agricultural Training"],
+        "exp": "0-1 years",
+        "sk": ["Physical Labor", "Equipment Operation", "Basic Agriculture"]
+      }
+    },
+    {
+      "id": "agricultural-technician",
+      "t": "Agricultural Technician",
+      "l": "I",
+      "s": ["Soil Analysis", "Crop Monitoring", "Pest Management", "Data Collection", "Equipment Maintenance"],
+      "c": ["Agricultural Technology", "Soil Science"],
+      "sr": "$35,000 - $50,000",
+      "te": "1-3 years",
+      "d": "Supports agricultural operations through technical analysis and monitoring.",
+      "jt": ["Crop Technician", "Soil Technician", "Agricultural Specialist"],
+      "r": {
+        "e": ["Associate's in Agriculture", "Technical Training"],
+        "exp": "1-3 years",
+        "sk": ["Soil Analysis", "Crop Science", "Data Collection"]
+      }
+    },
+    {
+      "id": "farm-manager",
+      "t": "Farm Manager",
+      "l": "A",
+      "s": ["Farm Operations", "Budget Management", "Staff Supervision", "Crop Planning", "Market Analysis"],
+      "c": ["Farm Management", "Agricultural Business"],
+      "sr": "$50,000 - $80,000",
+      "te": "3-7 years",
+      "d": "Oversees all aspects of farm operations and manages agricultural business.",
+      "jt": ["Farm Supervisor", "Agricultural Manager", "Operations Manager"],
+      "r": {
+        "e": ["Bachelor's in Agriculture", "Business Management"],
+        "exp": "3-7 years",
+        "sk": ["Farm Operations", "Management", "Business Planning"]
+      }
+    },
+    {
+      "id": "agricultural-engineer",
+      "t": "Agricultural Engineer",
+      "l": "A",
+      "s": ["Agricultural Systems Design", "Irrigation Systems", "Equipment Design", "Environmental Impact", "Project Management"],
+      "c": ["Professional Engineer", "Agricultural Engineering"],
+      "sr": "$60,000 - $90,000",
+      "te": "4-8 years",
+      "d": "Designs and improves agricultural systems, equipment, and processes.",
+      "jt": ["Agricultural Systems Engineer", "Irrigation Engineer", "Farm Equipment Engineer"],
+      "r": {
+        "e": ["Bachelor's in Agricultural Engineering", "PE License"],
+        "exp": "4-8 years",
+        "sk": ["Engineering Design", "Agricultural Systems", "Project Management"]
+      }
+    },
+    {
+      "id": "crop-scientist",
+      "t": "Crop Scientist",
+      "l": "X",
+      "s": ["Plant Breeding", "Genetic Research", "Crop Improvement", "Research Design", "Data Analysis"],
+      "c": ["PhD in Plant Science", "Research Certification"],
+      "sr": "$70,000 - $120,000",
+      "te": "6+ years",
+      "d": "Conducts advanced research to improve crop yields and develop new varieties.",
+      "jt": ["Plant Breeder", "Crop Researcher", "Agricultural Scientist"],
+      "r": {
+        "e": ["PhD in Plant Science", "Research Experience"],
+        "exp": "6+ years",
+        "sk": ["Plant Breeding", "Genetic Research", "Scientific Method"]
+      }
+    }
+  ]
+}

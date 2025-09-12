@@ -1,0 +1,103 @@
+{
+  "id": "manufacturing-careers",
+  "n": "Manufacturing Career Path",
+  "cat": "manufacturing",
+  "nodes": [
+    {
+      "id": "production-worker",
+      "t": "Production Worker",
+      "l": "E",
+      "s": ["Assembly Line Work", "Quality Control", "Equipment Operation", "Safety Procedures", "Team Work"],
+      "c": ["Manufacturing Safety", "Equipment Operation"],
+      "sr": "$25,000 - $40,000",
+      "te": "0-1 years",
+      "d": "Entry-level position performing assembly and production tasks in manufacturing.",
+      "jt": ["Assembly Worker", "Production Associate", "Manufacturing Worker"],
+      "r": {
+        "e": ["High School Diploma", "Manufacturing Training"],
+        "exp": "0-1 years",
+        "sk": ["Assembly Skills", "Quality Control", "Safety Awareness"]
+      }
+    },
+    {
+      "id": "machine-operator",
+      "t": "Machine Operator",
+      "l": "I",
+      "s": ["Machine Operation", "Equipment Maintenance", "Quality Control", "Production Monitoring", "Troubleshooting"],
+      "c": ["Machine Operation", "Equipment Maintenance"],
+      "sr": "$35,000 - $55,000",
+      "te": "1-3 years",
+      "d": "Operates and maintains manufacturing equipment and machinery.",
+      "jt": ["CNC Operator", "Equipment Operator", "Production Technician"],
+      "r": {
+        "e": ["Technical Training", "Equipment Certification"],
+        "exp": "1-3 years",
+        "sk": ["Machine Operation", "Equipment Maintenance", "Quality Control"]
+      }
+    },
+    {
+      "id": "quality-control-inspector",
+      "t": "Quality Control Inspector",
+      "l": "I",
+      "s": ["Quality Testing", "Inspection Procedures", "Documentation", "Statistical Analysis", "Problem Solving"],
+      "c": ["Quality Control", "Inspection Certification"],
+      "sr": "$40,000 - $60,000",
+      "te": "2-4 years",
+      "d": "Ensures products meet quality standards through testing and inspection.",
+      "jt": ["QC Inspector", "Quality Analyst", "Inspection Specialist"],
+      "r": {
+        "e": ["Quality Control Training", "Technical Degree"],
+        "exp": "2-4 years",
+        "sk": ["Quality Testing", "Inspection", "Statistical Analysis"]
+      }
+    },
+    {
+      "id": "production-supervisor",
+      "t": "Production Supervisor",
+      "l": "A",
+      "s": ["Team Leadership", "Production Planning", "Quality Management", "Safety Compliance", "Performance Monitoring"],
+      "c": ["Supervisory Training", "Manufacturing Management"],
+      "sr": "$50,000 - $75,000",
+      "te": "3-6 years",
+      "d": "Supervises production teams and ensures efficient manufacturing operations.",
+      "jt": ["Production Manager", "Shift Supervisor", "Manufacturing Supervisor"],
+      "r": {
+        "e": ["Bachelor's Degree", "Management Training"],
+        "exp": "3-6 years",
+        "sk": ["Team Leadership", "Production Management", "Quality Control"]
+      }
+    },
+    {
+      "id": "manufacturing-engineer",
+      "t": "Manufacturing Engineer",
+      "l": "A",
+      "s": ["Process Optimization", "Equipment Design", "Lean Manufacturing", "Project Management", "Cost Analysis"],
+      "c": ["Professional Engineer", "Lean Six Sigma"],
+      "sr": "$65,000 - $95,000",
+      "te": "4-8 years",
+      "d": "Optimizes manufacturing processes and designs production systems.",
+      "jt": ["Process Engineer", "Industrial Engineer", "Manufacturing Systems Engineer"],
+      "r": {
+        "e": ["Bachelor's in Engineering", "PE License"],
+        "exp": "4-8 years",
+        "sk": ["Process Engineering", "Manufacturing Systems", "Project Management"]
+      }
+    },
+    {
+      "id": "plant-manager",
+      "t": "Plant Manager",
+      "l": "X",
+      "s": ["Plant Operations", "Strategic Planning", "Budget Management", "Staff Management", "Regulatory Compliance"],
+      "c": ["Plant Management", "Operations Management"],
+      "sr": "$80,000 - $130,000",
+      "te": "8+ years",
+      "d": "Oversees entire manufacturing plant operations and strategic planning.",
+      "jt": ["Plant Director", "Operations Manager", "Manufacturing Director"],
+      "r": {
+        "e": ["Bachelor's in Engineering/Business", "MBA Preferred"],
+        "exp": "8+ years",
+        "sk": ["Plant Operations", "Strategic Planning", "Leadership"]
+      }
+    }
+  ]
+}

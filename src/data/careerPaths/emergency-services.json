@@ -1,0 +1,103 @@
+{
+  "id": "emergency-services-careers",
+  "n": "Emergency Services Career Path",
+  "cat": "emergency-services",
+  "nodes": [
+    {
+      "id": "emergency-dispatcher",
+      "t": "Emergency Dispatcher",
+      "l": "E",
+      "s": ["Emergency Communication", "Call Handling", "Dispatch Operations", "Stress Management", "Multi-tasking"],
+      "c": ["Emergency Dispatch", "Communication Training"],
+      "sr": "$30,000 - $45,000",
+      "te": "0-1 years",
+      "d": "Entry-level position handling emergency calls and dispatching services.",
+      "jt": ["911 Operator", "Dispatch Operator", "Emergency Call Taker"],
+      "r": {
+        "e": ["High School Diploma", "Dispatch Training"],
+        "exp": "0-1 years",
+        "sk": ["Emergency Communication", "Call Handling", "Stress Management"]
+      }
+    },
+    {
+      "id": "firefighter",
+      "t": "Firefighter",
+      "l": "I",
+      "s": ["Fire Suppression", "Emergency Response", "Rescue Operations", "Equipment Operation", "Physical Fitness"],
+      "c": ["Firefighter Certification", "EMT Training"],
+      "sr": "$35,000 - $60,000",
+      "te": "1-3 years",
+      "d": "Responds to fires, medical emergencies, and other emergency situations.",
+      "jt": ["Firefighter", "Fire Rescue", "Emergency Responder"],
+      "r": {
+        "e": ["Firefighter Academy", "EMT Certification"],
+        "exp": "1-3 years",
+        "sk": ["Fire Suppression", "Emergency Response", "Physical Fitness"]
+      }
+    },
+    {
+      "id": "paramedic",
+      "t": "Paramedic",
+      "l": "I",
+      "s": ["Advanced Life Support", "Medical Assessment", "Emergency Treatment", "Patient Care", "Medical Equipment"],
+      "c": ["Paramedic License", "Advanced Life Support"],
+      "sr": "$40,000 - $65,000",
+      "te": "2-4 years",
+      "d": "Provides advanced medical care in emergency situations and transports patients.",
+      "jt": ["Paramedic", "Emergency Medical Technician", "Ambulance Paramedic"],
+      "r": {
+        "e": ["Paramedic Training", "State License"],
+        "exp": "2-4 years",
+        "sk": ["Advanced Life Support", "Medical Assessment", "Emergency Treatment"]
+      }
+    },
+    {
+      "id": "police-officer",
+      "t": "Police Officer",
+      "l": "I",
+      "s": ["Law Enforcement", "Public Safety", "Investigation", "Community Relations", "Crisis Management"],
+      "c": ["Police Academy", "Law Enforcement Training"],
+      "sr": "$45,000 - $70,000",
+      "te": "2-4 years",
+      "d": "Enforces laws, maintains public safety, and serves the community.",
+      "jt": ["Police Officer", "Law Enforcement Officer", "Patrol Officer"],
+      "r": {
+        "e": ["Police Academy", "Law Enforcement Training"],
+        "exp": "2-4 years",
+        "sk": ["Law Enforcement", "Public Safety", "Investigation"]
+      }
+    },
+    {
+      "id": "fire-captain",
+      "t": "Fire Captain",
+      "l": "A",
+      "s": ["Team Leadership", "Fire Operations", "Training Management", "Emergency Planning", "Administrative Duties"],
+      "c": ["Fire Officer Training", "Leadership Certification"],
+      "sr": "$60,000 - $85,000",
+      "te": "5-8 years",
+      "d": "Leads firefighting teams and manages fire station operations.",
+      "jt": ["Fire Captain", "Station Captain", "Fire Lieutenant"],
+      "r": {
+        "e": ["Fire Officer Training", "Leadership Experience"],
+        "exp": "5-8 years",
+        "sk": ["Team Leadership", "Fire Operations", "Training Management"]
+      }
+    },
+    {
+      "id": "emergency-services-director",
+      "t": "Emergency Services Director",
+      "l": "X",
+      "s": ["Emergency Management", "Strategic Planning", "Budget Management", "Inter-agency Coordination", "Crisis Leadership"],
+      "c": ["Emergency Management", "Executive Leadership"],
+      "sr": "$80,000 - $130,000",
+      "te": "10+ years",
+      "d": "Oversees comprehensive emergency services operations and disaster response.",
+      "jt": ["Emergency Manager", "Public Safety Director", "Emergency Services Chief"],
+      "r": {
+        "e": ["Master's in Emergency Management", "Executive Experience"],
+        "exp": "10+ years",
+        "sk": ["Emergency Management", "Strategic Planning", "Crisis Leadership"]
+      }
+    }
+  ]
+}

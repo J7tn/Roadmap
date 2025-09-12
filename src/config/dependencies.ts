@@ -7,8 +7,8 @@ import { careerService } from '@/services/careerService';
 import { supabaseCareerService } from '@/services/supabaseCareerService';
 import { supabaseTrendingService } from '@/services/supabaseTrendingService';
 import { bookmarkService } from '@/services/bookmarkService';
-import { notificationService } from '@/services/notificationService';
-import { skillsAssessmentService } from '@/services/skillsAssessmentService';
+import { NotificationService } from '@/services/notificationService';
+import { SkillsAssessmentService } from '@/services/skillsAssessmentService';
 import { appStartupService } from '@/services/appStartupService';
 
 // Service interfaces for dependency injection

@@ -47,6 +47,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import CareerBlock from "@/components/CareerBlock";
+import RoadmapProgress from "@/components/RoadmapProgress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BottomNavigation from "@/components/BottomNavigation";
 
@@ -55,6 +56,11 @@ const MyCareerPathsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [bookmarkedCareers, setBookmarkedCareers] = useState<BookmarkedCareer[]>([]);
   const [careerPathProgress, setCareerPathProgress] = useState<CareerPathProgress[]>([]);
+  
+  // Roadmap progress state
+  const [currentCareer, setCurrentCareer] = useState<ICareerNode | null>(null);
+  const [nextCareerGoal, setNextCareerGoal] = useState<ICareerNode | null>(null);
+  const [targetCareer, setTargetCareer] = useState<ICareerNode | null>(null);
   
   // Load bookmarks and listen for updates
   useEffect(() => {
@@ -95,6 +101,52 @@ const MyCareerPathsPage = () => {
     
     return () => {
       window.removeEventListener('careerPathProgressUpdated', handleProgressUpdate);
+    };
+  }, []);
+
+  // Load roadmap progress data from localStorage
+  useEffect(() => {
+    const loadRoadmapProgress = () => {
+      const savedCurrentCareer = localStorage.getItem('currentCareer');
+      const savedNextGoal = localStorage.getItem('nextCareerGoal');
+      const savedTargetCareer = localStorage.getItem('targetCareer');
+      
+      if (savedCurrentCareer) {
+        try {
+          setCurrentCareer(JSON.parse(savedCurrentCareer));
+        } catch (error) {
+          console.error('Error loading current career:', error);
+        }
+      }
+      
+      if (savedNextGoal) {
+        try {
+          setNextCareerGoal(JSON.parse(savedNextGoal));
+        } catch (error) {
+          console.error('Error loading next career goal:', error);
+        }
+      }
+      
+      if (savedTargetCareer) {
+        try {
+          setTargetCareer(JSON.parse(savedTargetCareer));
+        } catch (error) {
+          console.error('Error loading target career:', error);
+        }
+      }
+    };
+    
+    loadRoadmapProgress();
+    
+    // Listen for roadmap progress updates
+    const handleRoadmapUpdate = () => {
+      loadRoadmapProgress();
+    };
+    
+    window.addEventListener('roadmapProgressUpdated', handleRoadmapUpdate);
+    
+    return () => {
+      window.removeEventListener('roadmapProgressUpdated', handleRoadmapUpdate);
     };
   }, []);
   
@@ -287,7 +339,15 @@ const MyCareerPathsPage = () => {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             {/* My Career Paths Tab */}
             <TabsContent value="my-career" className="space-y-6">
-              {filteredCareerPaths.length === 0 ? (
+              {/* Roadmap Progress */}
+              <RoadmapProgress
+                currentCareer={currentCareer}
+                nextCareerGoal={nextCareerGoal}
+                targetCareer={targetCareer}
+              />
+              
+              {/* Only show empty state if there's no roadmap progress AND no saved career paths */}
+              {filteredCareerPaths.length === 0 && !currentCareer && !nextCareerGoal && !targetCareer ? (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -303,7 +363,7 @@ const MyCareerPathsPage = () => {
                     <Link to="/roadmap">Explore Roadmaps</Link>
                   </Button>
                 </motion.div>
-              ) : (
+              ) : filteredCareerPaths.length > 0 ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {filteredCareerPaths.map((progress, index) => (
                     <motion.div
@@ -411,7 +471,7 @@ const MyCareerPathsPage = () => {
                     </motion.div>
                   ))}
                 </div>
-              )}
+              ) : null}
             </TabsContent>
 
             {/* Career Interests Tab */}

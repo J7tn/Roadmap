@@ -28,7 +28,7 @@ import {
   Palette,
   Heart,
   Building,
-  LocationIcon,
+  MapPin as LocationIcon,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";

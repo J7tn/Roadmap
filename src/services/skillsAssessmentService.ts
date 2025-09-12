@@ -1,5 +1,6 @@
 import { ICareerNode, ICareerPath, IndustryCategory } from '@/types/career';
 import { loadCareerPath, loadIndustryCareerPaths } from '@/utils/careerDataLoader';
+import { smartCareerCacheService } from './smartCareerCacheService';
 
 export interface SkillsAssessmentData {
   skills: string[];
@@ -83,61 +84,38 @@ export class SkillsAssessmentService {
   }
 
   private static async findMatchingCareers(userSkills: string[], experienceLevel: string, careerGoal: string): Promise<ICareerNode[]> {
-    // Create cache key based on input parameters
-    const cacheKey = `${userSkills.sort().join(',')}-${experienceLevel}-${careerGoal}`;
-    
-    // Check cache first
-    const cached = this.getCachedResults(cacheKey);
-    if (cached) {
-      return cached;
-    }
-    
-    const matchingCareers: ICareerNode[] = [];
-    
-    // Get all career paths by loading from all industries
-    const industries: IndustryCategory[] = ['tech', 'healthcare', 'business', 'finance', 'marketing', 'education', 'creative', 'engineering', 'science', 'legal', 'government', 'nonprofit', 'trades', 'hospitality', 'media'];
-    
-    for (const industry of industries) {
-      try {
-        const careerPaths = await loadIndustryCareerPaths(industry);
-        
-        for (const careerPath of careerPaths) {
-          if (!careerPath.nodes) continue;
+    try {
+      // Use smart caching service for better performance
+      const careers = await smartCareerCacheService.getCareers({
+        skills: userSkills,
+        level: experienceLevel,
+        limit: 50
+      });
+      
+      // Filter and score careers based on assessment criteria
+      const matchingCareers = careers
+        .map(career => {
+          const skillMatch = this.calculateSkillMatch(userSkills, career.s || []);
+          const levelMatch = this.matchesExperienceLevel(career.l, experienceLevel);
+          const goalMatch = this.matchesCareerGoal(career, careerGoal);
           
-          for (const node of careerPath.nodes) {
-            // Calculate skill match percentage
-            const skillMatch = this.calculateSkillMatch(userSkills, node.s || []);
-            
-            // Filter by experience level if specified
-            const levelMatch = this.matchesExperienceLevel(node.l, experienceLevel);
-            
-            // Filter by career goal if specified
-            const goalMatch = this.matchesCareerGoal(node, careerGoal);
-            
-            // Include if it has a good skill match and meets other criteria
-            if (skillMatch > 0.3 && levelMatch && goalMatch) {
-              matchingCareers.push({
-                ...node,
-                // Add match percentage for sorting
-                matchPercentage: skillMatch
-              } as ICareerNode & { matchPercentage: number });
-            }
+          if (skillMatch > 0.3 && levelMatch && goalMatch) {
+            return {
+              ...career,
+              matchPercentage: skillMatch
+            } as ICareerNode & { matchPercentage: number };
           }
-        }
-      } catch (error) {
-        console.warn(`Failed to load career paths for industry ${industry}:`, error);
-      }
+          return null;
+        })
+        .filter((career): career is ICareerNode & { matchPercentage: number } => career !== null)
+        .sort((a, b) => b.matchPercentage - a.matchPercentage)
+        .slice(0, 8); // Return top 8 matches
+      
+      return matchingCareers;
+    } catch (error) {
+      console.error('Failed to find matching careers:', error);
+      return [];
     }
-    
-    // Sort by match percentage and return top matches
-    const results = matchingCareers
-      .sort((a, b) => (b as any).matchPercentage - (a as any).matchPercentage)
-      .slice(0, 8); // Return top 8 matches
-    
-    // Cache the results
-    this.cacheResults(cacheKey, results);
-    
-    return results;
   }
 
   private static getCachedResults(cacheKey: string): ICareerNode[] | null {

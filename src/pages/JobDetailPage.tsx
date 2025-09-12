@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Home, Search, Target, BookOpen } from "lucide-react";
 import CareerDetailsContent from "@/components/CareerDetailsContent";
+import CareerTrendDisplay from "@/components/CareerTrendDisplay";
 import { getAllCareerNodes } from "@/services/careerService";
 import { ICareerNode, ICareerPath } from "@/types/career";
 import BottomNavigation from "@/components/BottomNavigation";
@@ -92,7 +93,7 @@ const JobDetailPage: React.FC = () => {
       )}
       
       {!loading && career && careerPath && (
-        <div className="container mx-auto px-4 pb-12">
+        <div className="container mx-auto px-4 pb-12 space-y-6">
           <CareerDetailsContent 
             career={career} 
             careerPath={careerPath}
@@ -113,6 +114,9 @@ const JobDetailPage: React.FC = () => {
               navigate(`/jobs/${careerId}`);
             }}
           />
+          
+          {/* Career Trend Display */}
+          <CareerTrendDisplay career={career} showIndustryTrend={true} />
         </div>
       )}
       
