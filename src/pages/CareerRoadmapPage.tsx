@@ -6,7 +6,6 @@ import { ArrowLeft, Search, Target, BookOpen, Map, Plus, CheckCircle, Star, Arro
 import { Link } from "react-router-dom";
 import CareerTransitionSuggestions from "@/components/CareerTransitionSuggestions";
 import RoadmapProgress from "@/components/RoadmapProgress";
-import { hybridCareerService } from "@/services/hybridCareerService";
 import { ICareerNode } from "@/types/career";
 import BottomNavigation from "@/components/BottomNavigation";
 
@@ -60,29 +59,31 @@ const CareerRoadmapPage: React.FC = () => {
       try {
         console.log('Loading career data for roadmap...');
         
-        // Use hybrid service to get career data
-        const searchResult = await hybridCareerService.searchCareers('developer', { industry: 'tech' }, 1, 50);
-        console.log('Career search result:', searchResult.careers.length);
+        // Create a sample career for demonstration
+        const sampleCareer: ICareerNode = {
+          id: 'mid-dev',
+          t: 'Mid-Level Developer',
+          d: 'Experienced software developer with 3-5 years of experience',
+          l: 'I',
+          s: ['JavaScript', 'React', 'Node.js', 'TypeScript', 'Git'],
+          sr: '$70,000 - $90,000',
+          te: '3-5 years',
+          cat: 'tech',
+          jt: ['Software Developer', 'Frontend Developer', 'Full Stack Developer'],
+          c: ['AWS Certified Developer', 'React Certification'],
+          r: {
+            e: ['Bachelor\'s in Computer Science or related field'],
+            exp: '3-5 years of software development experience',
+            sk: ['JavaScript', 'React', 'Node.js', 'TypeScript', 'Git', 'Agile']
+          },
+          loc: 'United States'
+        };
         
-        const sampleCareer = searchResult.careers.find(career => career.id === 'mid-dev');
-        console.log('Sample career found:', sampleCareer);
+        console.log('Using sample career:', sampleCareer);
+        setCurrentCareer(sampleCareer);
+        localStorage.setItem('currentCareer', JSON.stringify(sampleCareer));
+        window.dispatchEvent(new CustomEvent('roadmapProgressUpdated'));
         
-        if (sampleCareer) {
-          setCurrentCareer(sampleCareer);
-          localStorage.setItem('currentCareer', JSON.stringify(sampleCareer));
-          window.dispatchEvent(new CustomEvent('roadmapProgressUpdated'));
-        } else {
-          // Fallback to any available career
-          const fallbackCareer = searchResult.careers[0];
-          if (fallbackCareer) {
-            console.log('Using fallback career:', fallbackCareer);
-            setCurrentCareer(fallbackCareer);
-            localStorage.setItem('currentCareer', JSON.stringify(fallbackCareer));
-            window.dispatchEvent(new CustomEvent('roadmapProgressUpdated'));
-          } else {
-            setError('No career data available');
-          }
-        }
       } catch (error) {
         console.error('Failed to load career data:', error);
         setError('Failed to load career data');

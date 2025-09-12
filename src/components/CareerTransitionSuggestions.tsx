@@ -4,7 +4,7 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { ArrowRight, TrendingUp, Users, Target, ChevronDown, Star } from "lucide-react";
 import { ICareerNode, CareerLevel } from "@/types/career";
-import { smartCareerCacheService } from "@/services/smartCareerCacheService";
+// import { smartCareerCacheService } from "@/services/smartCareerCacheService";
 import {
   DropdownMenu,
   DropdownMenuContent,
