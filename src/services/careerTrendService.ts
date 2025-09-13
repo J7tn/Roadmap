@@ -58,6 +58,30 @@ class CareerTrendService {
   }
 
   /**
+   * Map local career IDs to trend data career IDs
+   */
+  private getTrendCareerId(localCareerId: string): string {
+    // Now we have 239+ careers with unique trend data in Supabase!
+    // Each career should use its own ID for trend data
+    
+    // Most careers now have their own unique trend data!
+    // Only use fallback mapping for careers that might not have trend data yet
+    const fallbackMapping: Record<string, string> = {
+      // Keep minimal fallbacks for edge cases
+      'junior-dev': 'software-engineer',
+      'mid-dev': 'software-engineer', 
+      'senior-dev': 'software-engineer',
+      'tech-lead': 'software-engineer',
+      'data-analyst': 'data-scientist',
+      'global-junior-dev': 'software-engineer',
+      'global-mid-dev': 'software-engineer'
+    };
+    
+    // First try the career's own ID, then fallback to mapping
+    return fallbackMapping[localCareerId] || localCareerId;
+  }
+
+  /**
    * Get trend data for a specific career
    */
   async getCareerTrend(careerId: string): Promise<CareerTrendData | null> {
@@ -67,38 +91,53 @@ class CareerTrendService {
         return this.cache.get(careerId)!;
       }
 
-      // Fetch from Supabase
+      // Map local career ID to trend data career ID
+      const trendCareerId = this.getTrendCareerId(careerId);
+      console.log('🔍 Mapping career ID:', careerId, '→', trendCareerId);
+      
+      // Fetch from Supabase (monthly updates)
+      console.log('🔍 Querying career_trends table for career_id:', trendCareerId);
       const { data, error } = await supabase
         .from('career_trends')
         .select('*')
-        .eq('career_id', careerId)
-        .single();
+        .eq('career_id', trendCareerId)
+        .limit(1);
+
+      console.log('📊 Supabase query result:', { data, error });
 
       if (error) {
         console.warn(`No trend data found for career ${careerId}:`, error.message);
         return null;
       }
 
+      if (!data || data.length === 0) {
+        console.warn(`No trend data found for career ${careerId}: No records found`);
+        return null;
+      }
+
+      // Get the first record if multiple exist
+      const trendRecord = Array.isArray(data) ? data[0] : data;
+
       const trendData: CareerTrendData = {
-        career_id: data.career_id,
-        trend_score: data.trend_score,
-        trend_direction: data.trend_direction,
-        demand_level: data.demand_level,
-        growth_rate: data.growth_rate,
-        market_insights: data.market_insights,
-        key_skills_trending: data.key_skills_trending || [],
-        salary_trend: data.salary_trend,
-        job_availability_score: data.job_availability_score,
-        top_locations: data.top_locations || [],
-        remote_work_trend: data.remote_work_trend,
-        industry_impact: data.industry_impact,
-        automation_risk: data.automation_risk,
-        future_outlook: data.future_outlook,
-        confidence_score: data.confidence_score,
-        last_updated: data.last_updated
+        career_id: trendRecord.career_id,
+        trend_score: trendRecord.trend_score,
+        trend_direction: trendRecord.trend_direction,
+        demand_level: trendRecord.demand_level,
+        growth_rate: trendRecord.growth_rate,
+        market_insights: trendRecord.market_insights,
+        key_skills_trending: trendRecord.key_skills_trending || [],
+        salary_trend: trendRecord.salary_trend,
+        job_availability_score: trendRecord.job_availability_score,
+        top_locations: trendRecord.top_locations || [],
+        remote_work_trend: trendRecord.remote_work_trend,
+        industry_impact: trendRecord.industry_impact,
+        automation_risk: trendRecord.automation_risk,
+        future_outlook: trendRecord.future_outlook,
+        confidence_score: trendRecord.confidence_score,
+        last_updated: trendRecord.last_updated
       };
 
-      // Cache the result
+      // Cache the result using the original career ID
       this.cache.set(careerId, trendData);
       this.cacheExpiry.set(careerId, Date.now() + this.CACHE_TTL);
 
@@ -106,6 +145,30 @@ class CareerTrendService {
     } catch (error) {
       console.error('Failed to get career trend:', error);
       return null;
+    }
+  }
+
+  /**
+   * Get all available career IDs with trend data (for debugging)
+   */
+  async getAllTrendCareerIds(): Promise<string[]> {
+    try {
+      console.log('🔍 Fetching all career IDs with trend data...');
+      const { data, error } = await supabase
+        .from('career_trends')
+        .select('career_id');
+
+      if (error) {
+        console.error('Failed to fetch career IDs:', error);
+        return [];
+      }
+
+      const careerIds = data.map(row => row.career_id);
+      console.log('📊 Available career IDs with trend data:', careerIds);
+      return careerIds;
+    } catch (error) {
+      console.error('Failed to get career IDs:', error);
+      return [];
     }
   }
 

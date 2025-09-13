@@ -21,15 +21,15 @@ const getLevelBadgeColor = (level: CareerLevel): string => {
   }
 };
 
-const getLevelDisplayName = (level: CareerLevel): string => {
-  switch (level) {
-    case 'E': return 'Entry';
-    case 'I': return 'Intermediate';
-    case 'A': return 'Advanced';
-    case 'X': return 'Expert';
-    default: return 'Unknown';
-  }
-};
+  const getLevelDisplayName = (level: CareerLevel): string => {
+    switch (level) {
+      case 'E': return 'Entry Level';
+      case 'I': return 'Mid Level';
+      case 'A': return 'Senior Level';
+      case 'X': return 'Expert Level';
+      default: return 'Unknown Level';
+    }
+  };
 
 const AllJobsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -333,12 +333,6 @@ const AllJobsPage: React.FC = () => {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <h4 className="font-semibold">{node.t}</h4>
-                          <Badge 
-                            variant="secondary" 
-                            className={`text-xs ${getLevelBadgeColor(node.l)}`}
-                          >
-                            {getLevelDisplayName(node.l)}
-                          </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                           {node.d}

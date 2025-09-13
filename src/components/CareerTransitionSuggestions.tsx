@@ -4,7 +4,7 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { ArrowRight, TrendingUp, Users, Target, ChevronDown, Star } from "lucide-react";
 import { ICareerNode, CareerLevel } from "@/types/career";
-// import { smartCareerCacheService } from "@/services/smartCareerCacheService";
+import { smartCareerCacheService } from "@/services/smartCareerCacheService";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,26 +52,21 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
   const getLevelDisplayName = useMemo(() => (level: CareerLevel): string => {
     switch (level) {
       case 'E': return 'Entry Level';
-      case 'I': return 'Intermediate';
-      case 'A': return 'Advanced';
-      case 'X': return 'Expert';
-      default: return 'Unknown';
+      case 'I': return 'Mid Level';
+      case 'A': return 'Senior Level';
+      case 'X': return 'Expert Level';
+      default: return 'Unknown Level';
     }
   }, []);
 
-  const getLevelColor = useMemo(() => (level: CareerLevel): string => {
-    switch (level) {
-      case 'E': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-      case 'I': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
-      case 'A': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
-      case 'X': return 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
-    }
-  }, []);
 
   // Generate real transition suggestions based on actual career data
   const transitionSuggestions = useMemo(() => {
     if (loading || allCareers.length === 0) return [];
+
+    console.log('Total careers loaded:', allCareers.length);
+    console.log('Current career:', currentCareer);
+    console.log('Target career:', targetCareer);
 
     const suggestions = [];
     
@@ -142,15 +137,81 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
       return !isStepTowardTarget(career);
     };
     
+    // Helper function to check if career is relevant to current career
+    const isRelevantCareer = (career: ICareerNode) => {
+      const currentSkills = currentCareer.s || [];
+      const careerSkills = career.s || [];
+      
+      // Check for skill overlap
+      const skillMatches = careerSkills.filter(skill => 
+        currentSkills.some(currentSkill => 
+          currentSkill.toLowerCase().includes(skill.toLowerCase()) ||
+          skill.toLowerCase().includes(currentSkill.toLowerCase())
+        )
+      );
+      
+      // Check for industry-related keywords
+      const getIndustryKeywords = (title: string, description: string) => {
+        const text = `${title} ${description}`.toLowerCase();
+        const industries = {
+          tech: ['developer', 'engineer', 'programmer', 'software', 'tech', 'it', 'data', 'analyst', 'designer', 'architect', 'manager', 'lead', 'senior', 'full stack', 'frontend', 'backend', 'mobile', 'web', 'cloud', 'devops', 'qa', 'test', 'cyber', 'security'],
+          healthcare: ['nurse', 'doctor', 'physician', 'medical', 'healthcare', 'clinical', 'therapist', 'pharmacist', 'dentist', 'veterinary', 'health', 'care', 'patient', 'hospital'],
+          finance: ['financial', 'banking', 'accounting', 'finance', 'investment', 'analyst', 'advisor', 'broker', 'auditor', 'treasurer', 'controller', 'cfo', 'economist'],
+          business: ['manager', 'director', 'executive', 'business', 'operations', 'strategy', 'consultant', 'analyst', 'coordinator', 'specialist', 'supervisor', 'lead'],
+          education: ['teacher', 'professor', 'educator', 'instructor', 'trainer', 'curriculum', 'academic', 'student', 'learning', 'education', 'school', 'university'],
+          marketing: ['marketing', 'advertising', 'promotion', 'brand', 'social media', 'content', 'digital', 'campaign', 'public relations', 'communications'],
+          sales: ['sales', 'account', 'representative', 'business development', 'revenue', 'client', 'customer', 'relationship', 'territory'],
+          creative: ['designer', 'artist', 'creative', 'graphic', 'visual', 'content', 'writer', 'editor', 'photographer', 'video', 'media'],
+          legal: ['lawyer', 'attorney', 'legal', 'paralegal', 'counsel', 'judge', 'court', 'litigation', 'compliance'],
+          engineering: ['engineer', 'mechanical', 'electrical', 'civil', 'chemical', 'aerospace', 'industrial', 'systems', 'project'],
+          science: ['scientist', 'researcher', 'laboratory', 'chemistry', 'biology', 'physics', 'research', 'development', 'analysis'],
+          trades: ['technician', 'mechanic', 'electrician', 'plumber', 'carpenter', 'welder', 'construction', 'maintenance', 'repair'],
+          hospitality: ['hotel', 'restaurant', 'tourism', 'hospitality', 'chef', 'server', 'bartender', 'concierge', 'event'],
+          transportation: ['driver', 'pilot', 'logistics', 'shipping', 'delivery', 'transportation', 'fleet', 'dispatch'],
+          manufacturing: ['production', 'manufacturing', 'assembly', 'quality', 'supervisor', 'operator', 'machinist', 'fabrication']
+        };
+        
+        const matchedIndustries = Object.entries(industries).filter(([_, keywords]) =>
+          keywords.some(keyword => text.includes(keyword))
+        );
+        
+        return matchedIndustries.map(([industry, _]) => industry);
+      };
+      
+      const currentIndustries = getIndustryKeywords(currentCareer.t, currentCareer.d);
+      const careerIndustries = getIndustryKeywords(career.t, career.d);
+      
+      // Check if careers share any industry
+      const hasIndustryOverlap = currentIndustries.some(industry => 
+        careerIndustries.includes(industry)
+      );
+      
+      // If careers are in the same industry, they're relevant
+      if (hasIndustryOverlap) {
+        return true;
+      }
+      
+      // If no industry overlap, require significant skill overlap
+      if (skillMatches.length >= 2) {
+        return true;
+      }
+      
+      // Allow careers with at least one skill match if they're at appropriate levels
+      return skillMatches.length > 0;
+    };
+
     // Same level careers (lateral moves) - only for next goal
     const sameLevelCareers = allCareers
       .filter(career => 
         career.l === currentCareer.l && 
         career.id !== currentCareer.id &&
         isLogicalNextStep(career, 'nextGoal') &&
-        isStepTowardTarget(career)
+        isStepTowardTarget(career) &&
+        isRelevantCareer(career)
       )
-      .slice(0, 3);
+      .slice(0, 6); // Show more options
+    
+    console.log('Same level careers found:', sameLevelCareers.length);
     
     if (sameLevelCareers.length > 0) {
       suggestions.push({
@@ -167,7 +228,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
           canBeTarget: isLogicalNextStep(career, 'target')
         })),
         icon: <ArrowRight className="h-4 w-4" />,
-        color: 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950'
+        color: 'border-muted bg-muted/50 dark:border-muted dark:bg-muted/30'
       });
     }
 
@@ -178,9 +239,12 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
         .filter(career => 
           career.l === nextLevel &&
           isLogicalNextStep(career, 'nextGoal') &&
-          isStepTowardTarget(career)
+          isStepTowardTarget(career) &&
+          isRelevantCareer(career)
         )
-        .slice(0, 3);
+        .slice(0, 6); // Show more options
+      
+      console.log('Next level careers found:', nextLevelCareers.length, 'for level:', nextLevel);
       
       if (nextLevelCareers.length > 0) {
         suggestions.push({
@@ -206,13 +270,16 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
     const skillBasedCareers = allCareers
       .filter(career => {
         if (career.id === currentCareer.id || !career.s || !currentCareer.s) return false;
-        // Find careers that share at least one skill AND make logical sense AND lead toward target
+        // Find careers that share at least one skill AND make logical sense AND lead toward target AND are relevant
         const hasSharedSkills = career.s.some(skill => currentCareer.s?.includes(skill));
         const isLogical = isLogicalNextStep(career, 'nextGoal') || isLogicalNextStep(career, 'target');
         const leadsToTarget = isStepTowardTarget(career);
-        return hasSharedSkills && isLogical && leadsToTarget;
+        const isRelevant = isRelevantCareer(career);
+        return hasSharedSkills && isLogical && leadsToTarget && isRelevant;
       })
-      .slice(0, 3);
+      .slice(0, 6); // Show more options
+    
+    console.log('Skill-based careers found:', skillBasedCareers.length);
     
     if (skillBasedCareers.length > 0) {
       suggestions.push({
@@ -229,12 +296,311 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
           canBeTarget: isLogicalNextStep(career, 'target')
         })),
         icon: <Target className="h-4 w-4" />,
-        color: 'border-purple-200 bg-purple-50 dark:border-purple-800 dark:bg-purple-950'
+        color: 'border-muted bg-muted/50 dark:border-muted dark:bg-muted/30'
       });
     }
 
+    console.log('Total suggestions generated:', suggestions.length);
+    console.log('Suggestions:', suggestions.map(s => ({ id: s.id, title: s.title, count: s.careers.length })));
+
+    // Always add curated tech career suggestions as a fallback to ensure we have options
+    // This ensures users always see relevant career options even if database filtering is too restrictive
+    
+    // Check if we need to add more suggestions
+    const hasLateralMove = suggestions.some(s => s.id === 'lateral-move');
+    const hasLevelUp = suggestions.some(s => s.id === 'level-up');
+    const hasSkillBased = suggestions.some(s => s.id === 'skill-transition');
+      const curatedCareers = [
+        // Tech Careers
+        {
+          id: 'senior-dev',
+          t: 'Senior Software Developer',
+          l: 'A' as CareerLevel,
+          s: ['JavaScript', 'React', 'Node.js', 'TypeScript', 'Git', 'Agile', 'Leadership'],
+          sr: '$90,000 - $120,000',
+          te: '5-8 years',
+          d: 'Lead development projects and mentor junior developers',
+          jt: ['Senior Developer', 'Lead Developer', 'Technical Lead'],
+          c: ['AWS Certified Solutions Architect', 'Scrum Master'],
+          r: {
+            e: ['Bachelor\'s in Computer Science or related field'],
+            exp: '5-8 years of software development experience',
+            sk: ['JavaScript', 'React', 'Node.js', 'TypeScript', 'Git', 'Agile', 'Leadership', 'Mentoring']
+          }
+        },
+        {
+          id: 'full-stack-dev',
+          t: 'Full Stack Developer',
+          l: 'I' as CareerLevel,
+          s: ['JavaScript', 'React', 'Node.js', 'TypeScript', 'SQL', 'MongoDB'],
+          sr: '$75,000 - $95,000',
+          te: '3-5 years',
+          d: 'Develop both frontend and backend applications',
+          jt: ['Full Stack Developer', 'Web Developer', 'Software Engineer'],
+          c: ['Full Stack Web Development Certification'],
+          r: {
+            e: ['Bachelor\'s in Computer Science or related field'],
+            exp: '3-5 years of full-stack development experience',
+            sk: ['JavaScript', 'React', 'Node.js', 'TypeScript', 'SQL', 'MongoDB', 'REST APIs']
+          }
+        },
+        // Healthcare Careers
+        {
+          id: 'senior-nurse',
+          t: 'Senior Registered Nurse',
+          l: 'A' as CareerLevel,
+          s: ['Patient Care', 'Medical Knowledge', 'Leadership', 'Critical Thinking', 'Communication'],
+          sr: '$70,000 - $90,000',
+          te: '5-8 years',
+          d: 'Lead nursing teams and provide advanced patient care',
+          jt: ['Senior Nurse', 'Charge Nurse', 'Nurse Supervisor'],
+          c: ['RN License', 'BLS Certification', 'ACLS Certification'],
+          r: {
+            e: ['Bachelor\'s in Nursing (BSN)'],
+            exp: '5-8 years of nursing experience',
+            sk: ['Patient Care', 'Medical Knowledge', 'Leadership', 'Critical Thinking', 'Communication', 'Team Management']
+          }
+        },
+        {
+          id: 'nurse-practitioner',
+          t: 'Nurse Practitioner',
+          l: 'A' as CareerLevel,
+          s: ['Advanced Practice', 'Diagnosis', 'Treatment', 'Patient Care', 'Medical Knowledge'],
+          sr: '$95,000 - $120,000',
+          te: '6-10 years',
+          d: 'Provide advanced healthcare services and primary care',
+          jt: ['Nurse Practitioner', 'Family Nurse Practitioner', 'Adult Nurse Practitioner'],
+          c: ['NP License', 'Master\'s in Nursing', 'Board Certification'],
+          r: {
+            e: ['Master\'s in Nursing (MSN)'],
+            exp: '6-10 years of nursing experience',
+            sk: ['Advanced Practice', 'Diagnosis', 'Treatment', 'Patient Care', 'Medical Knowledge']
+          }
+        },
+        // Business Careers
+        {
+          id: 'senior-manager',
+          t: 'Senior Manager',
+          l: 'A' as CareerLevel,
+          s: ['Leadership', 'Strategy', 'Operations', 'Team Management', 'Communication'],
+          sr: '$80,000 - $110,000',
+          te: '5-8 years',
+          d: 'Lead teams and drive business operations',
+          jt: ['Senior Manager', 'Operations Manager', 'Department Manager'],
+          c: ['MBA', 'Project Management Certification'],
+          r: {
+            e: ['Bachelor\'s degree, MBA preferred'],
+            exp: '5-8 years of management experience',
+            sk: ['Leadership', 'Strategy', 'Operations', 'Team Management', 'Communication', 'Budgeting']
+          }
+        },
+        {
+          id: 'business-analyst',
+          t: 'Business Analyst',
+          l: 'I' as CareerLevel,
+          s: ['Analysis', 'Data', 'Process Improvement', 'Communication', 'Problem Solving'],
+          sr: '$65,000 - $85,000',
+          te: '3-5 years',
+          d: 'Analyze business processes and recommend improvements',
+          jt: ['Business Analyst', 'Process Analyst', 'Data Analyst'],
+          c: ['Business Analysis Certification'],
+          r: {
+            e: ['Bachelor\'s in Business or related field'],
+            exp: '3-5 years of business analysis experience',
+            sk: ['Analysis', 'Data', 'Process Improvement', 'Communication', 'Problem Solving', 'Documentation']
+          }
+        },
+        // Finance Careers
+        {
+          id: 'senior-financial-analyst',
+          t: 'Senior Financial Analyst',
+          l: 'A' as CareerLevel,
+          s: ['Financial Analysis', 'Excel', 'Modeling', 'Reporting', 'Leadership'],
+          sr: '$75,000 - $100,000',
+          te: '5-8 years',
+          d: 'Lead financial analysis and strategic planning',
+          jt: ['Senior Financial Analyst', 'Lead Analyst', 'Finance Manager'],
+          c: ['CFA', 'CPA', 'MBA'],
+          r: {
+            e: ['Bachelor\'s in Finance or Accounting'],
+            exp: '5-8 years of financial analysis experience',
+            sk: ['Financial Analysis', 'Excel', 'Modeling', 'Reporting', 'Leadership', 'Strategic Planning']
+          }
+        },
+        {
+          id: 'financial-analyst',
+          t: 'Financial Analyst',
+          l: 'I' as CareerLevel,
+          s: ['Financial Analysis', 'Excel', 'Modeling', 'Reporting', 'Data Analysis'],
+          sr: '$60,000 - $80,000',
+          te: '3-5 years',
+          d: 'Analyze financial data and create reports',
+          jt: ['Financial Analyst', 'Investment Analyst', 'Credit Analyst'],
+          c: ['CFA Level 1', 'Financial Modeling Certification'],
+          r: {
+            e: ['Bachelor\'s in Finance or Accounting'],
+            exp: '3-5 years of financial analysis experience',
+            sk: ['Financial Analysis', 'Excel', 'Modeling', 'Reporting', 'Data Analysis', 'Valuation']
+          }
+        },
+        // Marketing Careers
+        {
+          id: 'senior-marketing-manager',
+          t: 'Senior Marketing Manager',
+          l: 'A' as CareerLevel,
+          s: ['Marketing Strategy', 'Digital Marketing', 'Leadership', 'Analytics', 'Campaign Management'],
+          sr: '$80,000 - $110,000',
+          te: '5-8 years',
+          d: 'Lead marketing teams and develop strategic campaigns',
+          jt: ['Senior Marketing Manager', 'Marketing Director', 'Brand Manager'],
+          c: ['Digital Marketing Certification', 'Google Analytics'],
+          r: {
+            e: ['Bachelor\'s in Marketing or related field'],
+            exp: '5-8 years of marketing experience',
+            sk: ['Marketing Strategy', 'Digital Marketing', 'Leadership', 'Analytics', 'Campaign Management', 'Brand Management']
+          }
+        },
+        {
+          id: 'marketing-specialist',
+          t: 'Marketing Specialist',
+          l: 'I' as CareerLevel,
+          s: ['Digital Marketing', 'Social Media', 'Content Creation', 'Analytics', 'SEO'],
+          sr: '$50,000 - $70,000',
+          te: '3-5 years',
+          d: 'Execute marketing campaigns and analyze performance',
+          jt: ['Marketing Specialist', 'Digital Marketing Specialist', 'Content Marketing Specialist'],
+          c: ['Google Ads Certification', 'HubSpot Certification'],
+          r: {
+            e: ['Bachelor\'s in Marketing or related field'],
+            exp: '3-5 years of marketing experience',
+            sk: ['Digital Marketing', 'Social Media', 'Content Creation', 'Analytics', 'SEO', 'Email Marketing']
+          }
+        },
+        // Sales Careers
+        {
+          id: 'senior-sales-manager',
+          t: 'Senior Sales Manager',
+          l: 'A' as CareerLevel,
+          s: ['Sales Leadership', 'Relationship Building', 'Strategy', 'Team Management', 'Negotiation'],
+          sr: '$85,000 - $120,000',
+          te: '5-8 years',
+          d: 'Lead sales teams and drive revenue growth',
+          jt: ['Senior Sales Manager', 'Sales Director', 'Regional Sales Manager'],
+          c: ['Sales Management Certification'],
+          r: {
+            e: ['Bachelor\'s degree'],
+            exp: '5-8 years of sales experience',
+            sk: ['Sales Leadership', 'Relationship Building', 'Strategy', 'Team Management', 'Negotiation', 'Revenue Growth']
+          }
+        },
+        {
+          id: 'account-executive',
+          t: 'Account Executive',
+          l: 'I' as CareerLevel,
+          s: ['Sales', 'Relationship Building', 'Communication', 'Negotiation', 'CRM'],
+          sr: '$60,000 - $85,000',
+          te: '3-5 years',
+          d: 'Manage client relationships and drive sales',
+          jt: ['Account Executive', 'Sales Representative', 'Business Development Representative'],
+          c: ['Sales Certification'],
+          r: {
+            e: ['Bachelor\'s degree'],
+            exp: '3-5 years of sales experience',
+            sk: ['Sales', 'Relationship Building', 'Communication', 'Negotiation', 'CRM', 'Lead Generation']
+          }
+        }
+      ];
+
+      // Filter curated careers based on current career level and relevance
+      const relevantCuratedCareers = curatedCareers.filter(career => {
+        const isRelevant = isRelevantCareer(career);
+        const isLogical = isLogicalNextStep(career, 'nextGoal') || isLogicalNextStep(career, 'target');
+        const leadsToTarget = isStepTowardTarget(career);
+        return isRelevant && isLogical && leadsToTarget;
+      });
+
+      // Always add curated suggestions to ensure we have all types of career transitions
+      if (relevantCuratedCareers.length > 0) {
+        // Add lateral moves if missing
+        if (!hasLateralMove) {
+          const lateralCareers = relevantCuratedCareers.filter(career => 
+            career.l === currentCareer.l && isLogicalNextStep(career, 'nextGoal')
+          );
+          if (lateralCareers.length > 0) {
+            suggestions.push({
+              id: 'lateral-move',
+              title: 'Lateral Career Move',
+              description: 'Explore similar roles at your current level',
+              careers: lateralCareers.slice(0, 6).map(career => ({
+                id: career.id,
+                title: career.t,
+                industry: 'Various',
+                level: career.l,
+                salary: career.sr || 'Salary not specified',
+                canBeNextGoal: isLogicalNextStep(career, 'nextGoal'),
+                canBeTarget: isLogicalNextStep(career, 'target')
+              })),
+              icon: <ArrowRight className="h-4 w-4" />,
+              color: 'border-muted bg-muted/50 dark:border-muted dark:bg-muted/30'
+            });
+          }
+        }
+
+        // Add level up if missing
+        if (!hasLevelUp && currentCareer.l !== 'X') {
+          const nextLevel = currentCareer.l === 'E' ? 'I' : currentCareer.l === 'I' ? 'A' : 'X';
+          const levelUpCareers = relevantCuratedCareers.filter(career => 
+            career.l === nextLevel && isLogicalNextStep(career, 'nextGoal')
+          );
+          if (levelUpCareers.length > 0) {
+            suggestions.push({
+              id: 'level-up',
+              title: 'Level Up Your Career',
+              description: 'Advance to the next career level',
+              careers: levelUpCareers.slice(0, 6).map(career => ({
+                id: career.id,
+                title: career.t,
+                industry: 'Various',
+                level: career.l,
+                salary: career.sr || 'Salary not specified',
+                canBeNextGoal: isLogicalNextStep(career, 'nextGoal'),
+                canBeTarget: isLogicalNextStep(career, 'target')
+              })),
+              icon: <TrendingUp className="h-4 w-4" />,
+              color: 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950'
+            });
+          }
+        }
+
+        // Add skill-based if missing
+        if (!hasSkillBased) {
+          const skillBasedCareers = relevantCuratedCareers.filter(career => {
+            const hasSharedSkills = career.s.some(skill => currentCareer.s?.includes(skill));
+            return hasSharedSkills && (isLogicalNextStep(career, 'nextGoal') || isLogicalNextStep(career, 'target'));
+          });
+          if (skillBasedCareers.length > 0) {
+            suggestions.push({
+              id: 'skill-transition',
+              title: 'Skill-Based Transitions',
+              description: 'Leverage your current skills in new areas',
+              careers: skillBasedCareers.slice(0, 6).map(career => ({
+                id: career.id,
+                title: career.t,
+                industry: 'Various',
+                level: career.l,
+                salary: career.sr || 'Salary not specified',
+                canBeNextGoal: isLogicalNextStep(career, 'nextGoal'),
+                canBeTarget: isLogicalNextStep(career, 'target')
+              })),
+              icon: <Target className="h-4 w-4" />,
+              color: 'border-muted bg-muted/50 dark:border-muted dark:bg-muted/30'
+            });
+          }
+        }
+      }
+
     return suggestions;
-  }, [currentCareer, allCareers, loading]);
+  }, [currentCareer, allCareers, loading, targetCareer]);
 
   if (loading) {
     return (
@@ -269,9 +635,10 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
     <div className="space-y-6">
       <div className="text-center">
         <h3 className="text-lg font-semibold mb-2">Your Career Transition Options</h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground mb-4">
           Based on your current role as <strong>{currentCareer.t}</strong>, here are potential career paths to explore
         </p>
+        
       </div>
 
       {transitionSuggestions.map((suggestion) => (
@@ -294,7 +661,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
             <div className="grid gap-3">
               {suggestion.careers.map((career) => {
                 const fullCareer = allCareers.find(c => c.id === career.id);
-                const isLocked = fullCareer ? !isStepTowardTarget(fullCareer) : false;
+                const isLocked = false; // TODO: Implement isStepTowardTarget logic
                 
                 return (
                 <div 
@@ -315,9 +682,6 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
                           </span>
                         )}
                       </h5>
-                      <Badge variant="outline" className={`text-xs flex-shrink-0 ${getLevelColor(career.level)} ${isLocked ? 'opacity-50' : ''}`}>
-                        {getLevelDisplayName(career.level)}
-                      </Badge>
                     </div>
                     <div className="flex items-center justify-between">
                       <p className="text-xs text-muted-foreground">
@@ -353,7 +717,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
                           className="flex items-center"
                           disabled={!career.canBeNextGoal}
                         >
-                          <ArrowRight className="h-4 w-4 mr-2 text-blue-500" />
+                          <ArrowRight className="h-4 w-4 mr-2 text-primary" />
                           Set as Next Goal
                         </DropdownMenuItem>
                         <DropdownMenuItem 
@@ -367,7 +731,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
                           className="flex items-center"
                           disabled={!career.canBeTarget}
                         >
-                          <Star className="h-4 w-4 mr-2 text-purple-500" />
+                          <Star className="h-4 w-4 mr-2 text-primary" />
                           Set as Target Career
                         </DropdownMenuItem>
                       </DropdownMenuContent>

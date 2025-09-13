@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useBookmarks } from '@/hooks/useBookmarks';
 import CareerBlock from '@/components/CareerBlock';
-import { ICareerNode } from '@/types/career';
+import { ICareerNode, CareerLevel } from '@/types/career';
 import { BookmarkedCareer } from '@/services/bookmarkService';
 import BottomNavigation from '@/components/BottomNavigation';
 import PageHeader from '@/components/PageHeader';
@@ -34,7 +34,9 @@ const MyBookmarksPage: React.FC = React.memo(() => {
   const convertToCareerNode = (bookmark: BookmarkedCareer): ICareerNode => ({
     id: bookmark.id,
     t: bookmark.title,
-    l: bookmark.level as 'entry' | 'mid' | 'senior' | 'executive',
+    l: (bookmark.level === 'entry' ? 'E' : 
+        bookmark.level === 'mid' ? 'I' : 
+        bookmark.level === 'senior' ? 'A' : 'X') as CareerLevel,
     s: bookmark.skills,
     c: bookmark.certifications,
     sr: bookmark.salary,

@@ -62,11 +62,11 @@ const CareerRoadmap: React.FC<CareerRoadmapProps> = memo(({
   // Helper function to get level display name
   const getLevelDisplayName = useCallback((level: CareerLevel): string => {
     switch (level) {
-      case 'E': return 'Entry';
-      case 'I': return 'Intermediate';
-      case 'A': return 'Advanced';
-      case 'X': return 'Expert';
-      default: return 'Unknown';
+      case 'E': return 'Entry Level';
+      case 'I': return 'Mid Level';
+      case 'A': return 'Senior Level';
+      case 'X': return 'Expert Level';
+      default: return 'Unknown Level';
     }
   }, []);
 
@@ -145,11 +145,6 @@ const CareerRoadmap: React.FC<CareerRoadmapProps> = memo(({
                         >
                           <CardContent className="p-4">
                             <div className="flex items-center justify-between mb-2">
-                              <span
-                                className={`text-xs font-medium px-2 py-1 rounded-full ${getLevelBadgeColor(node.l)}`}
-                              >
-                                {getLevelDisplayName(node.l)}
-                              </span>
                               <Info
                                 size={16}
                                 className="text-muted-foreground"

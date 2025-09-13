@@ -31,8 +31,9 @@ const SearchPage: React.FC = React.memo(() => {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
 
 
-  // Get search query from URL
+  // Get search query and industry from URL
   const urlSearchQuery = searchParams.get('search') || "";
+  const urlIndustry = searchParams.get('industry') || "";
 
   // Load all career data
   useEffect(() => {
@@ -67,10 +68,18 @@ const SearchPage: React.FC = React.memo(() => {
     }
   }, [urlSearchQuery]);
 
+  // Update industry filter when URL changes
+  useEffect(() => {
+    if (urlIndustry) {
+      setSelectedIndustry(urlIndustry);
+      setShowFilters(true); // Show filters when industry is specified
+    }
+  }, [urlIndustry]);
+
   // Filter careers based on search query and filters
   const filteredCareers = useMemo(() => {
     if (!searchQuery.trim() && selectedIndustry === "all" && selectedLevel === "all") {
-      return []; // Show no careers when search bar is empty
+      return []; // Show no careers when no filters are applied
     }
 
     const query = searchQuery.toLowerCase();

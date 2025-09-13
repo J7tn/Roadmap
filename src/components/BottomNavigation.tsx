@@ -4,7 +4,7 @@ import {
   Home,
   Search,
   Map,
-  Target,
+  User,
   Activity,
 } from "lucide-react";
 
@@ -66,7 +66,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ className = "" }) =
                 ? 'bg-primary text-primary-foreground' 
                 : 'text-muted-foreground hover:text-foreground'
             }`}>
-              <Target className="h-5 w-5" />
+              <User className="h-5 w-5" />
             </div>
             <span className="text-xs font-medium">Profile</span>
           </Link>

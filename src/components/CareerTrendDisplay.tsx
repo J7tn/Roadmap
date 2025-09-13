@@ -16,7 +16,9 @@ import {
   Target
 } from 'lucide-react';
 import { careerTrendService, CareerTrendData, IndustryTrendData } from '@/services/careerTrendService';
+import { regionalTrendService } from '@/services/regionalTrendService';
 import { ICareerNode } from '@/types/career';
+import { useRegion } from '@/contexts/RegionContext';
 
 interface CareerTrendDisplayProps {
   career: ICareerNode;
@@ -31,6 +33,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
   const [industryTrend, setIndustryTrend] = useState<IndustryTrendData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { selectedRegion, getRegionDisplayName } = useRegion();
 
   useEffect(() => {
     const loadTrendData = async () => {
@@ -38,13 +41,53 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
         setLoading(true);
         setError(null);
 
+        console.log('=== CAREER TREND DEBUG ===');
+        console.log('Loading trend data for career:', career.id, career.t);
+        console.log('Career object:', career);
+
+        // First, let's see what career IDs are available in the trend data
+        const availableCareerIds = await careerTrendService.getAllTrendCareerIds();
+        console.log('Available career IDs with trend data:', availableCareerIds);
+
         // Load career trend data
-        const careerTrend = await careerTrendService.getCareerTrend(career.id);
+        let careerTrend = await careerTrendService.getCareerTrend(career.id);
+        console.log('Career trend result for', career.id, ':', careerTrend);
+        
+        // Apply regional factors if trend data exists
+        if (careerTrend) {
+          careerTrend = regionalTrendService.applyRegionalFactors(careerTrend, selectedRegion);
+          console.log('Regional trend data for', selectedRegion, ':', careerTrend);
+        }
+        
+        // If no trend data found, try some common variations
+        if (!careerTrend) {
+          console.log('No trend data found for', career.id, '- checking for similar IDs...');
+          // Try some common ID variations
+          const variations = [
+            career.id.replace('-', '_'),
+            career.id.replace('_', '-'),
+            career.t.toLowerCase().replace(/\s+/g, '-'),
+            career.t.toLowerCase().replace(/\s+/g, '_')
+          ];
+          
+          for (const variation of variations) {
+            if (variation !== career.id) {
+              console.log('Trying variation:', variation);
+              const altTrend = await careerTrendService.getCareerTrend(variation);
+              if (altTrend) {
+                console.log('Found trend data with variation:', variation);
+                careerTrend = altTrend;
+                break;
+              }
+            }
+          }
+        }
         setTrendData(careerTrend);
 
         // Load industry trend data if requested
         if (showIndustryTrend && careerTrend) {
           const industryTrendData = await careerTrendService.getIndustryTrend(careerTrend.career_id);
+          console.log('Industry trend result:', industryTrendData);
           setIndustryTrend(industryTrendData);
         }
       } catch (err) {
@@ -56,7 +99,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
     };
 
     loadTrendData();
-  }, [career.id, showIndustryTrend]);
+  }, [career.id, showIndustryTrend, selectedRegion]);
 
   const getTrendIcon = (direction: string) => {
     switch (direction) {
@@ -111,7 +154,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             <span className="ml-2 text-gray-600">Loading trend data...</span>
           </div>
         </CardContent>
@@ -134,9 +177,36 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
             <p className="text-gray-600">
               {error || 'No trend data available for this career'}
             </p>
-            <p className="text-sm text-gray-500 mt-2">
-              Trend data is updated monthly
+            <p className="text-sm text-gray-500 mt-2 mb-4">
+              Trend data is updated monthly from Supabase. Some careers may not have trend data yet.
             </p>
+            <div className="space-y-2">
+              <p className="text-xs text-gray-500">
+                Career ID: <code className="bg-gray-100 px-1 rounded">{career.id}</code>
+              </p>
+              <p className="text-xs text-gray-500">
+                Look for this ID in the <code className="bg-gray-100 px-1 rounded">career_trends</code> table
+              </p>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  console.log('Manual trend update requested for:', career.id);
+                  // Open Supabase dashboard to the career_trends table
+                  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+                  if (supabaseUrl) {
+                    const projectId = supabaseUrl.split('//')[1].split('.')[0];
+                    // Open to the table editor for career_trends
+                    window.open(`https://supabase.com/dashboard/project/${projectId}/editor`, '_blank');
+                  } else {
+                    console.error('VITE_SUPABASE_URL not found in environment variables');
+                    alert('Supabase URL not configured. Please check your environment variables.');
+                  }
+                }}
+              >
+                Check Database
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -158,10 +228,16 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Region Indicator */}
+          <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+            <MapPin className="h-4 w-4" />
+            <span>Data customized for {getRegionDisplayName()}</span>
+          </div>
+
           {/* Trend Score and Direction */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="text-3xl font-bold text-blue-600">
+              <div className="text-3xl font-bold text-primary">
                 {trendData.trend_score.toFixed(1)}
               </div>
               <div>
@@ -216,9 +292,9 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
 
           {/* Market Insights */}
           {trendData.market_insights && (
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <h4 className="font-semibold text-blue-900 mb-2">Market Insights</h4>
-              <p className="text-sm text-blue-800">{trendData.market_insights}</p>
+            <div className="p-4 bg-muted/50 dark:bg-muted/30 rounded-lg">
+              <h4 className="font-semibold mb-2">Market Insights</h4>
+              <p className="text-sm text-muted-foreground">{trendData.market_insights}</p>
             </div>
           )}
 
@@ -228,7 +304,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
               <h4 className="font-semibold text-gray-900 mb-2">Trending Skills</h4>
               <div className="flex flex-wrap gap-2">
                 {trendData.key_skills_trending.map((skill, index) => (
-                  <Badge key={index} variant="outline" className="text-blue-600 border-blue-200">
+                  <Badge key={index} variant="outline" className="text-primary border-primary/20">
                     {skill}
                   </Badge>
                 ))}
@@ -295,7 +371,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <div className="text-lg font-semibold text-blue-600">
+                <div className="text-lg font-semibold text-primary">
                   {industryTrend.avg_trend_score.toFixed(1)}
                 </div>
                 <div className="text-xs text-gray-600">Industry Avg</div>

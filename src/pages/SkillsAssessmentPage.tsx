@@ -731,7 +731,7 @@ const SkillsAssessmentPage = () => {
     >
       {/* Mobile-Optimized Navigation Header */}
       <motion.header 
-        className="border-b bg-gradient-to-r from-orange-50 to-blue-50 sticky top-0 z-50 safe-area-top"
+        className="border-b bg-background sticky top-0 z-50 safe-area-top"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -752,7 +752,7 @@ const SkillsAssessmentPage = () => {
 
              {/* Progress Bar */}
        <motion.div 
-         className="border-b bg-gradient-to-r from-blue-50/50 to-purple-50/50"
+         className="border-b bg-muted/50"
          initial={{ opacity: 0, scale: 0.95 }}
          animate={{ opacity: 1, scale: 1 }}
          transition={{ duration: 0.4 }}

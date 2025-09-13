@@ -67,8 +67,9 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
       
       // Find careers with similar skills
       const similarCareers = allCareers
-        .filter(c => c.id !== currentCareer.id) // Exclude current career
-        .map(career => {
+        .filter(c => c.node.id !== currentCareer.id) // Exclude current career
+        .map(careerData => {
+          const career = careerData.node;
           const careerSkills = career.s || [];
           const skillMatches = careerSkills.filter(skill => 
             currentSkills.some(currentSkill => 
@@ -107,10 +108,10 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
   const getLevelDisplayName = useMemo(() => (level: CareerLevel): string => {
     switch (level) {
       case 'E': return 'Entry Level';
-      case 'I': return 'Intermediate';
-      case 'A': return 'Advanced';
-      case 'X': return 'Expert';
-      default: return 'Unknown';
+      case 'I': return 'Mid Level';
+      case 'A': return 'Senior Level';
+      case 'X': return 'Expert Level';
+      default: return 'Unknown Level';
     }
   }, []);
 
@@ -126,10 +127,10 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
 
   const getNextLevel = useMemo(() => (level: CareerLevel): string => {
     switch (level) {
-      case 'E': return 'Intermediate';
-      case 'I': return 'Advanced';
-      case 'A': return 'Expert';
-      case 'X': return 'Master/Executive';
+      case 'E': return 'Mid Level';
+      case 'I': return 'Senior Level';
+      case 'A': return 'Expert Level';
+      case 'X': return 'Top Executive';
       default: return 'Next Level';
     }
   }, []);
@@ -271,7 +272,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
               Career Path Progress
             </h3>
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-muted-foreground whitespace-nowrap">
                 Step {currentIndex + 1} of {careerPath.nodes.length}
               </span>
               {!isPathTracked && (

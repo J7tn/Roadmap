@@ -68,7 +68,7 @@ const CareerRoadmapPage: React.FC = () => {
           s: ['JavaScript', 'React', 'Node.js', 'TypeScript', 'Git'],
           sr: '$70,000 - $90,000',
           te: '3-5 years',
-          cat: 'tech',
+          // cat: 'tech', // TODO: Add category field to ICareerNode type
           jt: ['Software Developer', 'Frontend Developer', 'Full Stack Developer'],
           c: ['AWS Certified Developer', 'React Certification'],
           r: {
@@ -76,7 +76,7 @@ const CareerRoadmapPage: React.FC = () => {
             exp: '3-5 years of software development experience',
             sk: ['JavaScript', 'React', 'Node.js', 'TypeScript', 'Git', 'Agile']
           },
-          loc: 'United States'
+          // loc: 'United States' // TODO: Add location field to ICareerNode type
         };
         
         console.log('Using sample career:', sampleCareer);
@@ -162,7 +162,7 @@ const CareerRoadmapPage: React.FC = () => {
         {currentCareer ? (
           <div className="space-y-6">
             {/* Current Career Overview */}
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-lg p-6">
+            <div className="bg-muted/50 dark:bg-muted/30 rounded-lg p-6">
               <div className="mb-4">
                 <h2 className="text-2xl font-bold mb-2">Your Current Career</h2>
                 <p className="text-muted-foreground">Plan your next step</p>
@@ -170,7 +170,9 @@ const CareerRoadmapPage: React.FC = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-                  <h3 className="font-semibold text-lg">{currentCareer.t}</h3>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold text-lg">{currentCareer.t}</h3>
+                  </div>
                   <p className="text-sm text-muted-foreground mt-1">{currentCareer.d}</p>
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg p-4">

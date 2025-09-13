@@ -147,21 +147,13 @@ const HomePage = React.memo(() => {
       
       case 'view':
         if (notification.data?.industry) {
-          // Map industry to category and navigate
-          const industryMap: { [key: string]: string } = {
-            'Technology': 'tech',
-            'Healthcare': 'healthcare', 
-            'Finance': 'finance',
-            'Manufacturing': 'trades',
-            'Print Media': 'media',
-            'Traditional Retail': 'business',
-            'Coal Mining': 'trades',
-            'Telemarketing': 'business'
-          };
-          const categoryId = industryMap[notification.data.industry] || 'tech';
-          navigate(`/category/${categoryId}`);
+          // Import the mapping function and navigate to search page with industry filter
+          import('@/utils/industryMapping').then(({ getIndustryIdFromName }) => {
+            const industryId = getIndustryIdFromName(notification.data.industry);
+            navigate(`/search?industry=${encodeURIComponent(industryId)}`);
+          });
         } else {
-          navigate('/jobs');
+          navigate('/search');
         }
         break;
       
@@ -261,8 +253,20 @@ const HomePage = React.memo(() => {
               <Input placeholder="Search careers..." className="pl-8 h-9" />
             </div>
             
-            {/* Notifications Button */}
+            {/* Notifications and Settings Buttons */}
             <div className="flex items-center space-x-2">
+              {/* Settings Button */}
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => navigate('/settings')}
+                className="relative"
+                title="Settings"
+              >
+                <Settings className="h-5 w-5" />
+              </Button>
+              
+              {/* Notifications Button */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="relative">

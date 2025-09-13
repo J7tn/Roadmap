@@ -64,21 +64,14 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
 
   const handleIndustryClick = (industry: string) => {
     console.log('Industry clicked:', industry);
-    const industryMap: { [key: string]: string } = {
-      'Technology': 'tech',
-      'Healthcare': 'healthcare',
-      'Finance': 'finance',
-      'Manufacturing': 'trades',
-      'Print Media': 'media',
-      'Traditional Retail': 'business',
-      'Coal Mining': 'trades',
-      'Telemarketing': 'business'
-    };
-    const categoryId = industryMap[industry] || 'tech';
-    console.log('Navigating to category:', categoryId);
-    // Scroll to top immediately
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-    navigate(`/category/${categoryId}`);
+    // Import the mapping function
+    import('@/utils/industryMapping').then(({ getIndustryIdFromName }) => {
+      const industryId = getIndustryIdFromName(industry);
+      console.log('Mapped industry:', industry, 'to ID:', industryId);
+      // Navigate to search page with industry filter
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      navigate(`/search?industry=${encodeURIComponent(industryId)}`);
+    });
   };
 
   const handleRoleClick = (role: string) => {
@@ -199,7 +192,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
           <Card className="h-full">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg">
-                <TrendingUp className="h-5 w-5 text-blue-600" />
+                <TrendingUp className="h-5 w-5 text-primary" />
                 <span>Trending Skills</span>
               </CardTitle>
             </CardHeader>
@@ -243,7 +236,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
           <Card className="h-full">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg">
-                <TrendingDown className="h-5 w-5 text-red-600" />
+                <TrendingDown className="h-5 w-5 text-primary" />
                 <span>Declining Skills</span>
               </CardTitle>
             </CardHeader>
@@ -254,7 +247,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: Math.min(index * 0.1, 0.5) }}
-                  className="flex items-center justify-between p-2 rounded-lg bg-red-50/50 cursor-pointer hover:bg-red-50/70 transition-colors"
+                  className="flex items-center justify-between p-2 rounded-lg bg-red-50/50 dark:bg-red-900/20 cursor-pointer hover:bg-red-50/70 dark:hover:bg-red-900/30 transition-colors"
                   onClick={() => handleSkillClick(skill.skill)}
                 >
                   <div className="flex items-center space-x-2">
@@ -302,7 +295,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                   onClick={() => handleIndustryClick(industry.industry)}
                 >
                   <div className="flex items-center space-x-2">
-                    <Users className="h-4 w-4 text-blue-600" />
+                    <Users className="h-4 w-4 text-primary" />
                     <span className="font-medium">{industry.industry}</span>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -311,7 +304,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                         +{industry.growth}%
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {industry.jobCount?.toLocaleString() || '0'} jobs
+                        {industry.job_count?.toLocaleString() || '0'} jobs
                       </div>
                     </div>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -331,7 +324,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
           <Card className="h-full">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg">
-                <TrendingDown className="h-5 w-5 text-red-600" />
+                <TrendingDown className="h-5 w-5 text-primary" />
                 <span>Declining Industries</span>
               </CardTitle>
             </CardHeader>
@@ -342,7 +335,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: Math.min(index * 0.1, 0.5) }}
-                  className="flex items-center justify-between p-2 rounded-lg bg-red-50/50 cursor-pointer hover:bg-red-50/70 transition-colors"
+                  className="flex items-center justify-between p-2 rounded-lg bg-red-50/50 dark:bg-red-900/20 cursor-pointer hover:bg-red-50/70 dark:hover:bg-red-900/30 transition-colors"
                   onClick={() => handleIndustryClick(industry.industry)}
                 >
                   <div className="flex items-center space-x-2">
@@ -355,7 +348,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                         {industry.growth}%
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {industry.jobCount?.toLocaleString() || '0'} jobs
+                        {industry.job_count?.toLocaleString() || '0'} jobs
                       </div>
                     </div>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -375,7 +368,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
           <Card className="h-full">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg">
-                <Zap className="h-5 w-5 text-yellow-600" />
+                <Zap className="h-5 w-5 text-primary" />
                 <span>Emerging Roles</span>
               </CardTitle>
             </CardHeader>
@@ -481,7 +474,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg">
-                <Users className="h-5 w-5 text-blue-600" />
+                <Users className="h-5 w-5 text-primary" />
                 <span>Career Transition Opportunities</span>
               </CardTitle>
             </CardHeader>
@@ -491,7 +484,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                   <div key={role.title} className="flex items-center justify-between">
                     <span className="text-sm">{role.title}</span>
                     <div className="flex items-center space-x-2">
-                      <span className="text-xs font-medium text-blue-600">
+                      <span className="text-xs font-medium text-muted-foreground">
                         +{role.growth}%
                       </span>
                       <ChevronRight className="h-3 w-3 text-muted-foreground" />

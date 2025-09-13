@@ -30,7 +30,7 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
   
   const filters = useMemo(() => ({
     industry: selectedIndustry !== "all" ? [selectedIndustry as IndustryCategory] : undefined,
-    level: selectedLevel !== "all" ? [selectedLevel] : undefined
+    level: selectedLevel !== "all" ? [selectedLevel as CareerLevel] : undefined
   }), [selectedIndustry, selectedLevel]);
 
   const { data: searchResults, loading, error } = useOptimizedSearch(searchQuery, filters);
@@ -60,11 +60,11 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
 
   const getLevelDisplayName = useCallback((level: CareerLevel): string => {
     switch (level) {
-      case 'E': return 'Entry';
-      case 'I': return 'Intermediate';
-      case 'A': return 'Advanced';
-      case 'X': return 'Expert';
-      default: return 'Unknown';
+      case 'E': return 'Entry Level';
+      case 'I': return 'Mid Level';
+      case 'A': return 'Senior Level';
+      case 'X': return 'Expert Level';
+      default: return 'Unknown Level';
     }
   }, []);
 
@@ -173,10 +173,10 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="all">All Levels</SelectItem>
-                            <SelectItem value="E">Entry Level</SelectItem>
-                            <SelectItem value="I">Intermediate</SelectItem>
-                            <SelectItem value="A">Advanced</SelectItem>
-                            <SelectItem value="X">Expert</SelectItem>
+                <SelectItem value="E">Entry Level</SelectItem>
+                <SelectItem value="I">Mid Level</SelectItem>
+                <SelectItem value="A">Senior Level</SelectItem>
+                <SelectItem value="X">Expert Level</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -233,12 +233,6 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-2">
                                     <h4 className="font-semibold">{node.t}</h4>
-                                    <Badge 
-                                      variant="secondary" 
-                                      className={`text-xs ${getLevelBadgeColor(node.l)}`}
-                                    >
-                                      {getLevelDisplayName(node.l)}
-                                    </Badge>
                                   </div>
                                   <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                                     {node.d}
@@ -320,11 +314,11 @@ const BrowseAllCareers: React.FC<{ onCareerSelect: (career: ICareerNode) => void
 
   const getLevelDisplayName = useCallback((level: CareerLevel): string => {
     switch (level) {
-      case 'E': return 'Entry';
-      case 'I': return 'Intermediate';
-      case 'A': return 'Advanced';
-      case 'X': return 'Expert';
-      default: return 'Unknown';
+      case 'E': return 'Entry Level';
+      case 'I': return 'Mid Level';
+      case 'A': return 'Senior Level';
+      case 'X': return 'Expert Level';
+      default: return 'Unknown Level';
     }
   }, []);
 
@@ -371,12 +365,6 @@ const BrowseAllCareers: React.FC<{ onCareerSelect: (career: ICareerNode) => void
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <h4 className="font-semibold">{node.t}</h4>
-                      <Badge 
-                        variant="secondary" 
-                        className={`text-xs ${getLevelBadgeColor(node.l)}`}
-                      >
-                        {getLevelDisplayName(node.l)}
-                      </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                       {node.d}
