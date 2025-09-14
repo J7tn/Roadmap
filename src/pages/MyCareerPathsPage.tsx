@@ -30,8 +30,8 @@ const MyCareerPathsPage = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const bookmarks = await bookmarkService.getBookmarks();
-        const progress = await careerPathProgressService.getProgress();
+        const bookmarks = await bookmarkService.getAllBookmarks();
+        const progress = await careerPathProgressService.getAllProgress();
         setBookmarkedCareers(bookmarks);
         setCareerPathProgress(progress);
       } catch (error) {
@@ -152,7 +152,7 @@ const MyCareerPathsPage = () => {
                         <div className="space-y-3">
                           <div>
                             <p className="text-sm font-medium">Current Position</p>
-                            <p className="text-sm text-muted-foreground">{progress.currentCareerTitle}</p>
+                            <p className="text-sm text-muted-foreground">{progress.currentCareerId}</p>
                           </div>
                           
                           <div>
@@ -167,7 +167,7 @@ const MyCareerPathsPage = () => {
                           
                           <div>
                             <p className="text-sm font-medium">Next Step</p>
-                            <p className="text-sm text-muted-foreground">{progress.nextCareerTitle}</p>
+                            <p className="text-sm text-muted-foreground">Next step in path</p>
                           </div>
                         </div>
                       </CardContent>

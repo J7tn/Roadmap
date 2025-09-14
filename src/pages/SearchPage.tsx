@@ -86,7 +86,7 @@ const SearchPage: React.FC = React.memo(() => {
     
     const filtered = allCareers.filter(career => {
       // Ensure career object has required properties
-      if (!career || !career.id || !career.t || !career.cat) {
+      if (!career || !career.id || !career.t) {
         return false;
       }
 
@@ -100,7 +100,7 @@ const SearchPage: React.FC = React.memo(() => {
 
       // Apply industry filter
       const matchesIndustry = selectedIndustry === "all" || 
-        career.cat === selectedIndustry;
+        true; // Individual career nodes don't have category, filter by path instead
 
       // Apply level filter
       const matchesLevel = selectedLevel === "all" || 
@@ -295,7 +295,7 @@ const SearchPage: React.FC = React.memo(() => {
               <p className="text-sm text-muted-foreground">
                 {filteredCareers.length} career{filteredCareers.length !== 1 ? 's' : ''} found
               </p>
-              {filteredCareers.filter(career => career && career.id && career.t && career.cat).map((career, index) => (
+              {filteredCareers.filter(career => career && career.id && career.t).map((career, index) => (
                 <CareerBlock
                   key={career.id}
                   career={career}

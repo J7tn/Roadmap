@@ -9,7 +9,7 @@ const StatusBarComponent: React.FC = () => {
     const setStatusBarStyle = async () => {
       try {
         // Check if we're running on a native platform
-        if (typeof window !== 'undefined' && window.Capacitor) {
+        if (typeof window !== 'undefined' && (window as any).Capacitor) {
           // Set status bar style based on theme
           await StatusBar.setStyle({ 
             style: isDarkMode ? Style.Dark : Style.Light 

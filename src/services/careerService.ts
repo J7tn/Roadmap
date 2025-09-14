@@ -14,8 +14,7 @@ import {
   loadCareerPath, 
   loadIndustryCareerPaths, 
   searchCareerPaths, 
-  getCareerRecommendations as getRecommendations,
-  getCareerPathStats
+  getCareerRecommendations as getRecommendations
 } from '@/utils/careerDataLoader';
 
 // Performance-optimized career service

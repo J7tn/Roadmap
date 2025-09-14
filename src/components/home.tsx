@@ -239,7 +239,7 @@ const HomePage = React.memo(() => {
               onError={(e) => {
                 // Fallback to icon if logo not found
                 e.currentTarget.style.display = 'none';
-                e.currentTarget.nextElementSibling.style.display = 'block';
+                (e.currentTarget.nextElementSibling as HTMLElement).style.display = 'block';
               }}
             />
             <MapPin className="h-6 w-6 text-primary hidden" />

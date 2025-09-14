@@ -237,7 +237,11 @@ class SupabaseCareerService {
       te: career.experience,
       d: career.description,
       jt: career.job_titles,
-      r: career.requirements
+      r: {
+        e: career.requirements.education,
+        exp: career.requirements.experience,
+        sk: career.requirements.skills
+      }
     };
   }
 

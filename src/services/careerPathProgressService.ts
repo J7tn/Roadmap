@@ -64,8 +64,8 @@ class CareerPathProgressService {
     const progress: CareerPathProgress = {
       id: `progress_${careerPath.id}_${Date.now()}`,
       pathId: careerPath.id,
-      pathName: careerPath.name,
-      pathCategory: careerPath.category,
+      pathName: careerPath.n,
+      pathCategory: careerPath.cat,
       currentStep: startingIndex >= 0 ? startingIndex : 0,
       totalSteps: careerPath.nodes.length,
       completedSteps: startingIndex >= 0 ? [startingIndex] : [],

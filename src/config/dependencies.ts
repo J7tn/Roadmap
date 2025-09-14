@@ -63,8 +63,8 @@ export class DIContainer {
     this.services.set('supabaseCareerService', supabaseCareerService);
     this.services.set('supabaseTrendingService', supabaseTrendingService);
     this.services.set('bookmarkService', bookmarkService);
-    this.services.set('notificationService', notificationService);
-    this.services.set('skillsAssessmentService', skillsAssessmentService);
+    this.services.set('notificationService', NotificationService.getInstance());
+    this.services.set('skillsAssessmentService', new SkillsAssessmentService());
     this.services.set('appStartupService', appStartupService);
   }
 

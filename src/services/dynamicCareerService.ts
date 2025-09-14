@@ -142,7 +142,11 @@ class DynamicCareerService {
       te: career.experience,
       d: career.description,
       jt: career.jobTitles,
-      r: career.requirements
+      r: {
+        e: career.requirements.education,
+        exp: career.requirements.experience,
+        sk: career.requirements.skills
+      }
     };
   }
 

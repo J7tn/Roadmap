@@ -39,16 +39,24 @@ class LocalDataStrategy implements ICareerDataStrategy {
 class SupabaseDataStrategy implements ICareerDataStrategy {
   async getCareerPath(pathId: string): Promise<ICareerPath | null> {
     try {
-      return await supabaseCareerService.getCareerPath(pathId);
-    } catch (error) {
-      console.warn('Supabase career path fetch failed, falling back to local data:', error);
+      // Supabase doesn't have getCareerPath, fall back to local data
       return careerService.getCareerPath(pathId);
+    } catch (error) {
+      console.warn('Career path fetch failed:', error);
+      return null;
     }
   }
 
   async getCareerPathsByIndustry(industry: IndustryCategory, page = 1, limit = 10): Promise<ICareerSearchResult> {
     try {
-      return await supabaseCareerService.getCareerPathsByIndustry(industry, page, limit);
+      // Use getCareersByIndustry instead
+      const careers = await supabaseCareerService.getCareersByIndustry(industry);
+      return {
+        careers: careers.map(career => this.convertToCareerPath(career)),
+        total: careers.length,
+        filters: { industry: [industry], level: [], skills: [] },
+        suggestions: []
+      };
     } catch (error) {
       console.warn('Supabase industry fetch failed, falling back to local data:', error);
       return careerService.getCareerPathsByIndustry(industry, page, limit);
@@ -57,7 +65,8 @@ class SupabaseDataStrategy implements ICareerDataStrategy {
 
   async searchCareers(query: string, filters?: ICareerFilters, page = 1, limit = 20): Promise<ICareerSearchResult> {
     try {
-      return await supabaseCareerService.searchCareers(query, filters, page, limit);
+      // Supabase doesn't have searchCareers method, fall back to local data
+      return careerService.searchCareers(query, filters, page, limit);
     } catch (error) {
       console.warn('Supabase search failed, falling back to local data:', error);
       return careerService.searchCareers(query, filters, page, limit);
@@ -66,11 +75,38 @@ class SupabaseDataStrategy implements ICareerDataStrategy {
 
   async getCareerNode(nodeId: string): Promise<ICareerNode | null> {
     try {
-      return await supabaseCareerService.getCareerNode(nodeId);
-    } catch (error) {
-      console.warn('Supabase career node fetch failed, falling back to local data:', error);
+      // Supabase doesn't have getCareerNode method, fall back to local data
       return careerService.getCareerNode(nodeId);
+    } catch (error) {
+      console.warn('Career node fetch failed:', error);
+      return null;
     }
+  }
+
+  private convertToCareerPath(career: any): ICareerPath {
+    // Convert Supabase career data to ICareerPath format
+    return {
+      id: career.id,
+      n: career.title,
+      cat: career.industry,
+      nodes: [{
+        id: career.id,
+        t: career.title,
+        l: career.level || 'entry',
+        s: career.skills || [],
+        c: career.certifications || [],
+        sr: career.salary || '',
+        te: career.experience || '',
+        d: career.description || '',
+        jt: career.job_titles || [],
+        r: {
+          e: career.requirements?.education || [],
+          exp: career.requirements?.experience || '',
+          sk: career.requirements?.skills || []
+        }
+      }],
+      conn: []
+    };
   }
 }
 

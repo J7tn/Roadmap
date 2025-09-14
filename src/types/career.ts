@@ -217,13 +217,18 @@ export interface ICareerSearchResult {
   total: number;
   filters: ICareerFilters;
   suggestions: string[];
+  pagination?: {
+    hasMore: boolean;
+    currentPage: number;
+    totalPages: number;
+  };
 }
 
 // Export all interfaces for easy importing
 export type {
   ICareerNode as CareerNode,
   ICareerPath as CareerPath,
-  IIndustryCategory as IndustryCategory,
+  IIndustryCategory as IndustryCategoryInterface,
   IUserProfile as UserProfile,
   ICareerGoal as CareerGoal,
   IMilestone as Milestone,

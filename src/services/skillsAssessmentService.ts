@@ -132,8 +132,8 @@ export class SkillsAssessmentService {
     
     // Clean up old cache entries if cache gets too large
     if (this.careerDataCache.size > 50) {
-      const oldestKey = this.cacheTimestamps.entries()
-        .reduce((oldest, [key, time]) => time < oldest.time ? { key, time } : oldest, 
+      const oldestKey = Array.from(this.cacheTimestamps.entries())
+        .reduce((oldest, [key, time]) => time < oldest.time ? { key, time } : oldest,
                 { key: '', time: Date.now() });
       this.careerDataCache.delete(oldestKey.key);
       this.cacheTimestamps.delete(oldestKey.key);
