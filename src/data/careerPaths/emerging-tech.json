@@ -1,0 +1,157 @@
+{
+  "id": "emerging-tech-careers",
+  "n": "Emerging Technology Career Path",
+  "cat": "emerging-tech",
+  "nodes": [
+    {
+      "id": "ai-engineer",
+      "t": "AI Engineer",
+      "l": "I",
+      "s": ["Python", "Machine Learning", "TensorFlow", "PyTorch", "Deep Learning", "Neural Networks", "Natural Language Processing", "Computer Vision"],
+      "c": ["AWS Machine Learning", "Google Cloud ML", "Microsoft Azure ML", "TensorFlow Developer"],
+      "sr": "$90,000 - $150,000",
+      "te": "2-5 years",
+      "d": "Build and deploy AI models and systems for real-world applications.",
+      "jt": ["AI Engineer", "Machine Learning Engineer", "AI Developer", "ML Engineer"],
+      "r": {
+        "e": ["Bachelor's in Computer Science", "AI/ML Specialization", "Advanced Degree Preferred"],
+        "exp": "2-5 years",
+        "sk": ["Python", "Machine Learning", "Deep Learning", "AI Frameworks"]
+      }
+    },
+    {
+      "id": "devops-engineer",
+      "t": "DevOps Engineer",
+      "l": "I",
+      "s": ["Docker", "Kubernetes", "CI/CD", "AWS", "Azure", "Infrastructure as Code", "Monitoring", "Automation"],
+      "c": ["AWS Certified DevOps Engineer", "Kubernetes Administrator", "Docker Certified Associate"],
+      "sr": "$85,000 - $140,000",
+      "te": "2-5 years",
+      "d": "Automate deployment processes and manage cloud infrastructure.",
+      "jt": ["DevOps Engineer", "Site Reliability Engineer", "Platform Engineer", "Cloud Engineer"],
+      "r": {
+        "e": ["Bachelor's in Computer Science", "DevOps Certifications"],
+        "exp": "2-5 years",
+        "sk": ["Cloud Platforms", "Containerization", "CI/CD", "Infrastructure Management"]
+      }
+    },
+    {
+      "id": "data-engineer",
+      "t": "Data Engineer",
+      "l": "I",
+      "s": ["Python", "SQL", "Big Data", "Apache Spark", "Data Pipelines", "ETL", "Data Warehousing", "Cloud Platforms"],
+      "c": ["AWS Big Data", "Google Cloud Data Engineer", "Apache Spark Developer"],
+      "sr": "$80,000 - $130,000",
+      "te": "2-5 years",
+      "d": "Build data pipelines and infrastructure for large-scale data processing.",
+      "jt": ["Data Engineer", "Big Data Engineer", "Data Pipeline Engineer", "ETL Developer"],
+      "r": {
+        "e": ["Bachelor's in Computer Science", "Data Engineering Certifications"],
+        "exp": "2-5 years",
+        "sk": ["Python", "SQL", "Big Data Technologies", "Data Pipeline Design"]
+      }
+    },
+    {
+      "id": "mlops-engineer",
+      "t": "MLOps Engineer",
+      "l": "A",
+      "s": ["Machine Learning", "DevOps", "MLOps", "Model Deployment", "ML Pipeline", "Monitoring", "A/B Testing", "Cloud Platforms"],
+      "c": ["MLOps Professional", "AWS Machine Learning", "Google Cloud ML Engineer"],
+      "sr": "$95,000 - $155,000",
+      "te": "3-6 years",
+      "d": "Deploy and maintain machine learning systems in production environments.",
+      "jt": ["MLOps Engineer", "ML Platform Engineer", "ML Infrastructure Engineer", "ML Systems Engineer"],
+      "r": {
+        "e": ["Bachelor's in Computer Science", "MLOps Certifications", "Advanced Degree Preferred"],
+        "exp": "3-6 years",
+        "sk": ["Machine Learning", "DevOps", "MLOps", "Model Deployment"]
+      }
+    },
+    {
+      "id": "cloud-architect",
+      "t": "Cloud Architect",
+      "l": "A",
+      "s": ["Cloud Architecture", "AWS", "Azure", "Google Cloud", "Microservices", "Scalability", "Security", "Cost Optimization"],
+      "c": ["AWS Solutions Architect", "Azure Solutions Architect", "Google Cloud Architect"],
+      "sr": "$100,000 - $160,000",
+      "te": "5+ years",
+      "d": "Design cloud infrastructure and architecture for scalable applications.",
+      "jt": ["Cloud Architect", "Solutions Architect", "Cloud Solutions Engineer", "Infrastructure Architect"],
+      "r": {
+        "e": ["Bachelor's in Computer Science", "Cloud Architecture Certifications"],
+        "exp": "5+ years",
+        "sk": ["Cloud Platforms", "Architecture Design", "Scalability", "Security"]
+      }
+    },
+    {
+      "id": "quantum-software-engineer",
+      "t": "Quantum Software Engineer",
+      "l": "X",
+      "s": ["Quantum Computing", "Python", "Qiskit", "Quantum Algorithms", "Linear Algebra", "Physics", "Quantum Mechanics"],
+      "c": ["IBM Quantum Developer", "Quantum Computing Certifications"],
+      "sr": "$120,000 - $200,000",
+      "te": "3-7 years",
+      "d": "Develop quantum computing applications and algorithms.",
+      "jt": ["Quantum Software Engineer", "Quantum Developer", "Quantum Algorithm Engineer", "Quantum Computing Engineer"],
+      "r": {
+        "e": ["PhD in Physics/Computer Science", "Quantum Computing Specialization"],
+        "exp": "3-7 years",
+        "sk": ["Quantum Computing", "Quantum Algorithms", "Physics", "Advanced Mathematics"]
+      }
+    },
+    {
+      "id": "blockchain-developer",
+      "t": "Blockchain Developer",
+      "l": "I",
+      "s": ["Solidity", "Ethereum", "Smart Contracts", "Web3", "Blockchain", "Cryptocurrency", "DeFi", "NFTs"],
+      "c": ["Ethereum Developer", "Blockchain Developer Certifications"],
+      "sr": "$80,000 - $140,000",
+      "te": "2-5 years",
+      "d": "Develop decentralized applications and smart contracts on blockchain platforms.",
+      "jt": ["Blockchain Developer", "Smart Contract Developer", "Web3 Developer", "DeFi Developer"],
+      "r": {
+        "e": ["Bachelor's in Computer Science", "Blockchain Certifications"],
+        "exp": "2-5 years",
+        "sk": ["Solidity", "Blockchain", "Smart Contracts", "Web3"]
+      }
+    },
+    {
+      "id": "robotics-engineer",
+      "t": "Robotics Engineer",
+      "l": "A",
+      "s": ["Robotics", "Python", "C++", "ROS", "Computer Vision", "Control Systems", "Mechanical Engineering", "AI"],
+      "c": ["ROS Developer", "Robotics Engineering Certifications"],
+      "sr": "$85,000 - $135,000",
+      "te": "3-6 years",
+      "d": "Design and develop robotic systems and autonomous machines.",
+      "jt": ["Robotics Engineer", "Robotic Systems Engineer", "Autonomous Systems Engineer", "Robotics Software Engineer"],
+      "r": {
+        "e": ["Bachelor's in Robotics/Engineering", "Robotics Certifications"],
+        "exp": "3-6 years",
+        "sk": ["Robotics", "Control Systems", "Computer Vision", "Programming"]
+      }
+    }
+  ],
+  "conn": [
+    {
+      "s": "ai-engineer",
+      "t": "mlops-engineer",
+      "req": ["Advanced ML", "Production Systems", "DevOps"]
+    },
+    {
+      "s": "data-engineer",
+      "t": "ai-engineer",
+      "req": ["Machine Learning", "Python", "Data Processing"]
+    },
+    {
+      "s": "devops-engineer",
+      "t": "cloud-architect",
+      "req": ["Cloud Platforms", "Architecture", "Leadership"]
+    },
+    {
+      "s": "ai-engineer",
+      "t": "quantum-software-engineer",
+      "req": ["Advanced Mathematics", "Physics", "Research"]
+    }
+  ]
+}

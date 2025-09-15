@@ -8,6 +8,7 @@ import { supabaseCareerService } from '@/services/supabaseCareerService';
 import { supabaseTrendingService } from '@/services/supabaseTrendingService';
 import { bookmarkService } from '@/services/bookmarkService';
 import { NotificationService } from '@/services/notificationService';
+import { personalizedNotificationService } from '@/services/personalizedNotificationService';
 import { SkillsAssessmentService } from '@/services/skillsAssessmentService';
 import { appStartupService } from '@/services/appStartupService';
 
@@ -34,6 +35,13 @@ export interface INotificationService {
   addNotification(notification: any): void;
   getNotifications(): any[];
   markAsRead(id: string): void;
+}
+
+export interface IPersonalizedNotificationService {
+  initializeUserProfile(userId?: string): Promise<void>;
+  getUserProfile(): any;
+  getPersonalizedNotifications(): any[];
+  refreshUserProfile(): Promise<void>;
 }
 
 export interface ISkillsAssessmentService {
@@ -64,6 +72,7 @@ export class DIContainer {
     this.services.set('supabaseTrendingService', supabaseTrendingService);
     this.services.set('bookmarkService', bookmarkService);
     this.services.set('notificationService', NotificationService.getInstance());
+    this.services.set('personalizedNotificationService', personalizedNotificationService);
     this.services.set('skillsAssessmentService', new SkillsAssessmentService());
     this.services.set('appStartupService', appStartupService);
   }
@@ -89,5 +98,6 @@ export const getCareerService = () => container.get<ICareerDataService>('careerS
 export const getTrendingService = () => container.get<ITrendingDataService>('supabaseTrendingService');
 export const getBookmarkService = () => container.get<IBookmarkService>('bookmarkService');
 export const getNotificationService = () => container.get<INotificationService>('notificationService');
+export const getPersonalizedNotificationService = () => container.get<IPersonalizedNotificationService>('personalizedNotificationService');
 export const getSkillsAssessmentService = () => container.get<ISkillsAssessmentService>('skillsAssessmentService');
 export const getAppStartupService = () => container.get('appStartupService');

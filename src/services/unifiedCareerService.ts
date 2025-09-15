@@ -161,10 +161,10 @@ export class UnifiedCareerService {
   }
 
   private selectStrategy(): ICareerDataStrategy {
-    // Always use local data for search operations
-    // Supabase is only used for monthly updates, not real-time search
-    console.log('Using local data strategy for all operations');
-    return new LocalDataStrategy();
+    // Use Supabase as primary data source for all operations
+    // Local data is only used as fallback when Supabase is unavailable
+    console.log('Using Supabase as primary data source with local fallback');
+    return new HybridDataStrategy();
   }
 
   // Public API methods

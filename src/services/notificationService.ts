@@ -326,4 +326,11 @@ export class NotificationService {
     this.notifications = [];
     this.saveNotifications();
   }
+
+  // Initialize personalized notifications (called by PersonalizedNotificationService)
+  initializePersonalizedNotifications(): void {
+    // This will be called by the personalized notification service
+    // to start the personalized notification system
+    console.log('Initializing personalized notifications...');
+  }
 }

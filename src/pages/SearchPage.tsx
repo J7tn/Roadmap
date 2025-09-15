@@ -10,6 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ICareerNode } from "@/types/career";
+
+// Extended career node with category for search page
+interface ICareerNodeWithCategory extends ICareerNode {
+  cat?: string;
+}
 import { getAllCareerNodes } from "@/services/careerService";
 import { INDUSTRY_CATEGORIES } from "@/data/industries";
 import CareerBlock from "@/components/CareerBlock";
@@ -23,7 +28,7 @@ const SearchPage: React.FC = React.memo(() => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
-  const [allCareers, setAllCareers] = useState<ICareerNode[]>([]);
+  const [allCareers, setAllCareers] = useState<ICareerNodeWithCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
@@ -45,7 +50,7 @@ const SearchPage: React.FC = React.memo(() => {
         const careerData = await getAllCareerNodes();
         
         // Extract career nodes and add category from path
-        const careers = careerData.map(item => ({
+        const careers: ICareerNodeWithCategory[] = careerData.map(item => ({
           ...item.node,
           cat: item.path.cat // Add category from path to node
         }));
@@ -84,37 +89,110 @@ const SearchPage: React.FC = React.memo(() => {
 
     const query = searchQuery.toLowerCase();
     
-    const filtered = allCareers.filter(career => {
+    // Score and filter careers based on relevance
+    const scoredCareers = allCareers.map(career => {
       // Ensure career object has required properties
       if (!career || !career.id || !career.t) {
-        return false;
+        return { career, score: 0 };
       }
 
-      // Search in title, description, skills, job titles
-      const matchesSearch = !searchQuery.trim() || 
-        career.t?.toLowerCase().includes(query) ||
-        career.d?.toLowerCase().includes(query) ||
-        career.s?.some(skill => skill.toLowerCase().includes(query)) ||
-        career.jt?.some(jobTitle => jobTitle.toLowerCase().includes(query));
+      let score = 0;
+      const title = career.t?.toLowerCase() || '';
+      const description = career.d?.toLowerCase() || '';
       
-
       // Apply industry filter
       const matchesIndustry = selectedIndustry === "all" || 
-        true; // Individual career nodes don't have category, filter by path instead
+        career.cat === selectedIndustry;
 
       // Apply level filter
       const matchesLevel = selectedLevel === "all" || 
         career.l === selectedLevel;
 
-      const matches = matchesSearch && matchesIndustry && matchesLevel;
-      
-      // Log matches for debugging
-      if (matches && searchQuery.trim()) {
-        console.log('SearchPage: Found match:', career.t, 'for query:', query);
+      // If filters don't match, return 0 score
+      if (!matchesIndustry || !matchesLevel) {
+        return { career, score: 0 };
       }
 
-      return matches;
-    }).slice(0, 50); // Limit to 50 results for performance
+      // If no search query, return all items that match filters
+      if (!searchQuery.trim()) {
+        return { career, score: 1 };
+      }
+
+      // Exact title match (highest priority)
+      if (title === query) {
+        score += 100;
+      }
+      // Title starts with query
+      else if (title.startsWith(query)) {
+        score += 80;
+      }
+      // Title contains query
+      else if (title.includes(query)) {
+        score += 60;
+      }
+      
+      // Job titles exact match
+      if (career.jt?.some(jobTitle => jobTitle.toLowerCase() === query)) {
+        score += 70;
+      }
+      // Job titles contains match
+      else if (career.jt?.some(jobTitle => jobTitle.toLowerCase().includes(query))) {
+        score += 40;
+      }
+      
+      // Skills exact match
+      if (career.s?.some(skill => skill.toLowerCase() === query)) {
+        score += 50;
+      }
+      // Skills contains match
+      else if (career.s?.some(skill => skill.toLowerCase().includes(query))) {
+        score += 25;
+      }
+      
+      // Requirements skills exact match
+      if (career.r?.sk?.some(skill => skill.toLowerCase() === query)) {
+        score += 45;
+      }
+      // Requirements skills contains match
+      else if (career.r?.sk?.some(skill => skill.toLowerCase().includes(query))) {
+        score += 20;
+      }
+      
+      // Description match (lowest priority)
+      if (description.includes(query)) {
+        score += 10;
+      }
+      
+      // Multi-word query handling - boost score for careers that match multiple words
+      const queryWords = query.split(/\s+/).filter(word => word.length > 2);
+      if (queryWords.length > 1) {
+        const matchedWords = queryWords.filter(word => 
+          title.includes(word) || 
+          career.jt?.some(jobTitle => jobTitle.toLowerCase().includes(word)) ||
+          career.s?.some(skill => skill.toLowerCase().includes(word))
+        );
+        score += matchedWords.length * 10; // Bonus for matching multiple words
+      }
+      
+      // Special boost for emerging technology careers
+      const emergingTechKeywords = ['ai', 'artificial intelligence', 'machine learning', 'ml', 'data science', 'devops', 'cloud', 'quantum', 'blockchain', 'robotics', 'automation'];
+      const isEmergingTechQuery = emergingTechKeywords.some(keyword => query.includes(keyword));
+      const isEmergingTechCareer = career.cat === 'emerging-tech' || 
+        title.includes('ai') || title.includes('machine learning') || title.includes('data science') ||
+        career.s?.some(skill => emergingTechKeywords.some(keyword => skill.toLowerCase().includes(keyword)));
+      
+      if (isEmergingTechQuery && isEmergingTechCareer) {
+        score += 30; // Extra boost for emerging tech careers when searching for emerging tech terms
+      }
+      
+      return { career, score };
+    }).filter(({ score }) => score > 0); // Only include items with positive scores
+    
+    // Sort by score (highest first) and limit results
+    const filtered = scoredCareers
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 20) // Limit to top 20 most relevant results
+      .map(({ career }) => career);
     
     console.log('SearchPage: Filtered results:', filtered.length);
     return filtered;

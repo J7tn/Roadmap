@@ -53,6 +53,7 @@ import { useIndustryBrowser } from "@/hooks/useCareerData";
 import RealTimeJobFeed from "./RealTimeJobFeed";
 import ErrorBoundary from "./ErrorBoundary";
 import { NotificationService, Notification } from "@/services/notificationService";
+import PersonalizedNotificationCenter from "@/components/PersonalizedNotificationCenter";
 import BottomNavigation from "@/components/BottomNavigation";
 
 const HomePage = React.memo(() => {
@@ -266,86 +267,8 @@ const HomePage = React.memo(() => {
                 <Settings className="h-5 w-5" />
               </Button>
               
-              {/* Notifications Button */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative">
-                    <Bell className="h-5 w-5" />
-                    {unreadCount > 0 && (
-                      <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs flex items-center justify-center bg-red-500 text-white border-red-500">
-                        {unreadCount}
-                      </Badge>
-                    )}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-80">
-                  <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {notifications.length === 0 ? (
-                    <div className="p-4 text-center text-muted-foreground">
-                      No notifications
-                    </div>
-                  ) : (
-                    <>
-                      {notifications.map((notification) => (
-                        <div key={notification.id} className="relative group">
-                          <DropdownMenuItem
-                            onClick={() => handleNotificationClick(notification.id)}
-                            className={`flex items-start space-x-3 p-3 rounded-lg cursor-pointer w-full transition-all duration-200 hover:bg-accent hover:scale-[1.02] ${
-                              !notification.read ? "bg-muted" : ""
-                            } ${getNotificationColor(notification.type)} border-l-4`}
-                          >
-                            <div className="flex-shrink-0 mt-1">
-                              {getNotificationIcon(notification.type)}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-medium text-sm">{notification.title}</p>
-                              <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{notification.message}</p>
-                              <div className="flex items-center justify-between mt-2">
-                                <p className="text-xs text-muted-foreground">{notification.time}</p>
-                                <div className="flex items-center space-x-1">
-                                  <span className="text-xs text-muted-foreground capitalize">{notification.action}</span>
-                                  <ArrowRight className="h-3 w-3 text-muted-foreground" />
-                                </div>
-                              </div>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteNotification(notification.id);
-                              }}
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </DropdownMenuItem>
-                        </div>
-                      ))}
-                      <DropdownMenuSeparator />
-                      <div className="flex justify-between p-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={handleMarkAllAsRead}
-                          className="text-xs"
-                        >
-                          Mark all as read
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setNotifications([])}
-                          className="text-xs text-red-600 hover:text-red-700"
-                        >
-                          Clear all
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {/* Personalized Notifications */}
+              <PersonalizedNotificationCenter />
             </div>
 
 

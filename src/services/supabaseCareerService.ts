@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { ICareerNode, ICareerPath, IndustryCategory } from '@/types/career';
+import { ICareerNode, ICareerPath, IndustryCategory, ICareerSearchResult, CareerLevel } from '@/types/career';
 import { dataVersioningService } from './dataVersioningService';
 import { supabase } from '@/lib/supabase';
 
@@ -201,6 +201,93 @@ class SupabaseCareerService {
   }
 
   /**
+   * Get career path by ID (convert career to career path format)
+   */
+  async getCareerPath(pathId: string): Promise<ICareerPath | null> {
+    try {
+      const career = await this.getCareerById(pathId);
+      if (!career) return null;
+
+      return this.convertToCareerPath(career);
+    } catch (error) {
+      console.error('Error getting career path:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get career paths by industry
+   */
+  async getCareerPathsByIndustry(industry: IndustryCategory, page = 1, limit = 10): Promise<ICareerSearchResult> {
+    try {
+      const careers = await this.getCareersByIndustry(industry);
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedCareers = careers.slice(startIndex, endIndex);
+
+      return {
+        careers: paginatedCareers.map(career => this.convertToCareerPath(career)),
+        total: careers.length,
+        filters: { industry: [industry], level: [], skills: [] },
+        suggestions: []
+      };
+    } catch (error) {
+      console.error('Error getting career paths by industry:', error);
+      return { careers: [], total: 0, filters: { industry: [industry], level: [], skills: [] }, suggestions: [] };
+    }
+  }
+
+  /**
+   * Get career node by ID
+   */
+  async getCareerNode(nodeId: string): Promise<ICareerNode | null> {
+    try {
+      const career = await this.getCareerById(nodeId);
+      if (!career) return null;
+
+      return this.convertToCareerNode(career);
+    } catch (error) {
+      console.error('Error getting career node:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Convert Supabase career data to ICareerPath format
+   */
+  private convertToCareerPath(career: SupabaseCareerData): ICareerPath {
+    return {
+      id: career.id,
+      n: career.title,
+      cat: career.industry,
+      nodes: [this.convertToCareerNode(career)],
+      conn: []
+    };
+  }
+
+  /**
+   * Convert Supabase career data to ICareerNode format
+   */
+  private convertToCareerNode(career: SupabaseCareerData): ICareerNode {
+    return {
+      id: career.id,
+      t: career.title,
+      l: career.level as CareerLevel,
+      s: career.skills,
+      c: career.certifications,
+      sr: career.salary,
+      te: career.experience,
+      d: career.description,
+      jt: career.job_titles,
+      r: {
+        e: career.requirements.education || [],
+        exp: career.requirements.experience || '',
+        sk: career.requirements.skills || []
+      }
+    };
+  }
+
+  /**
    * Get career by ID
    */
   async getCareerById(id: string): Promise<SupabaseCareerData | null> {
@@ -223,27 +310,6 @@ class SupabaseCareerService {
     }
   }
 
-  /**
-   * Convert Supabase career data to ICareerNode format
-   */
-  convertToCareerNode(career: SupabaseCareerData): ICareerNode {
-    return {
-      id: career.id,
-      t: career.title,
-      l: career.level,
-      s: career.skills,
-      c: career.certifications,
-      sr: career.salary,
-      te: career.experience,
-      d: career.description,
-      jt: career.job_titles,
-      r: {
-        e: career.requirements.education,
-        exp: career.requirements.experience,
-        sk: career.requirements.skills
-      }
-    };
-  }
 
   /**
    * Generate search suggestions

@@ -74,88 +74,97 @@ const AllJobsPage: React.FC = () => {
     const query = searchQuery.toLowerCase().trim();
     console.log('Searching for:', query, 'in', items.length, 'items');
     
-    const filtered = items.filter(({ node, path }) => {
-      // Search in title
-      if (node.t?.toLowerCase().includes(query)) {
-        console.log('Match in title:', node.t);
-        return true;
+    // Score and filter items based on relevance
+    const scoredItems = items.map(({ node, path }) => {
+      let score = 0;
+      const title = node.t?.toLowerCase() || '';
+      const description = node.d?.toLowerCase() || '';
+      const category = path.cat?.toLowerCase() || '';
+      
+      // Exact title match (highest priority)
+      if (title === query) {
+        score += 100;
+      }
+      // Title starts with query
+      else if (title.startsWith(query)) {
+        score += 80;
+      }
+      // Title contains query
+      else if (title.includes(query)) {
+        score += 60;
       }
       
-      // Search in description
-      if (node.d?.toLowerCase().includes(query)) {
-        console.log('Match in description:', node.t);
-        return true;
+      // Job titles exact match
+      if (node.jt?.some(jobTitle => jobTitle.toLowerCase() === query)) {
+        score += 70;
+      }
+      // Job titles contains match
+      else if (node.jt?.some(jobTitle => jobTitle.toLowerCase().includes(query))) {
+        score += 40;
       }
       
-      // Search in skills (more flexible matching)
-      if (node.s && node.s.some(skill => {
-        const skillLower = skill.toLowerCase();
-        const queryLower = query.toLowerCase();
-        
-        // Exact match
-        if (skillLower === queryLower) return true;
-        
-        // Contains match
-        if (skillLower.includes(queryLower)) return true;
-        
-        // Split by common separators and check each part
-        const skillParts = skillLower.split(/[\/\s\-&,]+/).map(part => part.trim()).filter(part => part.length > 0);
-        const queryParts = queryLower.split(/[\/\s\-&,]+/).map(part => part.trim()).filter(part => part.length > 0);
-        
-        // Check if any skill part contains any query part
-        const matches = skillParts.some(skillPart => 
-          queryParts.some(queryPart => skillPart.includes(queryPart) || queryPart.includes(skillPart))
+      // Skills exact match
+      if (node.s?.some(skill => skill.toLowerCase() === query)) {
+        score += 50;
+      }
+      // Skills contains match
+      else if (node.s?.some(skill => skill.toLowerCase().includes(query))) {
+        score += 25;
+      }
+      
+      // Requirements skills exact match
+      if (node.r?.sk?.some(skill => skill.toLowerCase() === query)) {
+        score += 45;
+      }
+      // Requirements skills contains match
+      else if (node.r?.sk?.some(skill => skill.toLowerCase().includes(query))) {
+        score += 20;
+      }
+      
+      // Category match
+      if (category.includes(query)) {
+        score += 15;
+      }
+      
+      // Description match (lowest priority)
+      if (description.includes(query)) {
+        score += 10;
+      }
+      
+      // Multi-word query handling - boost score for careers that match multiple words
+      const queryWords = query.split(/\s+/).filter(word => word.length > 2);
+      if (queryWords.length > 1) {
+        const matchedWords = queryWords.filter(word => 
+          title.includes(word) || 
+          node.jt?.some(jobTitle => jobTitle.toLowerCase().includes(word)) ||
+          node.s?.some(skill => skill.toLowerCase().includes(word))
         );
-        
-        if (matches) {
-          console.log('Match in skills:', node.t, 'skill:', skill, 'query:', query);
-        }
-        return matches;
-      })) return true;
-      
-      // Search in job titles
-      if (node.jt && node.jt.some(title => title.toLowerCase().includes(query))) {
-        console.log('Match in job titles:', node.t);
-        return true;
+        score += matchedWords.length * 10; // Bonus for matching multiple words
       }
       
-      // Search in category
-      if (path.cat?.toLowerCase().includes(query)) {
-        console.log('Match in category:', node.t);
-        return true;
+      // Special boost for emerging technology careers
+      const emergingTechKeywords = ['ai', 'artificial intelligence', 'machine learning', 'ml', 'data science', 'devops', 'cloud', 'quantum', 'blockchain', 'robotics', 'automation'];
+      const isEmergingTechQuery = emergingTechKeywords.some(keyword => query.includes(keyword));
+      const isEmergingTechCareer = path.cat === 'emerging-tech' || 
+        title.includes('ai') || title.includes('machine learning') || title.includes('data science') ||
+        node.s?.some(skill => emergingTechKeywords.some(keyword => skill.toLowerCase().includes(keyword)));
+      
+      if (isEmergingTechQuery && isEmergingTechCareer) {
+        score += 30; // Extra boost for emerging tech careers when searching for emerging tech terms
       }
       
-      // Search in requirements skills (with improved matching)
-      if (node.r?.sk && node.r.sk.some(skill => {
-        const skillLower = skill.toLowerCase();
-        const queryLower = query.toLowerCase();
-        
-        // Exact match
-        if (skillLower === queryLower) return true;
-        
-        // Contains match
-        if (skillLower.includes(queryLower)) return true;
-        
-        // Split by common separators and check each part
-        const skillParts = skillLower.split(/[\/\s\-&,]+/).map(part => part.trim()).filter(part => part.length > 0);
-        const queryParts = queryLower.split(/[\/\s\-&,]+/).map(part => part.trim()).filter(part => part.length > 0);
-        
-        // Check if any skill part contains any query part
-        const matches = skillParts.some(skillPart => 
-          queryParts.some(queryPart => skillPart.includes(queryPart) || queryPart.includes(skillPart))
-        );
-        
-        if (matches) {
-          console.log('Match in requirements skills:', node.t, 'skill:', skill, 'query:', query);
-        }
-        return matches;
-      })) return true;
-      
-      return false;
-    });
+      return { node, path, score };
+    }).filter(({ score }) => score > 0); // Only include items with positive scores
     
-    console.log('Filtered results:', filtered.length, 'out of', items.length);
-    setFilteredItems(filtered);
+    // Sort by score (highest first) and limit results
+    const sortedItems = scoredItems
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 20) // Limit to top 20 most relevant results
+      .map(({ node, path }) => ({ node, path }));
+    
+    console.log('Filtered results:', sortedItems.length, 'out of', items.length);
+    console.log('Top results:', sortedItems.slice(0, 5).map(({ node }) => ({ title: node.t, score: scoredItems.find(s => s.node.id === node.id)?.score })));
+    setFilteredItems(sortedItems);
   }, [items, searchQuery]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {

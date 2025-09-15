@@ -1,6 +1,7 @@
 import { dataVersioningService } from './dataVersioningService';
 import { supabaseTrendingService } from './supabaseTrendingService';
 import { supabaseCareerService } from './supabaseCareerService';
+import { personalizedNotificationService } from './personalizedNotificationService';
 
 class AppStartupService {
   private isInitialized = false;
@@ -18,6 +19,9 @@ class AppStartupService {
     try {
       // Check data freshness and attempt updates if needed
       await this.checkAndUpdateData();
+      
+      // Initialize personalized notifications
+      await this.initializePersonalizedNotifications();
       
       // Log startup completion
       console.log('✅ App startup checks completed');
@@ -65,6 +69,19 @@ class AppStartupService {
       console.log('✅ Career data is fresh');
     } else {
       console.log('📅 Career data is cached but not fresh (update not needed yet)');
+    }
+  }
+
+  /**
+   * Initialize personalized notifications
+   */
+  private async initializePersonalizedNotifications(): Promise<void> {
+    try {
+      console.log('🔔 Initializing personalized notifications...');
+      await personalizedNotificationService.initializeUserProfile();
+      console.log('✅ Personalized notifications initialized');
+    } catch (error) {
+      console.warn('⚠️ Failed to initialize personalized notifications:', error);
     }
   }
 

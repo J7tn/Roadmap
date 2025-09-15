@@ -36,6 +36,7 @@ import manufacturingCareers from '@/data/careerPaths/manufacturing.json';
 import retailCareers from '@/data/careerPaths/retail.json';
 import transportationCareers from '@/data/careerPaths/transportation.json';
 import emergencyServicesCareers from '@/data/careerPaths/emergency-services.json';
+import emergingTechCareers from '@/data/careerPaths/emerging-tech.json';
 
 // Data mapping for efficient loading
 const CAREER_PATH_DATA: Record<string, ICareerPath> = {
@@ -74,6 +75,7 @@ const CAREER_PATH_DATA: Record<string, ICareerPath> = {
   'retail-careers': retailCareers as ICareerPath,
   'transportation-careers': transportationCareers as ICareerPath,
   'emergency-services-careers': emergencyServicesCareers as ICareerPath,
+  'emerging-tech-careers': emergingTechCareers as ICareerPath,
 };
 
 // Industry to career paths mapping - expanded to include multiple paths per industry
@@ -83,7 +85,7 @@ const INDUSTRY_CAREER_PATHS: Record<IndustryCategory, string[]> = {
   business: ['business-management-path', 'middle-management-careers'],
   finance: ['finance-analyst-path', 'investment-finance-careers', 'real-estate-careers'],
   construction: [],
-  'emerging-tech': [],
+  'emerging-tech': ['emerging-tech-careers'],
   environmental: [],
   'space-aerospace': [],
   marketing: ['marketing-careers'],
