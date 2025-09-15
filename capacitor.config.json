@@ -24,7 +24,9 @@
       "androidSplashScreenImageResourceName": "splash"
     },
     "StatusBar": {
-      "style": "default"
+      "style": "default",
+      "backgroundColor": "#ffffff",
+      "overlaysWebView": false
     }
   }
 }

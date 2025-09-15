@@ -3,6 +3,7 @@ import { bookmarkService, BookmarkedCareer } from './bookmarkService';
 import { careerPathProgressService, CareerPathProgress } from './careerPathProgressService';
 import { supabaseCareerService } from './supabaseCareerService';
 import { ICareerNode, IndustryCategory } from '@/types/career';
+import { supabase } from '@/lib/supabase';
 
 export interface UserCareerProfile {
   userId: string;
@@ -55,10 +56,14 @@ class PersonalizedNotificationService {
   private userProfile: UserCareerProfile | null = null;
   private readonly STORAGE_KEY = 'careering_user_profile';
   private readonly PROFILE_UPDATE_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
+  private readonly NOTIFICATION_HISTORY_KEY = 'careering_notification_history';
+  private readonly DUPLICATE_CHECK_HOURS = 24; // Don't show same notification for 24 hours
+  private notificationHistory: Map<string, number> = new Map(); // notification hash -> timestamp
 
   private constructor() {
     this.notificationService = NotificationService.getInstance();
     this.loadUserProfile();
+    this.loadNotificationHistory();
     this.startPersonalizedUpdates();
   }
 
@@ -90,6 +95,73 @@ class PersonalizedNotificationService {
         console.error('Failed to save user profile:', error);
       }
     }
+  }
+
+  // Load notification history from localStorage
+  private loadNotificationHistory(): void {
+    try {
+      const saved = localStorage.getItem(this.NOTIFICATION_HISTORY_KEY);
+      if (saved) {
+        const history = JSON.parse(saved);
+        this.notificationHistory = new Map(Object.entries(history));
+      }
+    } catch (error) {
+      console.error('Failed to load notification history:', error);
+    }
+  }
+
+  // Save notification history to localStorage
+  private saveNotificationHistory(): void {
+    try {
+      const history = Object.fromEntries(this.notificationHistory);
+      localStorage.setItem(this.NOTIFICATION_HISTORY_KEY, JSON.stringify(history));
+    } catch (error) {
+      console.error('Failed to save notification history:', error);
+    }
+  }
+
+  // Generate a hash for notification content to detect duplicates
+  private generateNotificationHash(notification: Omit<PersonalizedNotification, 'id' | 'time' | 'read'>): string {
+    const content = {
+      type: notification.type,
+      title: notification.title,
+      message: notification.message,
+      careerId: notification.careerData?.careerId,
+      trendType: notification.data?.trendType,
+      skill: notification.data?.skill,
+      industry: notification.data?.industry
+    };
+    
+    return btoa(JSON.stringify(content)).replace(/[^a-zA-Z0-9]/g, '').substring(0, 16);
+  }
+
+  // Check if notification is a duplicate
+  private isDuplicateNotification(notification: Omit<PersonalizedNotification, 'id' | 'time' | 'read'>): boolean {
+    const hash = this.generateNotificationHash(notification);
+    const lastShown = this.notificationHistory.get(hash);
+    
+    if (!lastShown) {
+      return false;
+    }
+    
+    const hoursSinceLastShown = (Date.now() - lastShown) / (1000 * 60 * 60);
+    return hoursSinceLastShown < this.DUPLICATE_CHECK_HOURS;
+  }
+
+  // Record notification in history
+  private recordNotification(notification: Omit<PersonalizedNotification, 'id' | 'time' | 'read'>): void {
+    const hash = this.generateNotificationHash(notification);
+    this.notificationHistory.set(hash, Date.now());
+    
+    // Clean up old entries (older than 7 days)
+    const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+    for (const [key, timestamp] of this.notificationHistory.entries()) {
+      if (timestamp < sevenDaysAgo) {
+        this.notificationHistory.delete(key);
+      }
+    }
+    
+    this.saveNotificationHistory();
   }
 
   // Initialize or update user profile based on current app usage
@@ -255,7 +327,7 @@ class PersonalizedNotificationService {
   // Get career trend data from Supabase
   private async getCareerTrendData(careerId: string): Promise<any> {
     try {
-      const { data, error } = await supabaseCareerService.supabase
+      const { data, error } = await supabase
         .from('career_trends')
         .select('*')
         .eq('career_id', careerId)
@@ -356,7 +428,11 @@ class PersonalizedNotificationService {
       }
     };
 
-    this.notificationService.addNotification(notification);
+    // Check for duplicates and throttling before adding
+    if (!this.isDuplicateNotification(notification) && !this.shouldThrottleNotificationType(notification.type)) {
+      this.notificationService.addNotification(notification);
+      this.recordNotification(notification);
+    }
   }
 
   // Check for skill development opportunities
@@ -416,7 +492,11 @@ class PersonalizedNotificationService {
       }
     };
 
-    this.notificationService.addNotification(notification);
+    // Check for duplicates and throttling before adding
+    if (!this.isDuplicateNotification(notification) && !this.shouldThrottleNotificationType(notification.type)) {
+      this.notificationService.addNotification(notification);
+      this.recordNotification(notification);
+    }
   }
 
   // Check for job opportunities (mock implementation - would integrate with job APIs)
@@ -463,7 +543,11 @@ class PersonalizedNotificationService {
       }
     };
 
-    this.notificationService.addNotification(notification);
+    // Check for duplicates and throttling before adding
+    if (!this.isDuplicateNotification(notification) && !this.shouldThrottleNotificationType(notification.type)) {
+      this.notificationService.addNotification(notification);
+      this.recordNotification(notification);
+    }
   }
 
   // Check for career progress milestones
@@ -471,19 +555,23 @@ class PersonalizedNotificationService {
     const progress = careerPathProgressService.getAllProgress();
     
     progress.forEach(p => {
+      // Calculate completion percentage
+      const completionPercentage = p.totalSteps > 0 ? (p.completedSteps.length / p.totalSteps) * 100 : 0;
+      const isCompleted = completionPercentage >= 100;
+      
       // Check for completion milestones
-      if (p.completionPercentage >= 100 && !p.completed) {
-        this.createMilestoneNotification(p, 'completed');
+      if (completionPercentage >= 100 && !isCompleted) {
+        this.createMilestoneNotification(p, 'completed', completionPercentage);
       }
       // Check for progress milestones
-      else if (p.completionPercentage >= 50 && p.completionPercentage < 100) {
-        this.createMilestoneNotification(p, 'halfway');
+      else if (completionPercentage >= 50 && completionPercentage < 100) {
+        this.createMilestoneNotification(p, 'halfway', completionPercentage);
       }
     });
   }
 
   // Create milestone notification
-  private createMilestoneNotification(progress: CareerPathProgress, milestone: 'completed' | 'halfway'): void {
+  private createMilestoneNotification(progress: CareerPathProgress, milestone: 'completed' | 'halfway', completionPercentage: number): void {
     const isCompleted = milestone === 'completed';
     const notification: PersonalizedNotification = {
       id: `milestone_${progress.pathId}_${Date.now()}`,
@@ -491,12 +579,12 @@ class PersonalizedNotificationService {
       title: isCompleted ? '🎉 Career Path Completed!' : '📈 Great Progress!',
       message: isCompleted 
         ? `You've completed the ${progress.pathName} career path!`
-        : `You're ${progress.completionPercentage}% through the ${progress.pathName} career path`,
+        : `You're ${Math.round(completionPercentage)}% through the ${progress.pathName} career path`,
       time: 'Just now',
       read: false,
       action: isCompleted ? 'explore' : 'continue',
       priority: isCompleted ? 'high' : 'medium',
-      data: { progress, milestone },
+      data: { progress, milestone, completionPercentage },
       relevanceScore: isCompleted ? 95 : 70,
       userContext: {
         basedOnBookmarks: false,
@@ -506,7 +594,11 @@ class PersonalizedNotificationService {
       }
     };
 
-    this.notificationService.addNotification(notification);
+    // Check for duplicates and throttling before adding
+    if (!this.isDuplicateNotification(notification) && !this.shouldThrottleNotificationType(notification.type)) {
+      this.notificationService.addNotification(notification);
+      this.recordNotification(notification);
+    }
   }
 
   // Check for industry insights
@@ -553,7 +645,11 @@ class PersonalizedNotificationService {
       }
     };
 
-    this.notificationService.addNotification(notification);
+    // Check for duplicates and throttling before adding
+    if (!this.isDuplicateNotification(notification) && !this.shouldThrottleNotificationType(notification.type)) {
+      this.notificationService.addNotification(notification);
+      this.recordNotification(notification);
+    }
   }
 
   // Calculate relevance score for a notification
@@ -607,6 +703,36 @@ class PersonalizedNotificationService {
     if (this.userProfile) {
       await this.initializeUserProfile(this.userProfile.userId);
     }
+  }
+
+  // Clear notification history (useful for testing or reset)
+  clearNotificationHistory(): void {
+    this.notificationHistory.clear();
+    localStorage.removeItem(this.NOTIFICATION_HISTORY_KEY);
+  }
+
+  // Get notification history stats
+  getNotificationHistoryStats(): { total: number; oldest: number; newest: number } {
+    const timestamps = Array.from(this.notificationHistory.values());
+    return {
+      total: timestamps.length,
+      oldest: timestamps.length > 0 ? Math.min(...timestamps) : 0,
+      newest: timestamps.length > 0 ? Math.max(...timestamps) : 0
+    };
+  }
+
+  // Check if a specific notification type should be throttled
+  private shouldThrottleNotificationType(type: string): boolean {
+    const now = Date.now();
+    const oneHourAgo = now - (60 * 60 * 1000);
+    
+    // Count notifications of this type in the last hour
+    const recentCount = Array.from(this.notificationHistory.values())
+      .filter(timestamp => timestamp > oneHourAgo)
+      .length;
+    
+    // Throttle if more than 3 notifications in the last hour
+    return recentCount >= 3;
   }
 }
 

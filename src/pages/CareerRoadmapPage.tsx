@@ -139,7 +139,7 @@ const CareerRoadmapPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-20">
       {/* Navigation Header */}
       <header className="border-b bg-background sticky top-0 z-50 safe-area-top">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -169,17 +169,17 @@ const CareerRoadmapPage: React.FC = () => {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+                <div className="bg-background border border-border rounded-lg p-4" style={{ backgroundColor: 'hsl(var(--background))' }}>
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-lg">{currentCareer.t}</h3>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">{currentCareer.d}</p>
                 </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+                <div className="bg-background border border-border rounded-lg p-4" style={{ backgroundColor: 'hsl(var(--background))' }}>
                   <h4 className="font-medium text-sm text-muted-foreground">Salary Range</h4>
                   <p className="text-lg font-semibold">{currentCareer.sr}</p>
                 </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+                <div className="bg-background border border-border rounded-lg p-4" style={{ backgroundColor: 'hsl(var(--background))' }}>
                   <h4 className="font-medium text-sm text-muted-foreground">Experience Level</h4>
                   <p className="text-lg font-semibold">{currentCareer.te}</p>
                 </div>

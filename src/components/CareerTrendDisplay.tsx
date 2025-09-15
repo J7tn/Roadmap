@@ -115,32 +115,32 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
   const getTrendColor = (direction: string) => {
     switch (direction) {
       case 'rising':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400 border-green-200 dark:border-green-800';
       case 'declining':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400 border-red-200 dark:border-red-800';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700';
     }
   };
 
   const getDemandColor = (level: string) => {
     switch (level) {
       case 'high':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400 border-green-200 dark:border-green-800';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800';
       case 'low':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400 border-red-200 dark:border-red-800';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700';
     }
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 8) return 'text-green-600';
-    if (score >= 6) return 'text-yellow-600';
-    if (score >= 4) return 'text-orange-600';
-    return 'text-red-600';
+    if (score >= 8) return 'text-green-600 dark:text-green-400';
+    if (score >= 6) return 'text-yellow-600 dark:text-yellow-400';
+    if (score >= 4) return 'text-orange-600 dark:text-orange-400';
+    return 'text-red-600 dark:text-red-400';
   };
 
   if (loading) {
@@ -155,7 +155,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
         <CardContent>
           <div className="flex items-center justify-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            <span className="ml-2 text-gray-600">Loading trend data...</span>
+            <span className="ml-2 text-muted-foreground">Loading trend data...</span>
           </div>
         </CardContent>
       </Card>
@@ -174,18 +174,18 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
         <CardContent>
           <div className="text-center py-8">
             <AlertTriangle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               {error || 'No trend data available for this career'}
             </p>
-            <p className="text-sm text-gray-500 mt-2 mb-4">
+            <p className="text-sm text-muted-foreground mt-2 mb-4">
               Trend data is updated monthly from Supabase. Some careers may not have trend data yet.
             </p>
             <div className="space-y-2">
-              <p className="text-xs text-gray-500">
-                Career ID: <code className="bg-gray-100 px-1 rounded">{career.id}</code>
+              <p className="text-xs text-muted-foreground">
+                Career ID: <code className="bg-muted px-1 rounded">{career.id}</code>
               </p>
-              <p className="text-xs text-gray-500">
-                Look for this ID in the <code className="bg-gray-100 px-1 rounded">career_trends</code> table
+              <p className="text-xs text-muted-foreground">
+                Look for this ID in the <code className="bg-muted px-1 rounded">career_trends</code> table
               </p>
               <Button 
                 variant="outline" 
@@ -222,14 +222,14 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
             <BarChart3 className="h-5 w-5" />
             Market Trends for {career.t}
           </CardTitle>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="h-4 w-4" />
             Last updated: {new Date(trendData.last_updated).toLocaleDateString()}
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Region Indicator */}
-          <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
             <MapPin className="h-4 w-4" />
             <span>Data customized for {getRegionDisplayName()}</span>
           </div>
@@ -241,8 +241,8 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
                 {trendData.trend_score.toFixed(1)}
               </div>
               <div>
-                <div className="text-sm text-gray-600">Trend Score</div>
-                <div className="text-xs text-gray-500">Out of 10</div>
+                <div className="text-sm text-muted-foreground">Trend Score</div>
+                <div className="text-xs text-muted-foreground">Out of 10</div>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -255,36 +255,36 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
 
           {/* Key Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-lg font-semibold text-blue-600">
+            <div className="text-center p-3 bg-muted/50 rounded-lg">
+              <div className="text-lg font-semibold text-blue-600 dark:text-blue-400">
                 {trendData.growth_rate.toFixed(1)}%
               </div>
-              <div className="text-xs text-gray-600">Growth Rate</div>
+              <div className="text-xs text-muted-foreground">Growth Rate</div>
             </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
+            <div className="text-center p-3 bg-muted/50 rounded-lg">
               <div className={`text-lg font-semibold ${getScoreColor(trendData.job_availability_score)}`}>
                 {trendData.job_availability_score.toFixed(1)}
               </div>
-              <div className="text-xs text-gray-600">Job Availability</div>
+              <div className="text-xs text-muted-foreground">Job Availability</div>
             </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
+            <div className="text-center p-3 bg-muted/50 rounded-lg">
               <div className={`text-lg font-semibold ${getScoreColor(trendData.remote_work_trend)}`}>
                 {trendData.remote_work_trend.toFixed(1)}
               </div>
-              <div className="text-xs text-gray-600">Remote Work</div>
+              <div className="text-xs text-muted-foreground">Remote Work</div>
             </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
+            <div className="text-center p-3 bg-muted/50 rounded-lg">
               <div className={`text-lg font-semibold ${getScoreColor(10 - trendData.automation_risk)}`}>
                 {(10 - trendData.automation_risk).toFixed(1)}
               </div>
-              <div className="text-xs text-gray-600">Job Security</div>
+              <div className="text-xs text-muted-foreground">Job Security</div>
             </div>
           </div>
 
           {/* Demand Level */}
           <div className="flex items-center gap-2">
-            <Briefcase className="h-4 w-4 text-gray-600" />
-            <span className="text-sm text-gray-600">Demand Level:</span>
+            <Briefcase className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">Demand Level:</span>
             <Badge className={getDemandColor(trendData.demand_level)}>
               {trendData.demand_level}
             </Badge>
@@ -301,7 +301,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
           {/* Trending Skills */}
           {trendData.key_skills_trending.length > 0 && (
             <div>
-              <h4 className="font-semibold text-gray-900 mb-2">Trending Skills</h4>
+              <h4 className="font-semibold text-foreground mb-2">Trending Skills</h4>
               <div className="flex flex-wrap gap-2">
                 {trendData.key_skills_trending.map((skill, index) => (
                   <Badge key={index} variant="outline" className="text-primary border-primary/20">
@@ -315,10 +315,10 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
           {/* Top Locations */}
           {trendData.top_locations.length > 0 && (
             <div>
-              <h4 className="font-semibold text-gray-900 mb-2">Top Locations</h4>
+              <h4 className="font-semibold text-foreground mb-2">Top Locations</h4>
               <div className="flex flex-wrap gap-2">
                 {trendData.top_locations.map((location, index) => (
-                  <div key={index} className="flex items-center gap-1 text-sm text-gray-600">
+                  <div key={index} className="flex items-center gap-1 text-sm text-muted-foreground">
                     <MapPin className="h-3 w-3" />
                     {location}
                   </div>
@@ -329,31 +329,31 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
 
           {/* Salary Trend */}
           {trendData.salary_trend && (
-            <div className="p-4 bg-green-50 rounded-lg">
-              <h4 className="font-semibold text-green-900 mb-2 flex items-center gap-2">
+            <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+              <h4 className="font-semibold text-green-900 dark:text-green-400 mb-2 flex items-center gap-2">
                 <DollarSign className="h-4 w-4" />
                 Salary Trend
               </h4>
-              <p className="text-sm text-green-800">{trendData.salary_trend}</p>
+              <p className="text-sm text-green-800 dark:text-green-300">{trendData.salary_trend}</p>
             </div>
           )}
 
           {/* Future Outlook */}
           {trendData.future_outlook && (
-            <div className="p-4 bg-purple-50 rounded-lg">
-              <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
+            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+              <h4 className="font-semibold text-purple-900 dark:text-purple-400 mb-2 flex items-center gap-2">
                 <Target className="h-4 w-4" />
                 Future Outlook
               </h4>
-              <p className="text-sm text-purple-800">{trendData.future_outlook}</p>
+              <p className="text-sm text-purple-800 dark:text-purple-300">{trendData.future_outlook}</p>
             </div>
           )}
 
           {/* Industry Impact */}
           {trendData.industry_impact && (
-            <div className="p-4 bg-orange-50 rounded-lg">
-              <h4 className="font-semibold text-orange-900 mb-2">Industry Impact</h4>
-              <p className="text-sm text-orange-800">{trendData.industry_impact}</p>
+            <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+              <h4 className="font-semibold text-orange-900 dark:text-orange-400 mb-2">Industry Impact</h4>
+              <p className="text-sm text-orange-800 dark:text-orange-300">{trendData.industry_impact}</p>
             </div>
           )}
         </CardContent>
@@ -370,38 +370,38 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
+              <div className="text-center p-3 bg-muted/50 rounded-lg">
                 <div className="text-lg font-semibold text-primary">
                   {industryTrend.avg_trend_score.toFixed(1)}
                 </div>
-                <div className="text-xs text-gray-600">Industry Avg</div>
+                <div className="text-xs text-muted-foreground">Industry Avg</div>
               </div>
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <div className="text-lg font-semibold text-green-600">
+              <div className="text-center p-3 bg-muted/50 rounded-lg">
+                <div className="text-lg font-semibold text-green-600 dark:text-green-400">
                   {industryTrend.rising_careers}
                 </div>
-                <div className="text-xs text-gray-600">Rising Careers</div>
+                <div className="text-xs text-muted-foreground">Rising Careers</div>
               </div>
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <div className="text-lg font-semibold text-gray-600">
+              <div className="text-center p-3 bg-muted/50 rounded-lg">
+                <div className="text-lg font-semibold text-muted-foreground">
                   {industryTrend.stable_careers}
                 </div>
-                <div className="text-xs text-gray-600">Stable Careers</div>
+                <div className="text-xs text-muted-foreground">Stable Careers</div>
               </div>
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <div className="text-lg font-semibold text-red-600">
+              <div className="text-center p-3 bg-muted/50 rounded-lg">
+                <div className="text-lg font-semibold text-red-600 dark:text-red-400">
                   {industryTrend.declining_careers}
                 </div>
-                <div className="text-xs text-gray-600">Declining Careers</div>
+                <div className="text-xs text-muted-foreground">Declining Careers</div>
               </div>
             </div>
 
             {industryTrend.emerging_skills.length > 0 && (
               <div className="mt-4">
-                <h4 className="font-semibold text-gray-900 mb-2">Emerging Industry Skills</h4>
+                <h4 className="font-semibold text-foreground mb-2">Emerging Industry Skills</h4>
                 <div className="flex flex-wrap gap-2">
                   {industryTrend.emerging_skills.map((skill, index) => (
-                    <Badge key={index} variant="outline" className="text-purple-600 border-purple-200">
+                    <Badge key={index} variant="outline" className="text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800">
                       {skill}
                     </Badge>
                   ))}

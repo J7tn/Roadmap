@@ -229,7 +229,7 @@ const AllJobsPage: React.FC = () => {
 
   return (
     <motion.div 
-      className="min-h-screen bg-background"
+      className="min-h-screen bg-background pb-20"
       initial="hidden"
       animate="visible"
       variants={containerVariants}

@@ -17,7 +17,7 @@ const RoadmapProgress: React.FC<RoadmapProgressProps> = ({
   className = ""
 }) => {
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg p-6 border ${className}`}>
+    <div className={`bg-background border border-border rounded-lg p-6 ${className}`} style={{ backgroundColor: 'hsl(var(--background))' }}>
       <h3 className="text-lg font-semibold mb-4 flex items-center">
         <TrendingUp className="h-5 w-5 mr-2 text-primary" />
         Your Roadmap Progress

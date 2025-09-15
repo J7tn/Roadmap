@@ -32,12 +32,14 @@ import { PersonalizedNotification, UserCareerProfile } from '@/services/personal
 import { Notification } from '@/services/notificationService';
 import { personalizedNotificationService } from '@/services/personalizedNotificationService';
 import { NotificationService } from '@/services/notificationService';
+import { useNavigate } from 'react-router-dom';
 
 interface PersonalizedNotificationCenterProps {
   className?: string;
 }
 
 const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterProps> = ({ className = '' }) => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [personalizedNotifications, setPersonalizedNotifications] = useState<PersonalizedNotification[]>([]);
@@ -114,32 +116,50 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
     setNotifications(allNotifications);
     setPersonalizedNotifications(personalized);
 
+    // Close the notification center
+    setIsOpen(false);
+
     // Handle action
+    const isPersonalized = 'careerData' in notification;
+    const personalizedNotif = notification as PersonalizedNotification;
+    
     switch (notification.action) {
       case 'explore':
-        // Navigate to career exploration
-        window.location.href = '/search';
+        // Navigate to career exploration or specific career details
+        if (isPersonalized && personalizedNotif.careerData?.careerId) {
+          navigate(`/jobs/${personalizedNotif.careerData.careerId}`);
+        } else {
+          navigate('/search');
+        }
         break;
       case 'learn':
         // Navigate to skill development
-        window.location.href = '/skills';
+        navigate('/skills');
         break;
       case 'apply':
-        // Navigate to job opportunities
-        window.location.href = '/jobs';
+        // Navigate to job opportunities or specific career details
+        if (isPersonalized && personalizedNotif.careerData?.careerId) {
+          navigate(`/jobs/${personalizedNotif.careerData.careerId}`);
+        } else {
+          navigate('/jobs');
+        }
         break;
       case 'continue':
         // Navigate to career progress
-        window.location.href = '/my-career-paths';
+        navigate('/my-paths');
         break;
       case 'review':
         // Navigate to assessment results
-        window.location.href = '/assessment';
+        navigate('/skills');
         break;
       default:
+        // If it's a career-related notification without specific action, go to career details
+        if (isPersonalized && personalizedNotif.careerData?.careerId) {
+          navigate(`/jobs/${personalizedNotif.careerData.careerId}`);
+        }
         break;
     }
-  }, [notificationService]);
+  }, [notificationService, navigate]);
 
   const handleMarkAllAsRead = useCallback(() => {
     filteredNotifications.forEach(notification => {
@@ -173,9 +193,9 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
   };
 
   const getRelevanceColor = (score: number) => {
-    if (score >= 80) return 'text-green-600 bg-green-50';
-    if (score >= 60) return 'text-yellow-600 bg-yellow-50';
-    return 'text-gray-600 bg-gray-50';
+    if (score >= 80) return 'text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-900/20';
+    if (score >= 60) return 'text-yellow-600 bg-yellow-50 dark:text-yellow-400 dark:bg-yellow-900/20';
+    return 'text-gray-600 bg-gray-50 dark:text-gray-400 dark:bg-gray-800';
   };
 
   const getContextIcons = (context: any) => {
@@ -223,67 +243,24 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-0 top-12 z-50 w-96 max-h-[80vh] overflow-hidden bg-white rounded-lg shadow-lg border"
+              className="absolute right-0 top-12 z-50 w-96 max-h-[80vh] overflow-hidden bg-background border border-border rounded-lg shadow-lg"
             >
               {/* Header */}
-              <div className="p-4 border-b bg-gray-50">
+              <div className="p-4 border-b bg-muted/50">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Bell className="h-5 w-5" />
-                    <h3 className="font-semibold">Notifications</h3>
-                    {unreadCount > 0 && (
-                      <Badge variant="secondary" className="text-xs">
-                        {unreadCount} new
-                      </Badge>
-                    )}
+                    <Bell className="h-5 w-5 text-foreground" />
+                    <h3 className="font-semibold text-foreground">Notifications</h3>
                   </div>
                   
-                  <div className="flex items-center gap-1">
-                    {/* Filter Dropdown */}
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <Filter className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Filter</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuCheckboxItem
-                          checked={filter === 'all'}
-                          onCheckedChange={() => setFilter('all')}
-                        >
-                          All Notifications
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                          checked={filter === 'personalized'}
-                          onCheckedChange={() => setFilter('personalized')}
-                        >
-                          Personalized Only
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                          checked={filter === 'general'}
-                          onCheckedChange={() => setFilter('general')}
-                        >
-                          General Only
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuCheckboxItem
-                          checked={showRelevance}
-                          onCheckedChange={setShowRelevance}
-                        >
-                          Show Relevance
-                        </DropdownMenuCheckboxItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-
+                  <div className="flex items-center gap-3">
                     {/* Mark All Read */}
                     {unreadCount > 0 && (
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={handleMarkAllAsRead}
-                        className="text-xs"
+                        className="text-xs text-foreground"
                       >
                         <Check className="h-3 w-3 mr-1" />
                         Mark All Read
@@ -294,6 +271,7 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
                       variant="ghost"
                       size="sm"
                       onClick={() => setIsOpen(false)}
+                      className="text-foreground"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -303,11 +281,11 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
 
               {/* User Profile Summary */}
               {userProfile && (
-                <div className="p-3 bg-blue-50 border-b">
+                <div className="p-3 bg-primary/5 border-b">
                   <div className="flex items-center gap-2 text-sm">
-                    <Star className="h-4 w-4 text-blue-500" />
-                    <span className="font-medium">Personalized for you:</span>
-                    <span className="text-blue-600">
+                    <Star className="h-4 w-4 text-primary" />
+                    <span className="font-medium text-foreground">Personalized for you:</span>
+                    <span className="text-primary">
                       {userProfile.preferredIndustries.slice(0, 2).join(', ')}
                     </span>
                   </div>
@@ -317,9 +295,9 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
               {/* Notifications List */}
               <div className="max-h-96 overflow-y-auto">
                 {filteredNotifications.length === 0 ? (
-                  <div className="p-6 text-center text-gray-500">
+                  <div className="p-6 text-center text-muted-foreground">
                     <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                    <p>No notifications yet</p>
+                    <p className="text-foreground">No notifications yet</p>
                     <p className="text-xs mt-1">
                       We'll notify you about relevant career opportunities
                     </p>
@@ -335,8 +313,8 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
                           key={notification.id}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
-                          className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                            !notification.read ? 'bg-blue-50/50' : ''
+                          className={`p-4 cursor-pointer ${
+                            !notification.read ? 'bg-primary/5' : ''
                           }`}
                           onClick={() => handleNotificationClick(notification)}
                         >
@@ -345,7 +323,7 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
                             
                             <div className="flex-1 min-w-0">
                               <div className="flex items-start justify-between gap-2">
-                                <h4 className="font-medium text-sm leading-tight">
+                                <h4 className="font-medium text-sm leading-tight text-foreground">
                                   {notification.title}
                                 </h4>
                                 
@@ -359,12 +337,12 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
                                 )}
                               </div>
                               
-                              <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                              <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
                                 {notification.message}
                               </p>
                               
                               <div className="flex items-center justify-between mt-2">
-                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                   <span>{notification.time}</span>
                                   
                                   {isPersonalized && personalizedNotif.userContext && (
@@ -382,7 +360,7 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="text-xs h-6 px-2"
+                                    className="text-xs h-6 px-2 text-foreground"
                                   >
                                     {notification.action}
                                     <ExternalLink className="h-3 w-3 ml-1" />
@@ -399,16 +377,19 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
               </div>
 
               {/* Footer */}
-              <div className="p-3 border-t bg-gray-50">
-                <div className="flex items-center justify-between text-xs text-gray-500">
+              <div className="p-3 border-t bg-muted/50">
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <span>
                     {filteredNotifications.length} notification{filteredNotifications.length !== 1 ? 's' : ''}
                   </span>
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => window.location.href = '/notifications'}
-                    className="text-xs h-6 px-2"
+                    onClick={() => {
+                      setIsOpen(false);
+                      navigate('/notifications');
+                    }}
+                    className="text-xs h-6 px-2 text-foreground"
                   >
                     View All
                   </Button>

@@ -42,9 +42,9 @@ const SettingsPage: React.FC = () => {
   const selectedRegionData = REGIONS.find(r => r.id === selectedRegion) || REGIONS[0];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background pb-20">
         {/* Header */}
-        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 safe-area-top">
+        <div className="bg-background border-b border-border safe-area-top">
           <div className="max-w-4xl mx-auto px-4 py-4">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
@@ -57,7 +57,7 @@ const SettingsPage: React.FC = () => {
 
         <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
         {/* Region Settings */}
-        <Card className="dark:bg-gray-800 dark:border-gray-700">
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 dark:text-gray-100">
               <Globe className="h-5 w-5 text-primary" />
@@ -103,7 +103,7 @@ const SettingsPage: React.FC = () => {
         </Card>
 
         {/* Notification Settings */}
-        <Card className="dark:bg-gray-800 dark:border-gray-700">
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 dark:text-gray-100">
               <Bell className="h-5 w-5 text-primary" />
@@ -134,7 +134,7 @@ const SettingsPage: React.FC = () => {
         </Card>
 
         {/* Appearance Settings */}
-        <Card className="dark:bg-gray-800 dark:border-gray-700">
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 dark:text-gray-100">
               <Palette className="h-5 w-5 text-primary" />
@@ -175,7 +175,7 @@ const SettingsPage: React.FC = () => {
         </Card>
 
         {/* App Information */}
-        <Card className="dark:bg-gray-800 dark:border-gray-700">
+        <Card>
           <CardHeader>
             <CardTitle className="dark:text-gray-100">About</CardTitle>
           </CardHeader>

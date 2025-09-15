@@ -135,7 +135,7 @@ const MyBookmarksPage: React.FC = React.memo(() => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center pb-20">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Loading bookmarks...</p>
@@ -146,7 +146,7 @@ const MyBookmarksPage: React.FC = React.memo(() => {
 
   return (
     <motion.div 
-      className="min-h-screen bg-background"
+      className="min-h-screen bg-background pb-20"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}

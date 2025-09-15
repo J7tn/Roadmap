@@ -13,18 +13,6 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-
-  // Load theme from localStorage on mount
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('darkMode');
-    if (savedTheme !== null) {
-      const isDark = savedTheme === 'true';
-      setIsDarkMode(isDark);
-      applyTheme(isDark);
-    }
-  }, []);
-
   const applyTheme = (isDark: boolean) => {
     const root = document.documentElement;
     if (isDark) {
@@ -33,6 +21,32 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.classList.remove('dark');
     }
   };
+
+  // Initialize with saved theme or default to false
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('darkMode');
+      if (savedTheme !== null) {
+        const isDark = savedTheme === 'true';
+        // Apply theme immediately on initialization
+        applyTheme(isDark);
+        return isDark;
+      }
+    }
+    return false;
+  });
+
+  // Load theme from localStorage on mount (for cases where localStorage wasn't available during initialization)
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('darkMode');
+    if (savedTheme !== null) {
+      const isDark = savedTheme === 'true';
+      if (isDark !== isDarkMode) {
+        setIsDarkMode(isDark);
+        applyTheme(isDark);
+      }
+    }
+  }, [isDarkMode]);
 
   const toggleDarkMode = () => {
     const newTheme = !isDarkMode;

@@ -267,7 +267,7 @@ const SearchPage: React.FC = React.memo(() => {
 
   return (
     <motion.div 
-      className="min-h-screen bg-background flex flex-col"
+      className="min-h-screen bg-background flex flex-col pb-20"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}

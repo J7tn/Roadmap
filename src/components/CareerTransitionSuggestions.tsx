@@ -668,9 +668,10 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
                   key={career.id}
                   className={`flex items-start justify-between p-3 rounded-lg border ${
                     isLocked 
-                      ? 'bg-gray-100 dark:bg-gray-900 border-gray-300 dark:border-gray-700 opacity-50' 
-                      : 'bg-white dark:bg-gray-800'
+                      ? 'bg-muted/50 border-muted opacity-50' 
+                      : 'bg-background border-border'
                   }`}
+                  style={!isLocked ? { backgroundColor: 'hsl(var(--background))' } : {}}
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start space-x-2 mb-2">

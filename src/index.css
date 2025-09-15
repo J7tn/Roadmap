@@ -2,9 +2,9 @@
   @tailwind components;
   @tailwind utilities;
 
-  /* Ensure smooth white background transition from splash screen */
+  /* Ensure smooth background transition from splash screen */
   html, body, #root {
-    background-color: #ffffff !important;
+    background-color: hsl(var(--background));
     transition: background-color 0.5s ease-in-out;
   }
 
@@ -21,15 +21,26 @@
   /* Ensure proper viewport handling with more spacing */
   @supports (padding: max(0px)) {
     .safe-area-top {
-      padding-top: max(env(safe-area-inset-top), 48px);
+      padding-top: max(env(safe-area-inset-top), 44px);
     }
   }
 
   /* Additional spacing for Android devices */
   @media screen and (max-width: 768px) {
     .safe-area-top {
-      padding-top: max(env(safe-area-inset-top), 56px);
+      padding-top: max(env(safe-area-inset-top), 48px);
     }
+  }
+
+  /* Status bar area styling */
+  .status-bar-area {
+    height: env(safe-area-inset-top);
+    background-color: hsl(var(--background));
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
   }
 
   /* Ensure app content is hidden until splash screen is dismissed */

@@ -2,6 +2,7 @@ import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { SplashScreen } from '@capacitor/splash-screen';
+import { useTheme } from '@/contexts/ThemeContext';
 import {
   Search,
   MapPin,
@@ -61,6 +62,7 @@ const HomePage = React.memo(() => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const notificationService = NotificationService.getInstance();
   const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
    
   const {
     data: careerData,
@@ -228,15 +230,18 @@ const HomePage = React.memo(() => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Top Header - Fixed */}
-      <header className="border-b bg-background sticky top-0 z-50 safe-area-top">
+    <div className="min-h-screen bg-background flex flex-col pb-20">
+      {/* Top Header - Fixed with proper status bar spacing */}
+      <header className="border-b bg-background/95 backdrop-blur-sm sticky top-0 z-50 safe-area-top">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <img 
               src="/logo-small.png" 
               alt="Careering Logo" 
-              className="h-8 w-8"
+              className={`h-8 w-8 ${isDarkMode ? 'brightness-0 invert' : ''}`}
+              style={{
+                filter: isDarkMode ? 'brightness(0) invert(1)' : 'none'
+              }}
               onError={(e) => {
                 // Fallback to icon if logo not found
                 e.currentTarget.style.display = 'none';

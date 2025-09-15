@@ -12,6 +12,7 @@ import CareerRoadmapPage from './pages/CareerRoadmapPage';
 import SkillsAssessmentPage from './pages/SkillsAssessmentPage';
 import CareerBranchingPage from './pages/CareerBranchingPage';
 import SettingsPage from './pages/SettingsPage';
+import NotificationsPage from './pages/NotificationsPage';
 import { appStartupService } from './services/appStartupService';
 import { RegionProvider } from './contexts/RegionContext';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -29,7 +30,9 @@ function App() {
     <ThemeProvider>
       <RegionProvider>
         <StatusBarComponent />
-        <div className="min-h-screen bg-white dark:bg-gray-900 app-content" id="app-content">
+        {/* Status bar area spacer */}
+        <div className="status-bar-area"></div>
+        <div className="min-h-screen bg-background app-content" id="app-content" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><p className="text-lg">Loading...</p></div>}>
           <>
             <ScrollToTop />
@@ -45,6 +48,7 @@ function App() {
             <Route path="/skills" element={<SkillsAssessmentPage />} />
             <Route path="/branching" element={<CareerBranchingPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
             </Routes>
           </>
         </Suspense>
