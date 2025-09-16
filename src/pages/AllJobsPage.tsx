@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, Clock, MapPin, Briefcase, Home, Search, Target, BookOpen, X } from "lucide-react";
@@ -33,6 +34,7 @@ const getLevelBadgeColor = (level: CareerLevel): string => {
 
 const AllJobsPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const [items, setItems] = useState<Array<{ node: ICareerNode; path: ICareerPath }>>([]);
   const [filteredItems, setFilteredItems] = useState<Array<{ node: ICareerNode; path: ICareerPath }>>([]);
@@ -247,7 +249,7 @@ const AllJobsPage: React.FC = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              {urlSearchQuery ? `Search Results: "${urlSearchQuery}"` : 'All Jobs'}
+              {urlSearchQuery ? `Search Results: "${urlSearchQuery}"` : t('pages.allJobs.title')}
             </motion.h1>
           </div>
           <motion.div 

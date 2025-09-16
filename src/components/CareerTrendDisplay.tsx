@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { useTranslation } from 'react-i18next';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -29,6 +30,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
   career, 
   showIndustryTrend = true 
 }) => {
+  const { t } = useTranslation();
   const [trendData, setTrendData] = useState<CareerTrendData | null>(null);
   const [industryTrend, setIndustryTrend] = useState<IndustryTrendData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -175,17 +177,17 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
           <div className="text-center py-8">
             <AlertTriangle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <p className="text-muted-foreground">
-              {error || 'No trend data available for this career'}
+              {error || t('components.trendDisplay.noTrendData')}
             </p>
             <p className="text-sm text-muted-foreground mt-2 mb-4">
-              Trend data is updated monthly from Supabase. Some careers may not have trend data yet.
+              {t('components.trendDisplay.trendDataDescription')}
             </p>
             <div className="space-y-2">
               <p className="text-xs text-muted-foreground">
-                Career ID: <code className="bg-muted px-1 rounded">{career.id}</code>
+                {t('components.trendDisplay.careerId')}: <code className="bg-muted px-1 rounded">{career.id}</code>
               </p>
               <p className="text-xs text-muted-foreground">
-                Look for this ID in the <code className="bg-muted px-1 rounded">career_trends</code> table
+                {t('components.trendDisplay.lookForId')} <code className="bg-muted px-1 rounded">career_trends</code> {t('components.trendDisplay.table')}
               </p>
               <Button 
                 variant="outline" 
@@ -204,7 +206,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
                   }
                 }}
               >
-                Check Database
+{t('components.trendDisplay.checkDatabase')}
               </Button>
             </div>
           </div>
@@ -301,7 +303,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
           {/* Trending Skills */}
           {trendData.key_skills_trending.length > 0 && (
             <div>
-              <h4 className="font-semibold text-foreground mb-2">Trending Skills</h4>
+              <h4 className="font-semibold text-foreground mb-2">{t('marketTrends.trendingSkills')}</h4>
               <div className="flex flex-wrap gap-2">
                 {trendData.key_skills_trending.map((skill, index) => (
                   <Badge key={index} variant="outline" className="text-primary border-primary/20">

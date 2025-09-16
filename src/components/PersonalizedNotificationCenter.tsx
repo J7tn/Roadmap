@@ -33,6 +33,7 @@ import { Notification } from '@/services/notificationService';
 import { personalizedNotificationService } from '@/services/personalizedNotificationService';
 import { NotificationService } from '@/services/notificationService';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface PersonalizedNotificationCenterProps {
   className?: string;
@@ -40,6 +41,7 @@ interface PersonalizedNotificationCenterProps {
 
 const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterProps> = ({ className = '' }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [personalizedNotifications, setPersonalizedNotifications] = useState<PersonalizedNotification[]>([]);
@@ -53,6 +55,9 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
   useEffect(() => {
     const loadData = async () => {
       try {
+        // Set translation function for the service
+        personalizedNotificationService.setTranslationFunction(t);
+        
         // Initialize user profile if not exists
         await personalizedNotificationService.initializeUserProfile();
         
@@ -263,7 +268,7 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
                         className="text-xs text-foreground"
                       >
                         <Check className="h-3 w-3 mr-1" />
-                        Mark All Read
+{t('notifications.markAllRead')}
                       </Button>
                     )}
 
@@ -284,7 +289,7 @@ const PersonalizedNotificationCenter: React.FC<PersonalizedNotificationCenterPro
                 <div className="p-3 bg-primary/5 border-b">
                   <div className="flex items-center gap-2 text-sm">
                     <Star className="h-4 w-4 text-primary" />
-                    <span className="font-medium text-foreground">Personalized for you:</span>
+                    <span className="font-medium text-foreground">{t('notifications.personalizedForYou')}</span>
                     <span className="text-primary">
                       {userProfile.preferredIndustries.slice(0, 2).join(', ')}
                     </span>

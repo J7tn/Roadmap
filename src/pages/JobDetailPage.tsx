@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Home, Search, Target, BookOpen } from "lucide-react";
 import CareerDetailsContent from "@/components/CareerDetailsContent";
@@ -11,6 +12,7 @@ import BottomNavigation from "@/components/BottomNavigation";
 const JobDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [career, setCareer] = useState<ICareerNode | null>(null);
   const [careerPath, setCareerPath] = useState<ICareerPath | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -78,7 +80,7 @@ const JobDetailPage: React.FC = () => {
             >
               <Home className="h-5 w-5" />
             </Button>
-            <h1 className="text-xl font-bold leading-none">Job Details</h1>
+            <h1 className="text-xl font-bold leading-none">{t('pages.jobDetails.title')}</h1>
           </div>
         </div>
       </header>
@@ -87,7 +89,7 @@ const JobDetailPage: React.FC = () => {
         <div className="container mx-auto px-4 py-12">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Loading career details...</p>
+            <p className="text-muted-foreground">{t('pages.jobDetails.loadingCareerDetails')}</p>
           </div>
         </div>
       )}

@@ -5,11 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { supabaseTrendingService, TrendingData } from '@/services/supabaseTrendingService';
 import DataStatusIndicator from './DataStatusIndicator';
 
 const RealTimeJobFeed: React.FC = React.memo(() => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [trendingData, setTrendingData] = useState<TrendingData | null>(null);
   const [loading, setLoading] = useState(true);
   
@@ -101,8 +103,8 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Market Trends</h2>
-          <div className="text-sm text-gray-500 dark:text-gray-400">Loading...</div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('marketTrends.title')}</h2>
+          <div className="text-sm text-gray-500 dark:text-gray-400">{t('marketTrends.loading')}</div>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
@@ -137,28 +139,28 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
     return (
       <div className="space-y-6">
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-foreground">Career Market Trends</h2>
+          <h2 className="text-2xl font-bold text-foreground">{t('marketTrends.title')}</h2>
           <p className="text-muted-foreground">
-            Stay updated with the latest career opportunities and market insights
+            {t('marketTrends.subtitle')}
           </p>
         </div>
 
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <DataStatusIndicator />
-          <span>Last updated: {formattedTime}</span>
+          <span>{t('marketTrends.lastUpdated')} {formattedTime}</span>
         </div>
 
         <div className="text-center py-12">
           <BarChart3 className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">No Market Data Available</h3>
+          <h3 className="text-xl font-semibold mb-2">{t('marketTrends.noMarketData')}</h3>
           <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-            Market trend data is currently unavailable. This may be due to a network issue or the data is being updated.
+            {t('marketTrends.noMarketDataDescription')}
           </p>
           <Button 
             variant="outline" 
             onClick={() => window.location.reload()}
           >
-            Try Again
+            {t('marketTrends.tryAgain')}
           </Button>
         </div>
       </div>
@@ -169,16 +171,16 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold text-foreground">Career Market Trends</h2>
+        <h2 className="text-2xl font-bold text-foreground">{t('marketTrends.title')}</h2>
         <p className="text-muted-foreground">
-          Stay updated with the latest career opportunities and market insights
+          {t('marketTrends.subtitle')}
         </p>
       </div>
 
       {/* Status Bar */}
       <div className="flex items-center justify-between text-sm text-muted-foreground">
         <DataStatusIndicator />
-        <span>Last updated: {formattedTime}</span>
+        <span>{t('marketTrends.lastUpdated')} {formattedTime}</span>
       </div>
 
       {/* Market Insights Grid */}
@@ -193,7 +195,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg">
                 <TrendingUp className="h-5 w-5 text-primary" />
-                <span>Trending Skills</span>
+                <span>{t('marketTrends.trendingSkills')}</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -237,7 +239,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg">
                 <TrendingDown className="h-5 w-5 text-primary" />
-                <span>Declining Skills</span>
+                <span>{t('marketTrends.decliningSkills')}</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -281,7 +283,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg">
                 <BarChart3 className="h-5 w-5 text-green-600" />
-                <span>Industry Growth</span>
+                <span>{t('marketTrends.industryGrowth')}</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -304,7 +306,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                         +{industry.growth}%
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {industry.job_count?.toLocaleString() || '0'} jobs
+                        {industry.job_count?.toLocaleString() || '0'} {t('marketTrends.jobs')}
                       </div>
                     </div>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -325,7 +327,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg">
                 <TrendingDown className="h-5 w-5 text-primary" />
-                <span>Declining Industries</span>
+                <span>{t('marketTrends.decliningIndustries')}</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -348,7 +350,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                         {industry.growth}%
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {industry.job_count?.toLocaleString() || '0'} jobs
+                        {industry.job_count?.toLocaleString() || '0'} {t('marketTrends.jobs')}
                       </div>
                     </div>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -369,7 +371,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg">
                 <Zap className="h-5 w-5 text-primary" />
-                <span>Emerging Roles</span>
+                <span>{t('marketTrends.emergingRoles')}</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -413,7 +415,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg">
                 <Award className="h-5 w-5 text-purple-600" />
-                <span>Skills in High Demand</span>
+                <span>{t('marketTrends.skillsInHighDemand')}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -444,7 +446,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg">
                 <BarChart3 className="h-5 w-5 text-green-600" />
-                <span>Industry Growth Analysis</span>
+                <span>{t('marketTrends.industryGrowthAnalysis')}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -475,7 +477,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg">
                 <Users className="h-5 w-5 text-primary" />
-                <span>Career Transition Opportunities</span>
+                <span>{t('marketTrends.careerTransitionOpportunities')}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -499,7 +501,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
 
       {/* Auto-refresh indicator */}
       <div className="text-center text-sm text-muted-foreground">
-        Auto-updating career trends monthly
+        {t('marketTrends.autoUpdatingTrends')}
       </div>
     </div>
   );

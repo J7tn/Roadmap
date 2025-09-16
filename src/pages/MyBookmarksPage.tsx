@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import {
   BookmarkCheck,
   ArrowLeft,
@@ -26,6 +27,7 @@ import EmptyState from '@/components/EmptyState';
 
 const MyBookmarksPage: React.FC = React.memo(() => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { bookmarks, loading, removeBookmark, clearAllBookmarks, getBookmarkCount } = useBookmarks();
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'category'>('date');
@@ -152,7 +154,7 @@ const MyBookmarksPage: React.FC = React.memo(() => {
       transition={{ duration: 0.5 }}
     >
       <PageHeader
-        title="My Bookmarks"
+        title={t('pages.bookmarks.title')}
         icon={<BookmarkCheck />}
         backTo="/categories"
         badge={{
@@ -166,10 +168,10 @@ const MyBookmarksPage: React.FC = React.memo(() => {
         {bookmarks.length === 0 ? (
           <EmptyState
             icon="bookmark"
-            title="No Bookmarks Yet"
-            description="Start exploring careers and bookmark the ones that interest you. Your saved jobs will appear here."
+            title={t('pages.bookmarks.noBookmarks')}
+            description={t('pages.bookmarks.noBookmarksDescription')}
             action={{
-              label: "Explore Careers",
+              label: t('pages.bookmarks.exploreCareers'),
               onClick: () => navigate('/categories')
             }}
           />

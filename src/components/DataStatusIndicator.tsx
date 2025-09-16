@@ -12,6 +12,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { dataVersioningService } from '@/services/dataVersioningService';
+import { useTranslation } from 'react-i18next';
 
 interface DataStatusIndicatorProps {
   className?: string;
@@ -22,6 +23,7 @@ const DataStatusIndicator: React.FC<DataStatusIndicatorProps> = ({
   className = '', 
   showDetails = false 
 }) => {
+  const { t } = useTranslation();
   const [dataStatus, setDataStatus] = useState(dataVersioningService.getDataStatus());
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -103,7 +105,7 @@ const DataStatusIndicator: React.FC<DataStatusIndicatorProps> = ({
       <div className={`flex items-center space-x-2 ${className}`}>
         {getStatusIcon(overallStatus)}
         <span className="text-sm text-muted-foreground">
-          {overallStatus === 'success' ? 'Data up to date' : 'Updating data...'}
+          {overallStatus === 'success' ? t('marketTrends.dataUpToDate') : t('marketTrends.updatingData')}
         </span>
       </div>
     );
@@ -121,7 +123,7 @@ const DataStatusIndicator: React.FC<DataStatusIndicatorProps> = ({
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
               <Database className="h-5 w-5 text-primary" />
-              <h3 className="font-semibold">Data Status</h3>
+              <h3 className="font-semibold">{t('marketTrends.dataStatus')}</h3>
             </div>
             <Button
               variant="outline"
@@ -134,7 +136,7 @@ const DataStatusIndicator: React.FC<DataStatusIndicatorProps> = ({
               ) : (
                 <RefreshCw className="h-4 w-4" />
               )}
-              Refresh
+              {t('marketTrends.refresh')}
             </Button>
           </div>
 
@@ -143,7 +145,7 @@ const DataStatusIndicator: React.FC<DataStatusIndicatorProps> = ({
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 {getStatusIcon(dataStatus.trending.status || 'unknown')}
-                <span className="text-sm font-medium">Trending Data</span>
+                <span className="text-sm font-medium">{t('marketTrends.trendingData')}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Badge className={getStatusColor(dataStatus.trending.status || 'unknown')}>
@@ -159,7 +161,7 @@ const DataStatusIndicator: React.FC<DataStatusIndicatorProps> = ({
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 {getStatusIcon(dataStatus.careers.status || 'unknown')}
-                <span className="text-sm font-medium">Career Data</span>
+                <span className="text-sm font-medium">{t('marketTrends.careerData')}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Badge className={getStatusColor(dataStatus.careers.status || 'unknown')}>
@@ -176,8 +178,8 @@ const DataStatusIndicator: React.FC<DataStatusIndicatorProps> = ({
               <div className="flex items-start space-x-2">
                 <Info className="h-4 w-4 text-muted-foreground mt-0.5" />
                 <div className="text-xs text-muted-foreground">
-                  <p>Data is updated monthly by our AI system.</p>
-                  <p>Your app remembers the most recent data even when updates fail.</p>
+                  <p>{t('marketTrends.dataUpdateInfo')}</p>
+                  <p>{t('marketTrends.dataFallbackInfo')}</p>
                 </div>
               </div>
             </div>

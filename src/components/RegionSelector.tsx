@@ -82,14 +82,14 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({
     <div className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        className="flex items-center gap-2 px-3 py-2 bg-background border border-border rounded-lg hover:bg-primary/10 transition-colors"
       >
-        <Globe className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <Globe className="w-4 h-4 text-muted-foreground" />
+        <span className="text-sm font-medium text-foreground">
           {selectedRegionData.flag} {selectedRegionData.name}
         </span>
         <svg
-          className={`w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -107,9 +107,9 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({
           />
           
           {/* Dropdown */}
-          <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-20">
+          <div className="absolute top-full left-0 mt-1 w-64 bg-background border border-border rounded-lg shadow-lg z-20">
             <div className="p-2">
-              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
                 Select Your Region
               </div>
               
@@ -119,14 +119,14 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({
                   onClick={() => handleRegionSelect(region.id)}
                   className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors ${
                     selectedRegion === region.id
-                      ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400'
-                      : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                      ? 'bg-primary/10 text-primary'
+                      : 'hover:bg-primary/5 text-foreground'
                   }`}
                 >
                   <span className="text-lg">{region.flag}</span>
                   <div className="flex-1">
                     <div className="font-medium text-sm">{region.name}</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-xs text-muted-foreground">
                       {region.countries.slice(0, 3).join(', ')}
                       {region.countries.length > 3 && ` +${region.countries.length - 3} more`}
                     </div>
@@ -140,8 +140,8 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({
               ))}
             </div>
             
-            <div className="border-t border-gray-100 dark:border-gray-700 p-2">
-              <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+            <div className="border-t border-border p-2">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <MapPin className="w-3 h-3" />
                 <span>Market trends will be customized for your region</span>
               </div>

@@ -16,6 +16,7 @@ import NotificationsPage from './pages/NotificationsPage';
 import { appStartupService } from './services/appStartupService';
 import { RegionProvider } from './contexts/RegionContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 import StatusBarComponent from './components/StatusBar';
 
 function App() {
@@ -27,8 +28,9 @@ function App() {
   }, []);
 
   return (
-    <ThemeProvider>
-      <RegionProvider>
+    <LanguageProvider>
+      <ThemeProvider>
+        <RegionProvider>
         <StatusBarComponent />
         {/* Status bar area spacer */}
         <div className="status-bar-area"></div>
@@ -53,8 +55,9 @@ function App() {
           </>
         </Suspense>
         </div>
-      </RegionProvider>
-    </ThemeProvider>
+        </RegionProvider>
+      </ThemeProvider>
+    </LanguageProvider>
   );
 }
 

@@ -2,6 +2,7 @@ import React from "react";
 import { Search, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useTranslation } from 'react-i18next';
 
 interface SearchInputProps {
   value: string;
@@ -20,7 +21,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   value,
   onChange,
   onSubmit,
-  placeholder = "Search...",
+  placeholder,
   showFilter = false,
   onFilterClick,
   loading = false,
@@ -28,6 +29,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   onSuggestionClick,
   className = ""
 }) => {
+  const { t } = useTranslation();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (onSubmit) {
@@ -42,7 +44,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder={placeholder}
+              placeholder={placeholder || t('search.placeholder')}
               value={value}
               onChange={(e) => onChange(e.target.value)}
               className="pl-10"
@@ -56,11 +58,11 @@ const SearchInput: React.FC<SearchInputProps> = ({
               className="flex items-center gap-2"
             >
               <Filter className="h-4 w-4" />
-              Filters
+              {t('pages.search.filters')}
             </Button>
           )}
           <Button type="submit" disabled={loading}>
-            {loading ? "Searching..." : "Search"}
+            {loading ? t('common.searching') : t('common.search')}
           </Button>
         </div>
       </form>
@@ -68,7 +70,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       {/* Search Suggestions */}
       {suggestions.length > 0 && (
         <div className="space-y-2">
-          <p className="text-sm text-muted-foreground">Suggestions:</p>
+          <p className="text-sm text-muted-foreground">{t('search.suggestions')}:</p>
           <div className="flex flex-wrap gap-2">
             {suggestions.map((suggestion, index) => (
               <Button

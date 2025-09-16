@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 import { 
   Search, 
   Filter,
@@ -27,6 +28,7 @@ import EmptyState from "@/components/EmptyState";
 const SearchPage: React.FC = React.memo(() => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [allCareers, setAllCareers] = useState<ICareerNodeWithCategory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -248,7 +250,7 @@ const SearchPage: React.FC = React.memo(() => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <LoadingSpinner message="Loading careers..." size="lg" />
+        <LoadingSpinner message={t('pages.search.loadingCareers')} size="lg" />
       </div>
     );
   }
@@ -257,7 +259,7 @@ const SearchPage: React.FC = React.memo(() => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <ErrorState
-          title="Error Loading Careers"
+          title={t('errors.errorLoadingCareers')}
           message={error}
           onRetry={() => window.location.reload()}
         />
@@ -275,7 +277,7 @@ const SearchPage: React.FC = React.memo(() => {
       {/* Header */}
       <div className="sticky top-0 z-50 bg-background border-b safe-area-top">
         <div className="flex items-center justify-between p-4">
-          <h1 className="text-lg font-semibold">Search Careers</h1>
+          <h1 className="text-lg font-semibold">{t('pages.search.title')}</h1>
           <Button
             variant="ghost"
             size="sm"
@@ -283,7 +285,7 @@ const SearchPage: React.FC = React.memo(() => {
             className="flex items-center gap-2"
           >
             <Filter className="h-4 w-4" />
-            Filters
+{t('pages.search.filters')}
           </Button>
         </div>
       </div>
@@ -296,7 +298,7 @@ const SearchPage: React.FC = React.memo(() => {
           value={searchQuery}
           onChange={setSearchQuery}
           onSubmit={handleSearchSubmit}
-          placeholder="Search careers, skills, or job titles..."
+          placeholder={t('pages.search.placeholder')}
           loading={loading}
           suggestions={searchSuggestions}
           onSuggestionClick={handleSuggestionClick}
@@ -311,7 +313,7 @@ const SearchPage: React.FC = React.memo(() => {
             className="mt-4 p-4 bg-muted rounded-lg space-y-4"
           >
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold">Filters</h3>
+              <h3 className="font-semibold">{t('pages.search.filters')}</h3>
               <Button
                 variant="ghost"
                 size="sm"
@@ -323,13 +325,13 @@ const SearchPage: React.FC = React.memo(() => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium mb-2 block">Industry</label>
+                <label className="text-sm font-medium mb-2 block">{t('pages.search.industry')}</label>
                 <select
                   value={selectedIndustry}
                   onChange={(e) => setSelectedIndustry(e.target.value)}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border border-border bg-background text-foreground rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary"
                 >
-                  <option value="all">All Industries</option>
+                  <option value="all">{t('pages.search.allIndustries')}</option>
                   {INDUSTRY_CATEGORIES.map(industry => (
                     <option key={industry.id} value={industry.id}>
                       {industry.name}
@@ -339,17 +341,17 @@ const SearchPage: React.FC = React.memo(() => {
               </div>
               
               <div>
-                <label className="text-sm font-medium mb-2 block">Experience Level</label>
+                <label className="text-sm font-medium mb-2 block">{t('pages.search.experience')}</label>
                 <select
                   value={selectedLevel}
                   onChange={(e) => setSelectedLevel(e.target.value)}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border border-border bg-background text-foreground rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary"
                 >
-                  <option value="all">All Levels</option>
-                  <option value="E">Entry Level</option>
-                  <option value="I">Intermediate</option>
-                  <option value="A">Advanced</option>
-                  <option value="X">Expert</option>
+                  <option value="all">{t('pages.search.allLevels')}</option>
+                  <option value="E">{t('pages.search.entryLevel')}</option>
+                  <option value="I">{t('pages.search.intermediate')}</option>
+                  <option value="A">{t('pages.search.advanced')}</option>
+                  <option value="X">{t('pages.search.expert')}</option>
                 </select>
               </div>
             </div>
@@ -361,17 +363,17 @@ const SearchPage: React.FC = React.memo(() => {
           {filteredCareers.length === 0 ? (
             <EmptyState
               icon="search"
-              title="No careers found"
-              description="Try adjusting your search terms or filters"
+              title={t('pages.search.noResults')}
+              description={t('pages.search.tryAdjustingSearch')}
               action={{
-                label: "Clear Search",
+                label: t('pages.search.clearSearch'),
                 onClick: clearSearch
               }}
             />
           ) : (
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">
-                {filteredCareers.length} career{filteredCareers.length !== 1 ? 's' : ''} found
+                {filteredCareers.length} {filteredCareers.length !== 1 ? t('pages.search.careersFound') : t('pages.search.careerFound')}
               </p>
               {filteredCareers.filter(career => career && career.id && career.t).map((career, index) => (
                 <CareerBlock

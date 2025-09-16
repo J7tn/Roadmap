@@ -59,6 +59,7 @@ class PersonalizedNotificationService {
   private readonly NOTIFICATION_HISTORY_KEY = 'careering_notification_history';
   private readonly DUPLICATE_CHECK_HOURS = 24; // Don't show same notification for 24 hours
   private notificationHistory: Map<string, number> = new Map(); // notification hash -> timestamp
+  private translateFunction: ((key: string, options?: any) => string) | null = null;
 
   private constructor() {
     this.notificationService = NotificationService.getInstance();
@@ -72,6 +73,39 @@ class PersonalizedNotificationService {
       PersonalizedNotificationService.instance = new PersonalizedNotificationService();
     }
     return PersonalizedNotificationService.instance;
+  }
+
+  // Set the translation function
+  setTranslationFunction(translateFunction: (key: string, options?: any) => string): void {
+    this.translateFunction = translateFunction;
+  }
+
+  // Helper method to get translated text with fallback
+  private t(key: string, options?: any): string {
+    if (this.translateFunction) {
+      return this.translateFunction(key, options);
+    }
+    // Fallback to English if no translation function is set
+    return this.getEnglishFallback(key, options);
+  }
+
+  // English fallback for when translation function is not available
+  private getEnglishFallback(key: string, options?: any): string {
+    const fallbacks: Record<string, string> = {
+      'notifications.justNow': 'Just now',
+      'notifications.careerUpdate': 'Career Update',
+      'notifications.skillDevelopmentOpportunity': 'Skill Development Opportunity',
+      'notifications.newJobOpportunities': 'New Job Opportunities',
+      'notifications.careerPathCompleted': 'Career Path Completed!',
+      'notifications.greatProgress': 'Great Progress!',
+      'notifications.industryInsight': 'Industry Insight',
+      'notifications.newTrendingSkills': `New trending skills for ${options?.career || 'this career'}: ${options?.skills || 'new skills'}`,
+      'notifications.learnSkillToAdvance': `Learn ${options?.skill || 'this skill'} to advance in ${options?.careers || 'your career'}`,
+      'notifications.newPositionsAvailable': `New ${options?.career || 'job'} positions available in your area`,
+      'notifications.careerPathCompletedMessage': `You've completed the ${options?.pathName || 'career path'} career path!`,
+      'notifications.careerPathProgressMessage': `You're ${options?.percentage || '0'}% through the ${options?.pathName || 'career path'} career path`
+    };
+    return fallbacks[key] || key;
   }
 
   // Load user profile from localStorage
@@ -387,7 +421,10 @@ class PersonalizedNotificationService {
           careerTitle: bookmark.title,
           trendType: 'skills',
           change: newSkills.length * 20,
-          message: `New trending skills for ${bookmark.title}: ${newSkills.slice(0, 3).join(', ')}`,
+          message: this.t('notifications.newTrendingSkills', { 
+            career: bookmark.title, 
+            skills: newSkills.slice(0, 3).join(', ') 
+          }),
           priority: 'medium',
           data: { newSkills, allTrendingSkills: trendData.key_skills_trending }
         });
@@ -406,9 +443,9 @@ class PersonalizedNotificationService {
     const notification: PersonalizedNotification = {
       id: `trend_${alert.careerId}_${Date.now()}`,
       type: 'market',
-      title: `${alert.trendType === 'growth' ? '📈' : alert.trendType === 'skills' ? '🛠️' : '💼'} ${alert.careerTitle} Update`,
+      title: `${alert.trendType === 'growth' ? '📈' : alert.trendType === 'skills' ? '🛠️' : '💼'} ${alert.careerTitle} ${this.t('notifications.careerUpdate')}`,
       message: alert.message,
-      time: 'Just now',
+      time: this.t('notifications.justNow'),
       read: false,
       action: 'explore',
       priority: alert.priority,
@@ -476,9 +513,12 @@ class PersonalizedNotificationService {
     const notification: PersonalizedNotification = {
       id: `skill_dev_${Date.now()}`,
       type: 'info',
-      title: '🛠️ Skill Development Opportunity',
-      message: `Learn ${skillGap.skill} to advance in ${skillGap.careers.slice(0, 2).join(' and ')}`,
-      time: 'Just now',
+      title: `🛠️ ${this.t('notifications.skillDevelopmentOpportunity')}`,
+      message: this.t('notifications.learnSkillToAdvance', { 
+        skill: skillGap.skill, 
+        careers: skillGap.careers.slice(0, 2).join(' and ') 
+      }),
+      time: this.t('notifications.justNow'),
       read: false,
       action: 'learn',
       priority: 'medium',
@@ -521,9 +561,9 @@ class PersonalizedNotificationService {
     const notification: PersonalizedNotification = {
       id: `job_opp_${career.id}_${Date.now()}`,
       type: 'career',
-      title: '💼 New Job Opportunities',
-      message: `New ${career.title} positions available in your area`,
-      time: 'Just now',
+      title: `💼 ${this.t('notifications.newJobOpportunities')}`,
+      message: this.t('notifications.newPositionsAvailable', { career: career.title }),
+      time: this.t('notifications.justNow'),
       read: false,
       action: 'apply',
       priority: 'medium',
@@ -576,11 +616,14 @@ class PersonalizedNotificationService {
     const notification: PersonalizedNotification = {
       id: `milestone_${progress.pathId}_${Date.now()}`,
       type: 'success',
-      title: isCompleted ? '🎉 Career Path Completed!' : '📈 Great Progress!',
+      title: isCompleted ? `🎉 ${this.t('notifications.careerPathCompleted')}` : `📈 ${this.t('notifications.greatProgress')}`,
       message: isCompleted 
-        ? `You've completed the ${progress.pathName} career path!`
-        : `You're ${Math.round(completionPercentage)}% through the ${progress.pathName} career path`,
-      time: 'Just now',
+        ? this.t('notifications.careerPathCompletedMessage', { pathName: progress.pathName })
+        : this.t('notifications.careerPathProgressMessage', { 
+            percentage: Math.round(completionPercentage), 
+            pathName: progress.pathName 
+          }),
+      time: this.t('notifications.justNow'),
       read: false,
       action: isCompleted ? 'explore' : 'continue',
       priority: isCompleted ? 'high' : 'medium',
@@ -629,9 +672,9 @@ class PersonalizedNotificationService {
     const notification: PersonalizedNotification = {
       id: `insight_${industry}_${Date.now()}`,
       type: 'info',
-      title: '📊 Industry Insight',
+      title: `📊 ${this.t('notifications.industryInsight')}`,
       message: randomInsight,
-      time: 'Just now',
+      time: this.t('notifications.justNow'),
       read: false,
       action: 'explore',
       priority: 'low',

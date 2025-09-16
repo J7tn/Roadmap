@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Search, Target, BookOpen, Map, Plus, CheckCircle, Star, ArrowRight, TrendingUp } from "lucide-react";
+import { Search, Target, BookOpen, Map, Plus, CheckCircle, Star, ArrowRight, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import CareerTransitionSuggestions from "@/components/CareerTransitionSuggestions";
 import RoadmapProgress from "@/components/RoadmapProgress";
@@ -11,6 +12,7 @@ import BottomNavigation from "@/components/BottomNavigation";
 
 const CareerRoadmapPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [currentCareer, setCurrentCareer] = useState<ICareerNode | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -86,7 +88,7 @@ const CareerRoadmapPage: React.FC = () => {
         
       } catch (error) {
         console.error('Failed to load career data:', error);
-        setError('Failed to load career data');
+        setError(t('pages.roadmap.failedToLoadData'));
       } finally {
         setLoading(false);
       }
@@ -111,7 +113,7 @@ const CareerRoadmapPage: React.FC = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading your career roadmap...</p>
+          <p className="text-muted-foreground">{t('pages.roadmap.loadingRoadmap')}</p>
         </div>
       </div>
     );
@@ -122,15 +124,15 @@ const CareerRoadmapPage: React.FC = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <Map className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-          <h2 className="text-2xl font-bold mb-2">Unable to Load Roadmap</h2>
+          <h2 className="text-2xl font-bold mb-2">{t('pages.roadmap.unableToLoadRoadmap')}</h2>
           <p className="text-muted-foreground mb-6">{error}</p>
           <div className="space-x-4">
             <Button onClick={() => window.location.reload()}>
-              Try Again
+              {t('pages.roadmap.tryAgain')}
             </Button>
             <Button variant="outline" onClick={() => navigate('/categories')}>
               <Search className="h-4 w-4 mr-2" />
-              Explore Careers
+              {t('pages.roadmap.exploreCareers')}
             </Button>
           </div>
         </div>
@@ -142,18 +144,10 @@ const CareerRoadmapPage: React.FC = () => {
     <div className="min-h-screen bg-background pb-20">
       {/* Navigation Header */}
       <header className="border-b bg-background sticky top-0 z-50 safe-area-top">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-center">
           <div className="flex items-center space-x-2">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => navigate(-1)}
-              className="mr-2"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <Map className="h-5 w-5 text-primary mr-2" />
-            <h1 className="text-xl font-bold">Career Roadmap</h1>
+            <Map className="h-5 w-5 text-primary" />
+            <h1 className="text-xl font-bold">{t('pages.roadmap.title')}</h1>
           </div>
         </div>
       </header>
@@ -164,8 +158,8 @@ const CareerRoadmapPage: React.FC = () => {
             {/* Current Career Overview */}
             <div className="bg-muted/50 dark:bg-muted/30 rounded-lg p-6">
               <div className="mb-4">
-                <h2 className="text-2xl font-bold mb-2">Your Current Career</h2>
-                <p className="text-muted-foreground">Plan your next step</p>
+                <h2 className="text-2xl font-bold mb-2">{t('pages.roadmap.yourCurrentCareer')}</h2>
+                <p className="text-muted-foreground">{t('pages.roadmap.planYourNextStep')}</p>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -176,11 +170,11 @@ const CareerRoadmapPage: React.FC = () => {
                   <p className="text-sm text-muted-foreground mt-1">{currentCareer.d}</p>
                 </div>
                 <div className="bg-background border border-border rounded-lg p-4" style={{ backgroundColor: 'hsl(var(--background))' }}>
-                  <h4 className="font-medium text-sm text-muted-foreground">Salary Range</h4>
+                  <h4 className="font-medium text-sm text-muted-foreground">{t('pages.roadmap.salaryRange')}</h4>
                   <p className="text-lg font-semibold">{currentCareer.sr}</p>
                 </div>
                 <div className="bg-background border border-border rounded-lg p-4" style={{ backgroundColor: 'hsl(var(--background))' }}>
-                  <h4 className="font-medium text-sm text-muted-foreground">Experience Level</h4>
+                  <h4 className="font-medium text-sm text-muted-foreground">{t('pages.roadmap.experienceLevel')}</h4>
                   <p className="text-lg font-semibold">{currentCareer.te}</p>
                 </div>
               </div>
@@ -205,13 +199,13 @@ const CareerRoadmapPage: React.FC = () => {
         ) : (
           <div className="text-center py-12">
             <Map className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-            <h2 className="text-2xl font-bold mb-2">Start Your Career Roadmap</h2>
+            <h2 className="text-2xl font-bold mb-2">{t('pages.roadmap.startYourCareerRoadmap')}</h2>
             <p className="text-muted-foreground mb-6">
-              Select your current career to begin planning your professional journey
+              {t('pages.roadmap.selectCurrentCareer')}
             </p>
             <Button onClick={() => navigate('/search')}>
               <Search className="h-4 w-4 mr-2" />
-              Find My Career
+              {t('pages.roadmap.searchCareers')}
             </Button>
           </div>
         )}

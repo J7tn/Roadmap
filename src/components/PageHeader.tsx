@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from 'react-i18next';
 
 interface PageHeaderProps {
   title: string;
@@ -20,10 +21,11 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   icon,
   backTo = "/home",
-  backLabel = "Back",
+  backLabel,
   badge,
   className = ""
 }) => {
+  const { t } = useTranslation();
   return (
     <motion.header 
       className={`border-b bg-background sticky top-0 z-50 safe-area-top ${className}`}
@@ -38,7 +40,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
             className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span className="hidden sm:inline">{backLabel}</span>
+            <span className="hidden sm:inline">{backLabel || t('common.back')}</span>
           </Link>
           <div className="flex items-center space-x-2">
             <div className="h-5 w-5 text-primary">

@@ -1,0 +1,256 @@
+{
+  "industries": {
+    "en": {
+      "technology": "Technology",
+      "healthcare": "Healthcare", 
+      "finance": "Finance",
+      "education": "Education",
+      "marketing": "Marketing",
+      "consulting": "Consulting",
+      "manufacturing": "Manufacturing",
+      "retail": "Retail",
+      "media": "Media",
+      "government": "Government"
+    },
+    "es": {
+      "technology": "Tecnología",
+      "healthcare": "Salud",
+      "finance": "Finanzas",
+      "education": "Educación",
+      "marketing": "Marketing",
+      "consulting": "Consultoría",
+      "manufacturing": "Manufactura",
+      "retail": "Venta al por menor",
+      "media": "Medios",
+      "government": "Gobierno"
+    },
+    "ja": {
+      "technology": "テクノロジー",
+      "healthcare": "ヘルスケア",
+      "finance": "金融",
+      "education": "教育",
+      "marketing": "マーケティング",
+      "consulting": "コンサルティング",
+      "manufacturing": "製造業",
+      "retail": "小売業",
+      "media": "メディア",
+      "government": "政府"
+    }
+  },
+  "skills": {
+    "en": {
+      "javascript": "JavaScript",
+      "python": "Python",
+      "react": "React",
+      "nodejs": "Node.js",
+      "sql": "SQL",
+      "aws": "AWS",
+      "docker": "Docker",
+      "git": "Git",
+      "machine_learning": "Machine Learning",
+      "data_analysis": "Data Analysis",
+      "project_management": "Project Management",
+      "agile": "Agile",
+      "ui_ux": "UI/UX Design",
+      "communication": "Communication",
+      "leadership": "Leadership",
+      "problem_solving": "Problem Solving",
+      "teamwork": "Teamwork",
+      "analytical_thinking": "Analytical Thinking",
+      "creativity": "Creativity",
+      "adaptability": "Adaptability"
+    },
+    "es": {
+      "javascript": "JavaScript",
+      "python": "Python",
+      "react": "React",
+      "nodejs": "Node.js",
+      "sql": "SQL",
+      "aws": "AWS",
+      "docker": "Docker",
+      "git": "Git",
+      "machine_learning": "Aprendizaje Automático",
+      "data_analysis": "Análisis de Datos",
+      "project_management": "Gestión de Proyectos",
+      "agile": "Ágil",
+      "ui_ux": "Diseño UI/UX",
+      "communication": "Comunicación",
+      "leadership": "Liderazgo",
+      "problem_solving": "Resolución de Problemas",
+      "teamwork": "Trabajo en Equipo",
+      "analytical_thinking": "Pensamiento Analítico",
+      "creativity": "Creatividad",
+      "adaptability": "Adaptabilidad"
+    },
+    "ja": {
+      "javascript": "JavaScript",
+      "python": "Python",
+      "react": "React",
+      "nodejs": "Node.js",
+      "sql": "SQL",
+      "aws": "AWS",
+      "docker": "Docker",
+      "git": "Git",
+      "machine_learning": "機械学習",
+      "data_analysis": "データ分析",
+      "project_management": "プロジェクト管理",
+      "agile": "アジャイル",
+      "ui_ux": "UI/UXデザイン",
+      "communication": "コミュニケーション",
+      "leadership": "リーダーシップ",
+      "problem_solving": "問題解決",
+      "teamwork": "チームワーク",
+      "analytical_thinking": "分析的思考",
+      "creativity": "創造性",
+      "adaptability": "適応性"
+    }
+  },
+  "careers": {
+    "en": {
+      "ai-engineer": {
+        "title": "AI Engineer",
+        "description": "Develop and implement artificial intelligence solutions and machine learning models",
+        "skills": ["machine_learning", "python", "data_analysis", "problem_solving"],
+        "job_titles": ["AI Engineer", "Machine Learning Engineer", "AI Developer", "ML Engineer"],
+        "certifications": ["AWS Machine Learning", "Google AI/ML", "Microsoft Azure AI"]
+      },
+      "data-scientist": {
+        "title": "Data Scientist",
+        "description": "Extract insights from data to drive business decisions and strategy",
+        "skills": ["data_analysis", "python", "sql", "machine_learning"],
+        "job_titles": ["Data Scientist", "Senior Data Scientist", "Lead Data Scientist", "Data Analyst"],
+        "certifications": ["AWS Data Analytics", "Google Data Analytics", "Microsoft Data Science"]
+      },
+      "software-engineer": {
+        "title": "Software Engineer",
+        "description": "Design, develop, and maintain software applications and systems",
+        "skills": ["javascript", "python", "react", "nodejs"],
+        "job_titles": ["Software Engineer", "Full Stack Developer", "Backend Developer", "Frontend Developer"],
+        "certifications": ["AWS Developer", "Google Cloud Developer", "Microsoft Azure Developer"]
+      },
+      "product-manager": {
+        "title": "Product Manager",
+        "description": "Lead product development and strategy to deliver value to customers",
+        "skills": ["project_management", "communication", "analytical_thinking", "leadership"],
+        "job_titles": ["Product Manager", "Senior Product Manager", "Product Owner", "Technical Product Manager"],
+        "certifications": ["PMP", "Certified Scrum Product Owner", "Google Product Management"]
+      },
+      "devops-engineer": {
+        "title": "DevOps Engineer",
+        "description": "Bridge development and operations for efficient deployment and infrastructure management",
+        "skills": ["docker", "aws", "git", "problem_solving"],
+        "job_titles": ["DevOps Engineer", "Site Reliability Engineer", "Cloud Engineer", "Infrastructure Engineer"],
+        "certifications": ["AWS DevOps", "Google Cloud DevOps", "Microsoft Azure DevOps"]
+      },
+      "ui-ux-designer": {
+        "title": "UI/UX Designer",
+        "description": "Create user-centered designs for digital products and experiences",
+        "skills": ["ui_ux", "creativity", "communication", "analytical_thinking"],
+        "job_titles": ["UI/UX Designer", "Product Designer", "User Experience Designer", "Interaction Designer"],
+        "certifications": ["Google UX Design", "Adobe Certified Expert", "Figma Certified"]
+      },
+      "cybersecurity-analyst": {
+        "title": "Cybersecurity Analyst",
+        "description": "Protect organizations from cyber threats and ensure information security",
+        "skills": ["problem_solving", "analytical_thinking", "communication", "adaptability"],
+        "job_titles": ["Cybersecurity Analyst", "Security Engineer", "Information Security Analyst", "Penetration Tester"],
+        "certifications": ["CISSP", "CEH", "CompTIA Security+", "CISM"]
+      },
+      "cloud-architect": {
+        "title": "Cloud Architect",
+        "description": "Design and implement cloud infrastructure solutions for scalable applications",
+        "skills": ["aws", "problem_solving", "analytical_thinking", "leadership"],
+        "job_titles": ["Cloud Architect", "Solutions Architect", "Cloud Engineer", "Infrastructure Architect"],
+        "certifications": ["AWS Solutions Architect", "Google Cloud Architect", "Microsoft Azure Architect"]
+      },
+      "blockchain-developer": {
+        "title": "Blockchain Developer",
+        "description": "Develop decentralized applications and smart contracts using blockchain technology",
+        "skills": ["javascript", "python", "problem_solving", "analytical_thinking"],
+        "job_titles": ["Blockchain Developer", "Smart Contract Developer", "Web3 Developer", "DApp Developer"],
+        "certifications": ["Ethereum Developer", "Hyperledger Developer", "Blockchain Council"]
+      },
+      "quantum-computing-engineer": {
+        "title": "Quantum Computing Engineer",
+        "description": "Develop quantum algorithms and applications for next-generation computing",
+        "skills": ["python", "analytical_thinking", "problem_solving", "creativity"],
+        "job_titles": ["Quantum Engineer", "Quantum Algorithm Developer", "Quantum Software Engineer", "Quantum Researcher"],
+        "certifications": ["IBM Quantum Developer", "Google Quantum Computing", "Microsoft Quantum Development"]
+      }
+    },
+    "es": {
+      "ai-engineer": {
+        "title": "Ingeniero de IA",
+        "description": "Desarrollar e implementar soluciones de inteligencia artificial y modelos de aprendizaje automático",
+        "skills": ["machine_learning", "python", "data_analysis", "problem_solving"],
+        "job_titles": ["Ingeniero de IA", "Ingeniero de Aprendizaje Automático", "Desarrollador de IA", "Ingeniero ML"],
+        "certifications": ["AWS Machine Learning", "Google AI/ML", "Microsoft Azure AI"]
+      },
+      "data-scientist": {
+        "title": "Científico de Datos",
+        "description": "Extraer insights de los datos para impulsar decisiones empresariales y estrategia",
+        "skills": ["data_analysis", "python", "sql", "machine_learning"],
+        "job_titles": ["Científico de Datos", "Científico de Datos Senior", "Líder de Ciencia de Datos", "Analista de Datos"],
+        "certifications": ["AWS Data Analytics", "Google Data Analytics", "Microsoft Data Science"]
+      },
+      "software-engineer": {
+        "title": "Ingeniero de Software",
+        "description": "Diseñar, desarrollar y mantener aplicaciones y sistemas de software",
+        "skills": ["javascript", "python", "react", "nodejs"],
+        "job_titles": ["Ingeniero de Software", "Desarrollador Full Stack", "Desarrollador Backend", "Desarrollador Frontend"],
+        "certifications": ["AWS Developer", "Google Cloud Developer", "Microsoft Azure Developer"]
+      },
+      "product-manager": {
+        "title": "Gerente de Producto",
+        "description": "Liderar el desarrollo y estrategia de productos para entregar valor a los clientes",
+        "skills": ["project_management", "communication", "analytical_thinking", "leadership"],
+        "job_titles": ["Gerente de Producto", "Gerente de Producto Senior", "Propietario de Producto", "Gerente de Producto Técnico"],
+        "certifications": ["PMP", "Certified Scrum Product Owner", "Google Product Management"]
+      },
+      "devops-engineer": {
+        "title": "Ingeniero DevOps",
+        "description": "Conectar desarrollo y operaciones para un despliegue eficiente y gestión de infraestructura",
+        "skills": ["docker", "aws", "git", "problem_solving"],
+        "job_titles": ["Ingeniero DevOps", "Ingeniero de Confiabilidad del Sitio", "Ingeniero de Nube", "Ingeniero de Infraestructura"],
+        "certifications": ["AWS DevOps", "Google Cloud DevOps", "Microsoft Azure DevOps"]
+      }
+    },
+    "ja": {
+      "ai-engineer": {
+        "title": "AIエンジニア",
+        "description": "人工知能ソリューションと機械学習モデルの開発と実装",
+        "skills": ["machine_learning", "python", "data_analysis", "problem_solving"],
+        "job_titles": ["AIエンジニア", "機械学習エンジニア", "AI開発者", "MLエンジニア"],
+        "certifications": ["AWS Machine Learning", "Google AI/ML", "Microsoft Azure AI"]
+      },
+      "data-scientist": {
+        "title": "データサイエンティスト",
+        "description": "データから洞察を抽出し、ビジネス決定と戦略を推進",
+        "skills": ["data_analysis", "python", "sql", "machine_learning"],
+        "job_titles": ["データサイエンティスト", "シニアデータサイエンティスト", "リードデータサイエンティスト", "データアナリスト"],
+        "certifications": ["AWS Data Analytics", "Google Data Analytics", "Microsoft Data Science"]
+      },
+      "software-engineer": {
+        "title": "ソフトウェアエンジニア",
+        "description": "ソフトウェアアプリケーションとシステムの設計、開発、保守",
+        "skills": ["javascript", "python", "react", "nodejs"],
+        "job_titles": ["ソフトウェアエンジニア", "フルスタック開発者", "バックエンド開発者", "フロントエンド開発者"],
+        "certifications": ["AWS Developer", "Google Cloud Developer", "Microsoft Azure Developer"]
+      },
+      "product-manager": {
+        "title": "プロダクトマネージャー",
+        "description": "製品開発と戦略をリードし、顧客に価値を提供",
+        "skills": ["project_management", "communication", "analytical_thinking", "leadership"],
+        "job_titles": ["プロダクトマネージャー", "シニアプロダクトマネージャー", "プロダクトオーナー", "テクニカルプロダクトマネージャー"],
+        "certifications": ["PMP", "Certified Scrum Product Owner", "Google Product Management"]
+      },
+      "devops-engineer": {
+        "title": "DevOpsエンジニア",
+        "description": "開発と運用を橋渡しし、効率的なデプロイメントとインフラ管理を実現",
+        "skills": ["docker", "aws", "git", "problem_solving"],
+        "job_titles": ["DevOpsエンジニア", "サイト信頼性エンジニア", "クラウドエンジニア", "インフラエンジニア"],
+        "certifications": ["AWS DevOps", "Google Cloud DevOps", "Microsoft Azure DevOps"]
+      }
+    }
+  }
+}

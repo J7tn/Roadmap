@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Settings, 
   Globe, 
@@ -15,12 +16,16 @@ import RegionSelector, { REGIONS } from '@/components/RegionSelector';
 import { useNavigate } from 'react-router-dom';
 import { useRegion } from '@/contexts/RegionContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 import BottomNavigation from '@/components/BottomNavigation';
 
 const SettingsPage: React.FC = () => {
   const navigate = useNavigate();
   const { selectedRegion, setSelectedRegion, getRegionDisplayName } = useRegion();
   const { isDarkMode, toggleDarkMode } = useTheme();
+  const { currentLanguage, setLanguage, availableLanguages } = useLanguage();
+  const { t } = useTranslation();
   const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(true);
 
   useEffect(() => {
@@ -49,7 +54,7 @@ const SettingsPage: React.FC = () => {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Settings className="h-5 w-5 text-primary" />
-                <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Settings</h1>
+                <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('settings.title')}</h1>
               </div>
             </div>
           </div>
@@ -61,16 +66,16 @@ const SettingsPage: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 dark:text-gray-100">
               <Globe className="h-5 w-5 text-primary" />
-              Region & Location
+{t('settings.regionLocation')}
             </CardTitle>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Set your region to see personalized career trends and market data
+{t('settings.setRegionDescription')}
             </p>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-medium text-gray-900 dark:text-gray-100">Current Region</h3>
+                <h3 className="font-medium text-gray-900 dark:text-gray-100">{t('settings.currentRegion')}</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   {selectedRegionData.flag} {selectedRegionData.name}
                 </p>
@@ -91,13 +96,55 @@ const SettingsPage: React.FC = () => {
                   <Check className="h-5 w-5 text-primary mt-0.5" />
                 </div>
                 <div>
-                  <h4 className="font-medium">Regional Personalization Active</h4>
+                  <h4 className="font-medium">{t('settings.regionalPersonalizationActive')}</h4>
                   <p className="text-sm text-muted-foreground mt-1">
-                    All career trends, market data, and insights are now customized for {selectedRegionData.name}. 
-                    This affects job availability, salary trends, and growth opportunities throughout the app.
+                    {t('settings.regionalPersonalizationDescription')}
                   </p>
                 </div>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Language Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 dark:text-gray-100">
+              <Globe className="h-5 w-5 text-primary" />
+              {t('settings.language')}
+            </CardTitle>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              {t('settings.chooseLanguageDescription')}
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100">{t('settings.language')}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {t('settings.selectLanguage')}
+                  </p>
+                </div>
+              </div>
+              
+              <Select value={currentLanguage} onValueChange={setLanguage}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder={t('settings.selectLanguagePlaceholder')}>
+                    {availableLanguages.find(lang => lang.code === currentLanguage)?.nativeName || 'English'}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {availableLanguages.map((language) => (
+                    <SelectItem key={language.code} value={language.code}>
+                      <div className="flex items-center justify-between w-full">
+                        <span className="font-medium">{language.nativeName}</span>
+                        <span className="text-sm text-muted-foreground ml-2">{language.name}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </CardContent>
         </Card>
@@ -107,18 +154,18 @@ const SettingsPage: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 dark:text-gray-100">
               <Bell className="h-5 w-5 text-primary" />
-              Notifications
+              {t('settings.notifications')}
             </CardTitle>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Manage how you receive updates and alerts
+              {t('settings.notificationsDescription')}
             </p>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-medium text-gray-900 dark:text-gray-100">Push Notifications</h3>
+                <h3 className="font-medium text-gray-900 dark:text-gray-100">{t('settings.pushNotifications')}</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Receive updates about new career opportunities and market trends
+                  {t('settings.receiveUpdates')}
                 </p>
               </div>
               <Button
@@ -127,7 +174,7 @@ const SettingsPage: React.FC = () => {
                 onClick={handleNotificationsToggle}
                 className="min-w-[80px]"
               >
-                {notificationsEnabled ? "Enabled" : "Disabled"}
+                {notificationsEnabled ? t('settings.notificationsEnabled') : t('settings.notificationsDisabled')}
               </Button>
             </div>
           </CardContent>
@@ -138,18 +185,18 @@ const SettingsPage: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 dark:text-gray-100">
               <Palette className="h-5 w-5 text-primary" />
-              Appearance
+              {t('settings.appearance')}
             </CardTitle>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Customize the look and feel of the app
+              {t('settings.customizeLookFeel')}
             </p>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-medium text-gray-900 dark:text-gray-100">Dark Mode</h3>
+                <h3 className="font-medium text-gray-900 dark:text-gray-100">{t('settings.darkMode')}</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Switch between light and dark themes
+                  {t('settings.switchThemes')}
                 </p>
               </div>
               <Button
@@ -161,12 +208,12 @@ const SettingsPage: React.FC = () => {
                 {isDarkMode ? (
                   <>
                     <Moon className="h-4 w-4 mr-2" />
-                    Dark
+                    {t('settings.dark')}
                   </>
                 ) : (
                   <>
                     <Sun className="h-4 w-4 mr-2" />
-                    Light
+                    {t('settings.light')}
                   </>
                 )}
               </Button>
@@ -177,19 +224,19 @@ const SettingsPage: React.FC = () => {
         {/* App Information */}
         <Card>
           <CardHeader>
-            <CardTitle className="dark:text-gray-100">About</CardTitle>
+            <CardTitle className="dark:text-gray-100">{t('settings.about')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">App Version</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">{t('settings.appVersion')}</span>
               <Badge variant="secondary">1.0.0</Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Data Source</span>
-              <span className="text-sm text-gray-900 dark:text-gray-100">Supabase + Regional Analytics</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">{t('settings.dataSource')}</span>
+              <span className="text-sm text-gray-900 dark:text-gray-100">{t('settings.dataSourceValue')}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Last Updated</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">{t('settings.lastUpdated')}</span>
               <span className="text-sm text-gray-900 dark:text-gray-100">{new Date().toLocaleDateString()}</span>
             </div>
           </CardContent>

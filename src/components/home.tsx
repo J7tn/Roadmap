@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { SplashScreen } from '@capacitor/splash-screen';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import {
   Search,
   MapPin,
@@ -63,6 +64,7 @@ const HomePage = React.memo(() => {
   const notificationService = NotificationService.getInstance();
   const navigate = useNavigate();
   const { isDarkMode } = useTheme();
+  const { t } = useTranslation();
    
   const {
     data: careerData,
@@ -237,8 +239,8 @@ const HomePage = React.memo(() => {
           <div className="flex items-center space-x-2">
             <img 
               src="/logo-small.png" 
-              alt="Careering Logo" 
-              className={`h-8 w-8 ${isDarkMode ? 'brightness-0 invert' : ''}`}
+              alt={t('app.logoAlt')} 
+              className="h-8 w-8"
               style={{
                 filter: isDarkMode ? 'brightness(0) invert(1)' : 'none'
               }}
@@ -248,15 +250,15 @@ const HomePage = React.memo(() => {
                 (e.currentTarget.nextElementSibling as HTMLElement).style.display = 'block';
               }}
             />
-            <MapPin className="h-6 w-6 text-primary hidden" />
-            <h1 className="text-xl font-bold">Careering</h1>
+            <MapPin className="h-6 w-6 text-primary" style={{ display: 'none' }} />
+            <h1 className="text-xl font-bold">{t('app.name')}</h1>
           </div>
 
           <div className="flex items-center space-x-3">
             {/* Search - Hidden on mobile to save space */}
             <div className="relative hidden md:block w-48">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search careers..." className="pl-8 h-9" />
+              <Input placeholder={t('search.placeholder')} className="pl-8 h-9" />
             </div>
             
             {/* Notifications and Settings Buttons */}
@@ -267,7 +269,7 @@ const HomePage = React.memo(() => {
                 size="icon" 
                 onClick={() => navigate('/settings')}
                 className="relative"
-                title="Settings"
+                title={t('navigation.settings')}
               >
                 <Settings className="h-5 w-5" />
               </Button>
@@ -288,14 +290,14 @@ const HomePage = React.memo(() => {
           {/* Debug Info */}
           {error && (
             <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <h3 className="text-red-800 font-semibold">Error Loading Data</h3>
+              <h3 className="text-red-800 font-semibold">{t('errors.errorLoadingData')}</h3>
               <p className="text-red-600 text-sm">{error}</p>
             </div>
           )}
           
           {loading && (
             <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-blue-600">Loading career data...</p>
+              <p className="text-blue-600">{t('common.loading')}</p>
             </div>
           )}
 
@@ -303,13 +305,13 @@ const HomePage = React.memo(() => {
 
           {/* Temporarily disabled for debugging */}
           <ErrorBoundary fallback={<div className="text-center py-8">
-            <h3 className="text-lg font-semibold mb-2">Unable to load market trends</h3>
-            <p className="text-muted-foreground mb-4">There was an error loading the market trends data.</p>
+            <h3 className="text-lg font-semibold mb-2">{t('errors.genericError')}</h3>
+            <p className="text-muted-foreground mb-4">{t('errors.serverError')}</p>
             <button
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
             >
-              Try Again
+              {t('common.retry')}
             </button>
           </div>}>
             <RealTimeJobFeed />

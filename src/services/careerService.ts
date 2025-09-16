@@ -16,6 +16,8 @@ import {
   searchCareerPaths, 
   getCareerRecommendations as getRecommendations
 } from '@/utils/careerDataLoader';
+import CareerDataTranslationService from './careerDataTranslationService';
+import TranslatedCareerService from './translatedCareerService';
 
 // Performance-optimized career service
 // Implements lazy loading, caching, and efficient data management
@@ -25,8 +27,12 @@ class CareerService {
   private lazyData: Map<string, ILazyCareerData> = new Map();
   private readonly CACHE_TTL = 30 * 60 * 1000; // 30 minutes
   private readonly MAX_CACHE_SIZE = 50; // Maximum cached items
+  private translationService: CareerDataTranslationService;
+  private translatedCareerService: TranslatedCareerService;
 
   constructor() {
+    this.translationService = CareerDataTranslationService.getInstance();
+    this.translatedCareerService = TranslatedCareerService.getInstance();
     this.initializeCache();
   }
 
@@ -333,14 +339,6 @@ class CareerService {
     return allPaths;
   }
 
-  async getAllCareerNodes(): Promise<Array<{ node: ICareerNode; path: ICareerPath }>> {
-    const paths = await this.getAllCareerPaths();
-    const nodes: Array<{ node: ICareerNode; path: ICareerPath }> = [];
-    paths.forEach(path => {
-      path.nodes.forEach(node => nodes.push({ node, path }));
-    });
-    return nodes;
-  }
 
   private generateSearchSuggestions(query: string, results: ICareerPath[]): string[] {
     const suggestions: string[] = [];
@@ -394,6 +392,97 @@ class CareerService {
     const average = Math.round(salaries.reduce((sum, salary) => sum + salary, 0) / salaries.length);
     return `$${average?.toLocaleString() || '0'}`;
   }
+
+  // Get all career nodes with path information (original structure)
+  public async getAllCareerNodes(): Promise<Array<{ node: ICareerNode; path: ICareerPath }>> {
+    const paths = await this.getAllCareerPaths();
+    const nodes: Array<{ node: ICareerNode; path: ICareerPath }> = [];
+    paths.forEach(path => {
+      path.nodes.forEach(node => {
+        // Apply translations to the node
+        const translatedNode = this.translationService.translateCareerNode(node);
+        nodes.push({ node: translatedNode, path });
+      });
+    });
+    return nodes;
+  }
+
+  // Get all career nodes as simple array with translation support
+  public async getAllCareerNodesArray(): Promise<ICareerNode[]> {
+    try {
+      return await this.translatedCareerService.getAllCareerNodes();
+    } catch (error) {
+      console.error('Error getting translated career nodes:', error);
+      // Fallback to original method
+      const allPaths = await this.getAllCareerPaths();
+      const allNodes: ICareerNode[] = [];
+      
+      allPaths.forEach(path => {
+        allNodes.push(...path.nodes);
+      });
+      
+      // Apply translations based on current language
+      return this.translationService.translateCareerArray(allNodes);
+    }
+  }
+
+  // Set language for translations
+  public setLanguage(language: string): void {
+    this.translationService.setLanguage(language);
+    this.translatedCareerService.setLanguage(language);
+  }
+
+  // Get career by ID with translations
+  public async getCareerByIdTranslated(id: string): Promise<ICareerNode | null> {
+    try {
+      return await this.translatedCareerService.getCareerById(id);
+    } catch (error) {
+      console.error('Error getting translated career by ID:', error);
+      // Fallback to getting from all nodes
+      const allNodes = await this.getAllCareerNodesArray();
+      return allNodes.find(node => node.id === id) || null;
+    }
+  }
+
+  // Search careers with translations
+  public async searchCareersTranslated(query: string, filters?: ICareerFilters): Promise<ICareerNode[]> {
+    try {
+      // Convert ICareerFilters to the format expected by translatedCareerService
+      const searchFilters = {
+        industry: filters?.industry?.[0], // Take first industry if multiple
+        level: filters?.level?.[0] // Take first level if multiple
+      };
+      return await this.translatedCareerService.searchCareers(query, searchFilters);
+    } catch (error) {
+      console.error('Error searching translated careers:', error);
+      // Fallback to getting all nodes and filtering
+      const allNodes = await this.getAllCareerNodesArray();
+      return allNodes.filter(node => 
+        node.t.toLowerCase().includes(query.toLowerCase()) ||
+        node.d.toLowerCase().includes(query.toLowerCase())
+      );
+    }
+  }
+
+  // Get translated industry name
+  public async getTranslatedIndustry(industryKey: string): Promise<string> {
+    try {
+      return await this.translatedCareerService.getTranslatedIndustry(industryKey);
+    } catch (error) {
+      console.error('Error getting translated industry:', error);
+      return industryKey;
+    }
+  }
+
+  // Get translated skill name
+  public async getTranslatedSkill(skillKey: string): Promise<string> {
+    try {
+      return await this.translatedCareerService.getTranslatedSkill(skillKey);
+    } catch (error) {
+      console.error('Error getting translated skill:', error);
+      return skillKey;
+    }
+  }
 }
 
 // Export singleton instance
@@ -410,6 +499,7 @@ export const getCareerRecommendations = (userSkills: string[], userInterests: st
 export const getCareerNode = (nodeId: string) => careerService.getCareerNode(nodeId);
 export const getAllCareerPaths = () => careerService.getAllCareerPaths();
 export const getAllCareerNodes = () => careerService.getAllCareerNodes();
+export const setCareerLanguage = (language: string) => careerService.setLanguage(language);
 export const clearCareerCache = () => careerService.clearCache();
 export const getCareerCacheStats = () => careerService.getCacheStats();
 export const getCareerPathStats = () => careerService.getCareerPathStats();

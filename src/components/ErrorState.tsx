@@ -1,6 +1,7 @@
 import React from "react";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from 'react-i18next';
 
 interface ErrorStateProps {
   title?: string;
@@ -11,23 +12,24 @@ interface ErrorStateProps {
 }
 
 const ErrorState: React.FC<ErrorStateProps> = ({
-  title = "Something went wrong",
+  title,
   message,
   onRetry,
-  retryLabel = "Try Again",
+  retryLabel,
   className = ""
 }) => {
+  const { t } = useTranslation();
   return (
     <div className={`flex flex-col items-center justify-center space-y-4 p-8 ${className}`}>
       <div className="flex flex-col items-center space-y-2">
         <AlertCircle className="h-12 w-12 text-destructive" />
-        <h2 className="text-xl font-semibold">{title}</h2>
+        <h2 className="text-xl font-semibold">{title || t('components.errorState.defaultTitle')}</h2>
         <p className="text-muted-foreground text-center max-w-md">{message}</p>
       </div>
       {onRetry && (
         <Button onClick={onRetry} className="flex items-center gap-2">
           <RefreshCw className="h-4 w-4" />
-          {retryLabel}
+          {retryLabel || t('components.errorState.defaultRetryLabel')}
         </Button>
       )}
     </div>

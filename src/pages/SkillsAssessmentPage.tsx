@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 import { SkillsAssessmentService, AssessmentRecommendations } from "@/services/skillsAssessmentService";
 import { NotificationService } from "@/services/notificationService";
 import {
   Search,
   MapPin,
-  ArrowLeft,
   BookOpen,
   CheckCircle,
   Circle,
@@ -46,6 +46,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const SkillsAssessmentPage = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(1);
   const [assessmentData, setAssessmentData] = useState({
     skills: [] as string[],
@@ -94,7 +95,7 @@ const SkillsAssessmentPage = () => {
     } catch (error) {
       console.error('Failed to generate recommendations:', error);
       // The service now provides fallback recommendations, so this should rarely happen
-      setAssessmentError(error instanceof Error ? error.message : 'Failed to generate recommendations');
+      setAssessmentError(error instanceof Error ? error.message : t('assessment.failedToGenerateRecommendations'));
     } finally {
       setIsLoadingRecommendations(false);
     }
@@ -165,68 +166,68 @@ const SkillsAssessmentPage = () => {
     notificationService.createAssessmentNotification(assessmentToSave);
     
     // Show success message
-    alert('Assessment saved successfully! You can view it in the "My Assessments" tab.');
+    alert(t('errors.assessmentSavedSuccessfully'));
   };
 
   const skillCategories = [
     {
       id: "technical",
-      name: "Technical Skills",
+      name: t('assessment.skillCategories.technical'),
       icon: Code,
       color: "bg-blue-100 text-blue-600",
-      skills: ["JavaScript", "Python", "React", "Node.js", "SQL", "AWS", "Docker", "Git"]
+      skills: [t('skills.javascript'), t('skills.python'), t('skills.react'), t('skills.nodejs'), t('skills.sql'), t('skills.aws'), t('skills.docker'), t('skills.git')]
     },
     {
       id: "creative",
-      name: "Creative Skills",
+      name: t('assessment.skillCategories.creative'),
       icon: Palette,
       color: "bg-purple-100 text-purple-600",
-      skills: ["Design", "Copywriting", "Photography", "Video Editing", "UI/UX", "Branding", "Illustration", "Animation"]
+      skills: [t('skills.design'), t('skills.copywriting'), t('skills.photography'), t('skills.videoEditing'), t('skills.uiUx'), t('skills.branding'), t('skills.illustration'), t('skills.animation')]
     },
     {
       id: "analytical",
-      name: "Analytical Skills",
+      name: t('assessment.skillCategories.analytical'),
       icon: Calculator,
       color: "bg-green-100 text-green-600",
-      skills: ["Data Analysis", "Statistics", "Excel", "Tableau", "R", "Python", "SQL", "Machine Learning"]
+      skills: [t('skills.dataAnalysis'), t('skills.statistics'), t('skills.excel'), t('skills.tableau'), t('skills.r'), t('skills.python'), t('skills.sql'), t('skills.machineLearning')]
     },
     {
       id: "communication",
-      name: "Communication",
+      name: t('assessment.skillCategories.communication'),
       icon: Users,
       color: "bg-orange-100 text-orange-600",
-      skills: ["Public Speaking", "Writing", "Presentation", "Negotiation", "Leadership", "Team Management", "Client Relations", "Training"]
+      skills: [t('skills.publicSpeaking'), t('skills.writing'), t('skills.presentation'), t('skills.negotiation'), t('skills.leadership'), t('skills.teamManagement'), t('skills.clientRelations'), t('skills.training')]
     },
     {
       id: "business",
-      name: "Business Skills",
+      name: t('assessment.skillCategories.business'),
       icon: Briefcase,
       color: "bg-indigo-100 text-indigo-600",
-      skills: ["Project Management", "Marketing", "Sales", "Finance", "Strategy", "Operations", "HR", "Legal"]
+      skills: [t('skills.projectManagement'), t('skills.marketing'), t('skills.sales'), t('skills.finance'), t('skills.strategy'), t('skills.operations'), t('skills.hr'), t('skills.legal')]
     },
     {
       id: "languages",
-      name: "Languages",
+      name: t('assessment.skillCategories.languages'),
       icon: Globe,
       color: "bg-teal-100 text-teal-600",
-      skills: ["English", "Spanish", "French", "German", "Chinese", "Japanese", "Arabic", "Portuguese"]
+      skills: [t('skills.english'), t('skills.spanish'), t('skills.french'), t('skills.german'), t('skills.chinese'), t('skills.japanese'), t('skills.arabic'), t('skills.portuguese')]
     }
   ];
 
   const experienceLevels = [
-    { value: "beginner", label: "Beginner (0-1 years)", description: "Just starting to learn" },
-    { value: "intermediate", label: "Intermediate (1-3 years)", description: "Some practical experience" },
-    { value: "advanced", label: "Advanced (3-5 years)", description: "Significant experience" },
-    { value: "expert", label: "Expert (5+ years)", description: "Deep expertise and leadership" }
+    { value: "beginner", label: t('assessment.experienceLevels.beginner'), description: t('assessment.experienceDescriptions.beginner') },
+    { value: "intermediate", label: t('assessment.experienceLevels.intermediate'), description: t('assessment.experienceDescriptions.intermediate') },
+    { value: "advanced", label: t('assessment.experienceLevels.advanced'), description: t('assessment.experienceDescriptions.advanced') },
+    { value: "expert", label: t('assessment.experienceLevels.expert'), description: t('assessment.experienceDescriptions.expert') }
   ];
 
   const careerGoals = [
-    { value: "technical", label: "Technical Leadership", icon: Code, description: "Lead technical teams and projects" },
-    { value: "management", label: "People Management", icon: Users, description: "Manage teams and organizations" },
-    { value: "entrepreneur", label: "Entrepreneurship", icon: Zap, description: "Start your own business" },
-    { value: "specialist", label: "Specialist/Consultant", icon: Star, description: "Deep expertise in specific areas" },
-    { value: "creative", label: "Creative Director", icon: Palette, description: "Lead creative projects and teams" },
-    { value: "analyst", label: "Data/Analytics", icon: TrendingUp, description: "Focus on data and insights" }
+    { value: "technical", label: t('assessment.careerGoals.technical'), icon: Code, description: t('assessment.careerGoalDescriptions.technical') },
+    { value: "management", label: t('assessment.careerGoals.management'), icon: Users, description: t('assessment.careerGoalDescriptions.management') },
+    { value: "entrepreneur", label: t('assessment.careerGoals.entrepreneur'), icon: Zap, description: t('assessment.careerGoalDescriptions.entrepreneur') },
+    { value: "specialist", label: t('assessment.careerGoals.specialist'), icon: Star, description: t('assessment.careerGoalDescriptions.specialist') },
+    { value: "creative", label: t('assessment.careerGoals.creative'), icon: Palette, description: t('assessment.careerGoalDescriptions.creative') },
+    { value: "analyst", label: t('assessment.careerGoals.analyst'), icon: TrendingUp, description: t('assessment.careerGoalDescriptions.analyst') }
   ];
 
 
@@ -245,7 +246,7 @@ const SkillsAssessmentPage = () => {
               transition={{ duration: 0.4 }}>
               <h3 className="text-lg md:text-xl font-semibold mb-4">What skills do you currently have?</h3>
               <p className="text-sm md:text-base text-muted-foreground mb-6">
-                Select the skills you're proficient in. You can add custom skills too.
+                {t('assessment.selectSkills')}
               </p>
             </motion.div>
             
@@ -267,7 +268,7 @@ const SkillsAssessmentPage = () => {
                         <div>
                           <CardTitle className="text-base md:text-lg">{category.name}</CardTitle>
                           <p className="text-xs md:text-sm text-muted-foreground">
-                            Select relevant skills from this category
+                            {t('assessment.selectRelevantSkills')}
                           </p>
                         </div>
                       </div>
@@ -435,7 +436,7 @@ const SkillsAssessmentPage = () => {
             <div>
               <h3 className="text-lg md:text-xl font-semibold mb-4">What are your career goals?</h3>
               <p className="text-sm md:text-base text-muted-foreground mb-6">
-                Select the career direction that interests you most.
+                {t('assessment.selectCareerDirection')}
               </p>
             </div>
 
@@ -525,7 +526,7 @@ const SkillsAssessmentPage = () => {
                  </p>
                  <div className="space-y-3">
                    <Button onClick={generateRecommendations} className="w-full sm:w-auto">
-                     Try Again
+                     {t('assessment.tryAgain')}
                    </Button>
                    <p className="text-sm text-muted-foreground">
                      You can still save your assessment data and try again later.
@@ -637,9 +638,9 @@ const SkillsAssessmentPage = () => {
                                }`}></div>
                                <div className="font-medium text-sm md:text-base">{item.skill}</div>
                              </div>
-                             <Badge variant={item.priority === "High" ? "default" : "secondary"}>
-                               {item.priority}
-                             </Badge>
+                               <Badge variant={item.priority === t('priority.high') ? "default" : "secondary"}>
+                                 {t(`assessment.priority.${item.priority.toLowerCase()}`)}
+                               </Badge>
                            </div>
                            <div className="text-xs md:text-sm text-muted-foreground">{item.description}</div>
                            <div className="text-xs text-muted-foreground">⏰ Timeline: {item.timeline}</div>
@@ -691,9 +692,9 @@ const SkillsAssessmentPage = () => {
                </div>
              ) : (
                <div className="text-center py-8">
-                 <p className="text-muted-foreground">No recommendations available. Please try again.</p>
+                 <p className="text-muted-foreground">{t('errors.noRecommendationsAvailable')}</p>
                  <Button onClick={generateRecommendations} className="mt-2">
-                   Generate Recommendations
+                   {t('errors.generateRecommendations')}
                  </Button>
                </div>
              )}
@@ -706,7 +707,7 @@ const SkillsAssessmentPage = () => {
                  disabled={!!assessmentError}
                >
                  <BookOpen className="h-4 w-4 mr-2" />
-                 Save Assessment
+                 {t('errors.saveAssessment')}
                </Button>
              </div>
            </div>
@@ -715,8 +716,8 @@ const SkillsAssessmentPage = () => {
       default:
         return (
           <div className="text-center py-8">
-            <h3 className="text-lg font-semibold mb-2">Step {currentStep}</h3>
-            <p className="text-muted-foreground">This step is not yet implemented.</p>
+            <h3 className="text-lg font-semibold mb-2">{t('assessment.step')} {currentStep}</h3>
+            <p className="text-muted-foreground">{t('errors.stepNotImplemented')}</p>
           </div>
         );
     }
@@ -736,16 +737,10 @@ const SkillsAssessmentPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Link to="/home" className="flex items-center space-x-2 text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Back</span>
-            </Link>
-            <div className="flex items-center space-x-2">
-              <BookOpen className="h-5 w-5 text-primary" />
-              <h1 className="text-lg md:text-xl font-bold">Skills Assessment</h1>
-            </div>
+        <div className="container mx-auto px-4 py-3 flex items-center justify-center">
+          <div className="flex items-center space-x-2">
+            <BookOpen className="h-5 w-5 text-primary" />
+            <h1 className="text-lg md:text-xl font-bold">Skills Assessment</h1>
           </div>
         </div>
       </motion.header>
@@ -772,10 +767,10 @@ const SkillsAssessmentPage = () => {
                <span>Skills selected: {assessmentData.skills.length}</span>
              )}
              {currentStep === 2 && (
-               <span>Experience level: {assessmentData.experienceLevel ? "✓ Selected" : "Not selected"}</span>
+               <span>{t('assessment.stepProgress.experienceLevel')} {assessmentData.experienceLevel ? t('assessment.stepProgress.selected') : t('assessment.stepProgress.notSelected')}</span>
              )}
              {currentStep === 3 && (
-               <span>Career goal: {assessmentData.selectedCareerGoal ? "✓ Selected" : "Not selected"}</span>
+               <span>{t('assessment.stepProgress.careerGoal')} {assessmentData.selectedCareerGoal ? t('assessment.stepProgress.selected') : t('assessment.stepProgress.notSelected')}</span>
              )}
              {currentStep === 4 && (
                <span>Assessment complete!</span>
@@ -813,7 +808,7 @@ const SkillsAssessmentPage = () => {
                  disabled={isNextDisabled()}
                  className="h-11"
                >
-                 {currentStep === 3 ? "Complete Assessment" : "Next"}
+                 {currentStep === 3 ? t('assessment.buttons.completeAssessment') : t('assessment.buttons.next')}
                  <ChevronRight className="h-4 w-4 ml-2" />
                </Button>
             </motion.div>

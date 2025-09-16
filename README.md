@@ -82,6 +82,7 @@ npx cap open android
 - Bookmark and progress tracking
 - Dark/light mode support
 - Mobile-optimized interface
+- **🌍 Multilingual Support**: Full translation support for 11 languages with automatic device language detection
 
 ## 🔧 Backend Services
 
@@ -89,6 +90,54 @@ The backend services are located in the `backend/` folder:
 - **chat2api**: Python Flask API for career data and trends
 - **Database**: SQL schemas and setup scripts
 - **Redis**: Caching and session storage
+
+## 🌍 Internationalization (i18n)
+
+The app supports **11 languages** with comprehensive translation coverage:
+
+### Supported Languages
+- **English** (en) - Default
+- **Spanish** (es) - Español
+- **French** (fr) - Français
+- **German** (de) - Deutsch
+- **Italian** (it) - Italiano
+- **Portuguese** (pt) - Português
+- **Japanese** (ja) - 日本語
+- **Korean** (ko) - 한국어
+- **Chinese** (zh) - 中文
+- **Russian** (ru) - Русский
+- **Arabic** (ar) - العربية (RTL support)
+
+### Translation Features
+- **Automatic Language Detection**: Detects user's device language on first launch
+- **Language Persistence**: Remembers user's language choice
+- **Real-time Switching**: Change language in settings with immediate updates
+- **RTL Support**: Proper right-to-left layout for Arabic
+- **Fallback System**: Falls back to English if translation is missing
+- **Complete UI Coverage**: All pages, components, and user messages translated
+
+### Translation Files
+Translation files are located in `src/locales/` with the following structure:
+```
+src/locales/
+├── en.json    # English (base)
+├── es.json    # Spanish
+├── fr.json    # French
+├── de.json    # German
+├── it.json    # Italian
+├── pt.json    # Portuguese
+├── ja.json    # Japanese
+├── ko.json    # Korean
+├── zh.json    # Chinese
+├── ru.json    # Russian
+└── ar.json    # Arabic
+```
+
+### Adding New Translations
+1. Add new keys to `src/locales/en.json`
+2. Add corresponding translations to all other language files
+3. Use the `useTranslation` hook in components: `const { t } = useTranslation()`
+4. Replace hardcoded strings with `t('key.path')`
 
 ## 📖 Documentation
 

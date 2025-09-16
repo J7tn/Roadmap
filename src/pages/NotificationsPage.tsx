@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { 
   Bell, 
   X, 
@@ -40,6 +41,7 @@ import { useNavigate } from 'react-router-dom';
 import BottomNavigation from '@/components/BottomNavigation';
 
 const NotificationsPage: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [personalizedNotifications, setPersonalizedNotifications] = useState<PersonalizedNotification[]>([]);
@@ -54,6 +56,9 @@ const NotificationsPage: React.FC = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
+        // Set translation function for the service
+        personalizedNotificationService.setTranslationFunction(t);
+        
         // Initialize user profile if not exists
         await personalizedNotificationService.initializeUserProfile();
         
@@ -259,32 +264,32 @@ const NotificationsPage: React.FC = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="text-foreground border-border hover:bg-accent">
                   <Filter className="h-4 w-4 mr-2" />
-                  Filter
+                  {t('notifications.filter')}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-background border-border">
-                <DropdownMenuLabel className="text-foreground">Filter</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-foreground">{t('notifications.filter')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuCheckboxItem
                   checked={filter === 'all'}
                   onCheckedChange={() => setFilter('all')}
                   className="text-foreground"
                 >
-                  All Notifications
+                  {t('notifications.allNotifications')}
                 </DropdownMenuCheckboxItem>
                 <DropdownMenuCheckboxItem
                   checked={filter === 'personalized'}
                   onCheckedChange={() => setFilter('personalized')}
                   className="text-foreground"
                 >
-                  Personalized Only
+                  {t('notifications.personalizedNotifications')} Only
                 </DropdownMenuCheckboxItem>
                 <DropdownMenuCheckboxItem
                   checked={filter === 'general'}
                   onCheckedChange={() => setFilter('general')}
                   className="text-foreground"
                 >
-                  General Only
+                  {t('notifications.generalNotifications')} Only
                 </DropdownMenuCheckboxItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuCheckboxItem
@@ -313,7 +318,7 @@ const NotificationsPage: React.FC = () => {
                 className="text-foreground border-border"
               >
                 <Check className="h-4 w-4 mr-2" />
-                Mark All Read
+                {t('notifications.markAllRead')}
               </Button>
             )}
           </div>
@@ -326,7 +331,7 @@ const NotificationsPage: React.FC = () => {
           <div className="container mx-auto px-4 py-3">
             <div className="flex items-center gap-2 text-sm">
               <Star className="h-4 w-4 text-primary" />
-              <span className="font-medium text-foreground">Personalized for you:</span>
+              <span className="font-medium text-foreground">{t('notifications.personalizedForYou')}</span>
               <span className="text-primary">
                 {userProfile.preferredIndustries.slice(0, 2).join(', ')}
               </span>
@@ -344,8 +349,8 @@ const NotificationsPage: React.FC = () => {
               <h3 className="text-lg font-semibold text-foreground mb-2">No notifications</h3>
               <p className="text-muted-foreground">
                 {filter === 'personalized' 
-                  ? "We'll notify you about relevant career opportunities based on your interests"
-                  : "You're all caught up! New notifications will appear here."}
+                  ? t('notifications.personalizedDescription')
+                  : t('notifications.allCaughtUp')}
               </p>
             </CardContent>
           </Card>

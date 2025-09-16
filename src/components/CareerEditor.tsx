@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { EditableCareerService, EditableCareerData } from '@/services/editableCareerService';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,6 +32,7 @@ export const CareerEditor: React.FC<CareerEditorProps> = ({
   onSave, 
   onCancel 
 }) => {
+  const { t } = useTranslation();
   const [career, setCareer] = useState<EditableCareerData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -384,7 +386,7 @@ export const CareerEditor: React.FC<CareerEditorProps> = ({
                 ))}
                 <div className="flex space-x-2">
                   <Input
-                    placeholder="Add new skill"
+                    placeholder={t('assessment.placeholders.addNewSkill')}
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
                         const newSkill = e.currentTarget.value.trim();
@@ -423,7 +425,7 @@ export const CareerEditor: React.FC<CareerEditorProps> = ({
                 ))}
                 <div className="flex space-x-2">
                   <Input
-                    placeholder="Add next step"
+                    placeholder={t('assessment.placeholders.addNextStep')}
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
                         const newStep = e.currentTarget.value.trim();
@@ -468,7 +470,7 @@ export const CareerEditor: React.FC<CareerEditorProps> = ({
                   ))}
                   <div className="flex space-x-2">
                     <Input
-                      placeholder="Add short-term goal"
+                      placeholder={t('assessment.placeholders.addShortTermGoal')}
                       onKeyPress={(e) => {
                         if (e.key === 'Enter') {
                           addRoadmapItem('shortTerm', e.currentTarget.value);
@@ -498,7 +500,7 @@ export const CareerEditor: React.FC<CareerEditorProps> = ({
                   ))}
                   <div className="flex space-x-2">
                     <Input
-                      placeholder="Add medium-term goal"
+                      placeholder={t('assessment.placeholders.addMediumTermGoal')}
                       onKeyPress={(e) => {
                         if (e.key === 'Enter') {
                           addRoadmapItem('mediumTerm', e.currentTarget.value);
@@ -528,7 +530,7 @@ export const CareerEditor: React.FC<CareerEditorProps> = ({
                   ))}
                   <div className="flex space-x-2">
                     <Input
-                      placeholder="Add long-term goal"
+                      placeholder={t('assessment.placeholders.addLongTermGoal')}
                       onKeyPress={(e) => {
                         if (e.key === 'Enter') {
                           addRoadmapItem('longTerm', e.currentTarget.value);

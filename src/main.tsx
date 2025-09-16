@@ -4,6 +4,7 @@ import App from "./App.tsx";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { SplashScreen } from '@capacitor/splash-screen';
+import './lib/dynamicI18n'; // Initialize dynamic i18n
 
 // Temporarily disable Tempo devtools for mobile debugging
 // import { TempoDevtools } from "tempo-devtools";

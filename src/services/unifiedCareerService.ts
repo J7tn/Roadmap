@@ -49,34 +49,62 @@ class SupabaseDataStrategy implements ICareerDataStrategy {
 
   async getCareerPathsByIndustry(industry: IndustryCategory, page = 1, limit = 10): Promise<ICareerSearchResult> {
     try {
-      // Use getCareersByIndustry instead
-      const careers = await supabaseCareerService.getCareersByIndustry(industry);
+      // Use translated career service for better language support
+      const translatedCareers = await careerService.getAllCareerNodesArray();
+      const filteredCareers = translatedCareers.filter(career => 
+        career.r?.exp?.toLowerCase().includes(industry.toLowerCase()) || 
+        career.d?.toLowerCase().includes(industry.toLowerCase())
+      );
+      
+      // Convert ICareerNode to ICareerPath format
+      const careerPaths = filteredCareers.map(career => this.convertCareerNodeToPath(career));
+      
       return {
-        careers: careers.map(career => this.convertToCareerPath(career)),
-        total: careers.length,
+        careers: careerPaths,
+        total: careerPaths.length,
         filters: { industry: [industry], level: [], skills: [] },
-        suggestions: []
+        suggestions: [],
+        pagination: {
+          hasMore: false,
+          currentPage: page,
+          totalPages: Math.ceil(careerPaths.length / limit)
+        }
       };
     } catch (error) {
-      console.warn('Supabase industry fetch failed, falling back to local data:', error);
+      console.warn('Translated industry fetch failed, falling back to local data:', error);
       return careerService.getCareerPathsByIndustry(industry, page, limit);
     }
   }
 
   async searchCareers(query: string, filters?: ICareerFilters, page = 1, limit = 20): Promise<ICareerSearchResult> {
     try {
-      // Supabase doesn't have searchCareers method, fall back to local data
-      return careerService.searchCareers(query, filters, page, limit);
+      // Use translated career service for better language support
+      const translatedCareers = await careerService.searchCareersTranslated(query, filters);
+      
+      // Convert ICareerNode to ICareerPath format
+      const careerPaths = translatedCareers.map(career => this.convertCareerNodeToPath(career));
+      
+      return {
+        careers: careerPaths,
+        total: careerPaths.length,
+        filters: filters || { industry: [], level: [], skills: [] },
+        suggestions: [],
+        pagination: {
+          hasMore: false,
+          currentPage: page,
+          totalPages: Math.ceil(careerPaths.length / limit)
+        }
+      };
     } catch (error) {
-      console.warn('Supabase search failed, falling back to local data:', error);
+      console.warn('Translated search failed, falling back to local data:', error);
       return careerService.searchCareers(query, filters, page, limit);
     }
   }
 
   async getCareerNode(nodeId: string): Promise<ICareerNode | null> {
     try {
-      // Supabase doesn't have getCareerNode method, fall back to local data
-      return careerService.getCareerNode(nodeId);
+      // Use translated career service for better language support
+      return await careerService.getCareerByIdTranslated(nodeId);
     } catch (error) {
       console.warn('Career node fetch failed:', error);
       return null;
@@ -105,6 +133,17 @@ class SupabaseDataStrategy implements ICareerDataStrategy {
           sk: career.requirements?.skills || []
         }
       }],
+      conn: []
+    };
+  }
+
+  private convertCareerNodeToPath(career: ICareerNode): ICareerPath {
+    // Convert ICareerNode to ICareerPath format
+    return {
+      id: career.id,
+      n: career.t,
+      cat: 'tech' as IndustryCategory, // Default to tech category
+      nodes: [career],
       conn: []
     };
   }

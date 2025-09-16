@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 import {
   Search,
   MapPin,
@@ -41,57 +42,58 @@ import { Progress } from "@/components/ui/progress";
 import BottomNavigation from "@/components/BottomNavigation";
 
 const CareerBranchingPage = () => {
+  const { t } = useTranslation();
   // Get user's current career from the MyCareerPathsPage data
-  const userCurrentCareer = "Software Engineer"; // This would come from user's actual data
+  const userCurrentCareer = t('pages.branching.currentCareer'); // This would come from user's actual data
   const [selectedTransition, setSelectedTransition] = useState<string | null>(null);
 
   const careerTransitions = {
     "software-developer": [
       {
         id: "product-manager",
-        title: "Product Manager",
-        description: "Move from technical implementation to product strategy and management",
-        difficulty: "Medium",
-        timeline: "1-2 years",
-        transferableSkills: ["Problem Solving", "Technical Knowledge", "Analytical Thinking"],
-        newSkills: ["Product Strategy", "User Research", "Stakeholder Management"],
-        salaryIncrease: "+25%",
+        title: t('pages.branching.transitionData.productManager.title'),
+        description: t('pages.branching.transitionData.productManager.description'),
+        difficulty: t('pages.branching.transitionData.productManager.difficulty'),
+        timeline: t('pages.branching.transitionData.productManager.timeline'),
+        transferableSkills: [t('skills.problemSolving'), t('skills.technicalKnowledge'), t('skills.analyticalThinking')],
+        newSkills: [t('skills.productStrategy'), t('skills.userResearch'), t('skills.stakeholderManagement')],
+        salaryIncrease: t('pages.branching.transitionData.productManager.salaryIncrease'),
         icon: Users,
         color: "bg-blue-100 text-blue-600"
       },
       {
         id: "data-scientist",
-        title: "Data Scientist",
-        description: "Leverage programming skills for data analysis and machine learning",
-        difficulty: "Medium",
-        timeline: "6-12 months",
-        transferableSkills: ["Programming", "Problem Solving", "Mathematics"],
-        newSkills: ["Statistics", "Machine Learning", "Data Visualization"],
-        salaryIncrease: "+30%",
+        title: t('pages.branching.transitionData.dataScientist.title'),
+        description: t('pages.branching.transitionData.dataScientist.description'),
+        difficulty: t('pages.branching.transitionData.dataScientist.difficulty'),
+        timeline: t('pages.branching.transitionData.dataScientist.timeline'),
+        transferableSkills: [t('skills.programming'), t('skills.problemSolving'), t('skills.mathematics')],
+        newSkills: [t('skills.statistics'), t('skills.machineLearning'), t('skills.dataVisualization')],
+        salaryIncrease: t('pages.branching.transitionData.dataScientist.salaryIncrease'),
         icon: Calculator,
         color: "bg-green-100 text-green-600"
       },
       {
         id: "devops-engineer",
-        title: "DevOps Engineer",
-        description: "Focus on infrastructure, deployment, and operational excellence",
-        difficulty: "Easy",
-        timeline: "3-6 months",
-        transferableSkills: ["Programming", "System Understanding", "Problem Solving"],
-        newSkills: ["Cloud Platforms", "Infrastructure as Code", "Monitoring"],
-        salaryIncrease: "+20%",
+        title: t('pages.branching.transitionData.devopsEngineer.title'),
+        description: t('pages.branching.transitionData.devopsEngineer.description'),
+        difficulty: t('pages.branching.transitionData.devopsEngineer.difficulty'),
+        timeline: t('pages.branching.transitionData.devopsEngineer.timeline'),
+        transferableSkills: [t('skills.programming'), t('skills.systemUnderstanding'), t('skills.problemSolving')],
+        newSkills: [t('skills.cloudPlatforms'), t('skills.infrastructureAsCode'), t('skills.monitoring')],
+        salaryIncrease: t('pages.branching.transitionData.devopsEngineer.salaryIncrease'),
         icon: Zap,
         color: "bg-orange-100 text-orange-600"
       },
       {
         id: "technical-lead",
-        title: "Technical Lead",
-        description: "Advance to leadership while maintaining technical expertise",
-        difficulty: "Hard",
-        timeline: "2-3 years",
-        transferableSkills: ["Technical Skills", "Problem Solving", "Communication"],
-        newSkills: ["Team Leadership", "Architecture Design", "Mentoring"],
-        salaryIncrease: "+40%",
+        title: t('pages.branching.transitionData.technicalLead.title'),
+        description: t('pages.branching.transitionData.technicalLead.description'),
+        difficulty: t('pages.branching.transitionData.technicalLead.difficulty'),
+        timeline: t('pages.branching.transitionData.technicalLead.timeline'),
+        transferableSkills: [t('skills.technicalSkills'), t('skills.problemSolving'), t('skills.communication')],
+        newSkills: [t('skills.teamLeadership'), t('skills.architectureDesign'), t('skills.mentoring')],
+        salaryIncrease: t('pages.branching.transitionData.technicalLead.salaryIncrease'),
         icon: Award,
         color: "bg-purple-100 text-purple-600"
       }
@@ -99,37 +101,37 @@ const CareerBranchingPage = () => {
     "marketing-manager": [
       {
         id: "product-marketing",
-        title: "Product Marketing Manager",
-        description: "Specialize in product-focused marketing strategies",
-        difficulty: "Easy",
-        timeline: "6-12 months",
-        transferableSkills: ["Marketing Strategy", "Communication", "Analytics"],
-        newSkills: ["Product Knowledge", "Go-to-Market Strategy", "Customer Insights"],
-        salaryIncrease: "+15%",
+        title: t('pages.branching.transitionData.productMarketingManager.title'),
+        description: t('pages.branching.transitionData.productMarketingManager.description'),
+        difficulty: t('pages.branching.transitionData.productMarketingManager.difficulty'),
+        timeline: t('pages.branching.transitionData.productMarketingManager.timeline'),
+        transferableSkills: [t('skills.marketingStrategy'), t('skills.communication'), t('skills.analytics')],
+        newSkills: [t('skills.productKnowledge'), t('skills.goToMarketStrategy'), t('skills.customerInsights')],
+        salaryIncrease: t('pages.branching.transitionData.productMarketingManager.salaryIncrease'),
         icon: Target,
         color: "bg-indigo-100 text-indigo-600"
       },
       {
         id: "growth-hacker",
-        title: "Growth Hacker",
-        description: "Focus on rapid experimentation and data-driven growth",
-        difficulty: "Medium",
-        timeline: "1 year",
-        transferableSkills: ["Marketing", "Analytics", "Creativity"],
-        newSkills: ["A/B Testing", "Automation", "Technical Skills"],
-        salaryIncrease: "+35%",
+        title: t('pages.branching.transitionData.growthHacker.title'),
+        description: t('pages.branching.transitionData.growthHacker.description'),
+        difficulty: t('pages.branching.transitionData.growthHacker.difficulty'),
+        timeline: t('pages.branching.transitionData.growthHacker.timeline'),
+        transferableSkills: [t('skills.marketing'), t('skills.analytics'), t('skills.creativity')],
+        newSkills: [t('skills.abTesting'), t('skills.automation'), t('skills.technicalSkills')],
+        salaryIncrease: t('pages.branching.transitionData.growthHacker.salaryIncrease'),
         icon: TrendingUp,
         color: "bg-teal-100 text-teal-600"
       },
       {
         id: "brand-manager",
-        title: "Brand Manager",
-        description: "Lead brand strategy and creative direction",
-        difficulty: "Medium",
-        timeline: "1-2 years",
-        transferableSkills: ["Marketing", "Communication", "Strategy"],
-        newSkills: ["Brand Strategy", "Creative Direction", "Stakeholder Management"],
-        salaryIncrease: "+20%",
+        title: t('pages.branching.transitionData.brandManager.title'),
+        description: t('pages.branching.transitionData.brandManager.description'),
+        difficulty: t('pages.branching.transitionData.brandManager.difficulty'),
+        timeline: t('pages.branching.transitionData.brandManager.timeline'),
+        transferableSkills: [t('skills.marketing'), t('skills.communication'), t('skills.strategy')],
+        newSkills: [t('skills.brandStrategy'), t('skills.creativeDirection'), t('skills.stakeholderManagement')],
+        salaryIncrease: t('pages.branching.transitionData.brandManager.salaryIncrease'),
         icon: Palette,
         color: "bg-pink-100 text-pink-600"
       }
@@ -137,37 +139,37 @@ const CareerBranchingPage = () => {
     "data-analyst": [
       {
         id: "data-scientist",
-        title: "Data Scientist",
-        description: "Advance to machine learning and predictive analytics",
-        difficulty: "Medium",
-        timeline: "1-2 years",
-        transferableSkills: ["Data Analysis", "Statistics", "Programming"],
-        newSkills: ["Machine Learning", "Deep Learning", "Model Deployment"],
-        salaryIncrease: "+40%",
+        title: t('pages.branching.transitionData.dataScientistAdvanced.title'),
+        description: t('pages.branching.transitionData.dataScientistAdvanced.description'),
+        difficulty: t('pages.branching.transitionData.dataScientistAdvanced.difficulty'),
+        timeline: t('pages.branching.transitionData.dataScientistAdvanced.timeline'),
+        transferableSkills: [t('skills.dataAnalysis'), t('skills.statistics'), t('skills.programming')],
+        newSkills: [t('skills.machineLearning'), t('skills.deepLearning'), t('skills.modelDeployment')],
+        salaryIncrease: t('pages.branching.transitionData.dataScientistAdvanced.salaryIncrease'),
         icon: Calculator,
         color: "bg-green-100 text-green-600"
       },
       {
         id: "business-intelligence",
-        title: "BI Manager",
-        description: "Lead data strategy and business intelligence initiatives",
-        difficulty: "Medium",
-        timeline: "1-2 years",
-        transferableSkills: ["Data Analysis", "Business Acumen", "Communication"],
-        newSkills: ["Team Leadership", "Data Strategy", "Stakeholder Management"],
-        salaryIncrease: "+30%",
+        title: t('pages.branching.transitionData.biManager.title'),
+        description: t('pages.branching.transitionData.biManager.description'),
+        difficulty: t('pages.branching.transitionData.biManager.difficulty'),
+        timeline: t('pages.branching.transitionData.biManager.timeline'),
+        transferableSkills: [t('skills.dataAnalysis'), t('skills.businessAcumen'), t('skills.communication')],
+        newSkills: [t('skills.teamLeadership'), t('skills.dataStrategy'), t('skills.stakeholderManagement')],
+        salaryIncrease: t('pages.branching.transitionData.biManager.salaryIncrease'),
         icon: BarChart3,
         color: "bg-blue-100 text-blue-600"
       },
       {
         id: "product-analyst",
-        title: "Product Analyst",
-        description: "Focus on product metrics and user behavior analysis",
-        difficulty: "Easy",
-        timeline: "6-12 months",
-        transferableSkills: ["Data Analysis", "SQL", "Statistics"],
-        newSkills: ["Product Metrics", "User Research", "A/B Testing"],
-        salaryIncrease: "+25%",
+        title: t('pages.branching.transitionData.productAnalyst.title'),
+        description: t('pages.branching.transitionData.productAnalyst.description'),
+        difficulty: t('pages.branching.transitionData.productAnalyst.difficulty'),
+        timeline: t('pages.branching.transitionData.productAnalyst.timeline'),
+        transferableSkills: [t('skills.dataAnalysis'), t('skills.sql'), t('skills.statistics')],
+        newSkills: [t('skills.productMetrics'), t('skills.userResearch'), t('skills.abTesting')],
+        salaryIncrease: t('pages.branching.transitionData.productAnalyst.salaryIncrease'),
         icon: Target,
         color: "bg-purple-100 text-purple-600"
       }
@@ -197,7 +199,7 @@ const CareerBranchingPage = () => {
             </Link>
             <div className="flex items-center space-x-2">
               <TrendingUp className="h-5 w-5 text-primary" />
-              <h1 className="text-lg md:text-xl font-bold">Career Branching</h1>
+              <h1 className="text-lg md:text-xl font-bold">{t('pages.branching.title')}</h1>
             </div>
           </div>
 
@@ -373,18 +375,11 @@ const CareerBranchingPage = () => {
             <CardHeader>
               <CardTitle className="text-base md:text-lg flex items-center">
                 <Lightbulb className="h-5 w-5 mr-2 text-yellow-600" />
-                Career Transition Tips
+{t('pages.branching.transitionTips.title')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {[
-                "Focus on transferable skills that apply across industries",
-                "Build a portfolio or case studies to demonstrate your capabilities",
-                "Network with professionals in your target field",
-                "Consider taking relevant courses or certifications",
-                "Start with side projects or freelance work to gain experience",
-                "Be patient - career transitions typically take 1-2 years"
-              ].map((tip, index) => (
+              {(t('pages.branching.transitionTips.tips', { returnObjects: true }) as string[]).map((tip: string, index: number) => (
                 <div key={index} className="flex items-start space-x-3">
                   <Circle className="h-2 w-2 mt-2 text-muted-foreground flex-shrink-0" />
                   <p className="text-sm text-muted-foreground">{tip}</p>

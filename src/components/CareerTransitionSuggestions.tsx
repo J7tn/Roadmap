@@ -1,4 +1,5 @@
 import React, { memo, useMemo, useState, useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -27,6 +28,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
   targetCareer,
   nextCareerGoal
 }) => {
+  const { t } = useTranslation();
   const [allCareers, setAllCareers] = useState<ICareerNode[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -51,13 +53,13 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
 
   const getLevelDisplayName = useMemo(() => (level: CareerLevel): string => {
     switch (level) {
-      case 'E': return 'Entry Level';
-      case 'I': return 'Mid Level';
-      case 'A': return 'Senior Level';
-      case 'X': return 'Expert Level';
-      default: return 'Unknown Level';
+      case 'E': return t('pages.search.entryLevel');
+      case 'I': return t('pages.search.intermediate');
+      case 'A': return t('pages.search.advanced');
+      case 'X': return t('pages.search.expert');
+      default: return t('common.unknown');
     }
-  }, []);
+  }, [t]);
 
 
   // Generate real transition suggestions based on actual career data
@@ -216,14 +218,14 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
     if (sameLevelCareers.length > 0) {
       suggestions.push({
         id: 'lateral-move',
-        title: 'Lateral Career Move',
-        description: 'Explore similar roles at your current level',
+        title: t('pages.roadmap.lateralCareerMove'),
+        description: t('pages.roadmap.exploreSimilarRoles'),
         careers: sameLevelCareers.map(career => ({
           id: career.id,
           title: career.t,
-          industry: 'Various',
+          industry: t('common.various'),
           level: career.l,
-          salary: career.sr || 'Salary not specified',
+          salary: career.sr || t('common.salaryNotSpecified'),
           canBeNextGoal: isLogicalNextStep(career, 'nextGoal'),
           canBeTarget: isLogicalNextStep(career, 'target')
         })),
@@ -249,8 +251,8 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
       if (nextLevelCareers.length > 0) {
         suggestions.push({
           id: 'level-up',
-          title: 'Level Up Your Career',
-          description: 'Advance to the next career level',
+          title: t('pages.roadmap.levelUpYourCareer'),
+          description: t('pages.roadmap.advanceToNextLevel'),
           careers: nextLevelCareers.map(career => ({
             id: career.id,
             title: career.t,
@@ -284,14 +286,14 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
     if (skillBasedCareers.length > 0) {
       suggestions.push({
         id: 'skill-transition',
-        title: 'Skill-Based Transitions',
-        description: 'Leverage your current skills in new areas',
+        title: t('pages.roadmap.skillBasedTransitions'),
+        description: t('pages.roadmap.leverageCurrentSkills'),
         careers: skillBasedCareers.map(career => ({
           id: career.id,
           title: career.t,
-          industry: 'Various',
+          industry: t('common.various'),
           level: career.l,
-          salary: career.sr || 'Salary not specified',
+          salary: career.sr || t('common.salaryNotSpecified'),
           canBeNextGoal: isLogicalNextStep(career, 'nextGoal'),
           canBeTarget: isLogicalNextStep(career, 'target')
         })),
@@ -529,8 +531,8 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
           if (lateralCareers.length > 0) {
             suggestions.push({
               id: 'lateral-move',
-              title: 'Lateral Career Move',
-              description: 'Explore similar roles at your current level',
+              title: t('pages.roadmap.lateralCareerMove'),
+              description: t('pages.roadmap.exploreSimilarRoles'),
               careers: lateralCareers.slice(0, 6).map(career => ({
                 id: career.id,
                 title: career.t,
@@ -606,7 +608,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
     return (
       <div className="space-y-6">
         <div className="text-center">
-          <h3 className="text-lg font-semibold mb-2">Your Career Transition Options</h3>
+          <h3 className="text-lg font-semibold mb-2">{t('pages.roadmap.yourCareerTransitionOptions')}</h3>
           <p className="text-sm text-muted-foreground">
             Loading career suggestions...
           </p>
@@ -622,9 +624,9 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
     return (
       <div className="space-y-6">
         <div className="text-center">
-          <h3 className="text-lg font-semibold mb-2">Your Career Transition Options</h3>
+          <h3 className="text-lg font-semibold mb-2">{t('pages.roadmap.yourCareerTransitionOptions')}</h3>
           <p className="text-sm text-muted-foreground">
-            No career transition options found. Try exploring careers manually.
+            {t('pages.roadmap.noResultsFound')}
           </p>
         </div>
       </div>
@@ -634,9 +636,9 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h3 className="text-lg font-semibold mb-2">Your Career Transition Options</h3>
+        <h3 className="text-lg font-semibold mb-2">{t('pages.roadmap.yourCareerTransitionOptions')}</h3>
         <p className="text-sm text-muted-foreground mb-4">
-          Based on your current role as <strong>{currentCareer.t}</strong>, here are potential career paths to explore
+          {t('pages.roadmap.basedOnCurrentRole', { role: currentCareer.t })}
         </p>
         
       </div>
@@ -719,7 +721,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
                           disabled={!career.canBeNextGoal}
                         >
                           <ArrowRight className="h-4 w-4 mr-2 text-primary" />
-                          Set as Next Goal
+{t('pages.roadmap.setAsNextGoal')}
                         </DropdownMenuItem>
                         <DropdownMenuItem 
                           onClick={() => {
@@ -733,7 +735,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
                           disabled={!career.canBeTarget}
                         >
                           <Star className="h-4 w-4 mr-2 text-primary" />
-                          Set as Target Career
+{t('pages.roadmap.setAsTargetCareer')}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -742,7 +744,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
                       size="sm"
                       onClick={() => onCareerSelect?.(`details-${career.id}`)}
                     >
-                      Career Details
+{t('pages.roadmap.careerDetails')}
                     </Button>
                   </div>
                 </div>
