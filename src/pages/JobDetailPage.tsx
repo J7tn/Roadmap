@@ -125,10 +125,10 @@ const JobDetailPage: React.FC = () => {
       {!loading && !career && (
         <div className="container mx-auto px-4 py-12">
           <div className="text-center">
-            <h2 className="text-2xl font-bold mb-2">Career Not Found</h2>
-            <p className="text-muted-foreground mb-4">The career you're looking for doesn't exist or has been removed.</p>
+            <h2 className="text-2xl font-bold mb-2">{t('pages.jobDetails.careerNotFound')}</h2>
+            <p className="text-muted-foreground mb-4">{t('pages.jobDetails.careerNotFoundDescription')}</p>
             <Button onClick={() => navigate('/search')}>
-              Back to Search
+              {t('pages.jobDetails.backToSearch')}
             </Button>
           </div>
         </div>

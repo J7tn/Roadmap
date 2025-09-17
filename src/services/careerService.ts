@@ -18,6 +18,7 @@ import {
 } from '@/utils/careerDataLoader';
 import CareerDataTranslationService from './careerDataTranslationService';
 import TranslatedCareerService from './translatedCareerService';
+import SupabaseCareerService from './supabaseCareerService';
 
 // Performance-optimized career service
 // Implements lazy loading, caching, and efficient data management
@@ -29,10 +30,12 @@ class CareerService {
   private readonly MAX_CACHE_SIZE = 50; // Maximum cached items
   private translationService: CareerDataTranslationService;
   private translatedCareerService: TranslatedCareerService;
+  private supabaseCareerService: SupabaseCareerService;
 
   constructor() {
     this.translationService = CareerDataTranslationService.getInstance();
     this.translatedCareerService = TranslatedCareerService.getInstance();
+    this.supabaseCareerService = SupabaseCareerService.getInstance();
     this.initializeCache();
   }
 
@@ -410,19 +413,26 @@ class CareerService {
   // Get all career nodes as simple array with translation support
   public async getAllCareerNodesArray(): Promise<ICareerNode[]> {
     try {
-      return await this.translatedCareerService.getAllCareerNodes();
+      // Use Supabase service to get all career nodes
+      return await this.supabaseCareerService.getAllCareerNodes();
     } catch (error) {
-      console.error('Error getting translated career nodes:', error);
-      // Fallback to original method
-      const allPaths = await this.getAllCareerPaths();
-      const allNodes: ICareerNode[] = [];
-      
-      allPaths.forEach(path => {
-        allNodes.push(...path.nodes);
-      });
-      
-      // Apply translations based on current language
-      return this.translationService.translateCareerArray(allNodes);
+      console.error('Error getting career nodes from Supabase:', error);
+      // Fallback to translated career service
+      try {
+        return await this.translatedCareerService.getAllCareerNodes();
+      } catch (fallbackError) {
+        console.error('Error getting translated career nodes:', fallbackError);
+        // Final fallback to original method
+        const allPaths = await this.getAllCareerPaths();
+        const allNodes: ICareerNode[] = [];
+        
+        allPaths.forEach(path => {
+          allNodes.push(...path.nodes);
+        });
+        
+        // Apply translations based on current language
+        return this.translationService.translateCareerArray(allNodes);
+      }
     }
   }
 
@@ -430,6 +440,7 @@ class CareerService {
   public setLanguage(language: string): void {
     this.translationService.setLanguage(language);
     this.translatedCareerService.setLanguage(language);
+    this.supabaseCareerService.setLanguage(language);
   }
 
   // Get career by ID with translations

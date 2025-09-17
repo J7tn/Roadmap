@@ -88,6 +88,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   const setLanguage = useCallback(async (language: string) => {
     try {
       setIsLoading(true);
+      console.log(`🔄 Changing language to: ${language}`);
       
       // Load the language translations
       await dynamicI18n.changeLanguage(language);
@@ -103,9 +104,11 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
       document.documentElement.lang = language;
       
-      console.log(`Language changed to: ${language}`);
+      console.log(`✅ Language successfully changed to: ${language}`);
+      console.log(`📊 Current i18n language: ${i18n.language}`);
+      console.log(`📊 Available resource bundles:`, i18n.getResourceBundle(language, 'translation') ? 'Loaded' : 'Not loaded');
     } catch (error) {
-      console.error(`Failed to change language to ${language}:`, error);
+      console.error(`❌ Failed to change language to ${language}:`, error);
       throw error;
     } finally {
       setIsLoading(false);

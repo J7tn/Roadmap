@@ -66,9 +66,10 @@ class TranslationService {
       console.log(`Downloading translations for language: ${languageCode}`);
       
       const { data, error } = await supabase
-        .from('active_translations')
+        .from('translations')
         .select('translation_data, version, updated_at')
         .eq('language_code', languageCode)
+        .eq('is_active', true)
         .order('version', { ascending: false })
         .limit(1)
         .single();
@@ -123,8 +124,9 @@ class TranslationService {
   public async getAvailableLanguages(): Promise<string[]> {
     try {
       const { data, error } = await supabase
-        .from('active_translations')
+        .from('translations')
         .select('language_code')
+        .eq('is_active', true)
         .order('language_code');
 
       if (error) {
@@ -184,9 +186,10 @@ class TranslationService {
   public async getTranslationVersion(languageCode: string): Promise<{ version: string; updated_at: string } | null> {
     try {
       const { data, error } = await supabase
-        .from('active_translations')
+        .from('translations')
         .select('version, updated_at')
         .eq('language_code', languageCode)
+        .eq('is_active', true)
         .order('version', { ascending: false })
         .limit(1)
         .single();

@@ -120,6 +120,15 @@ class DynamicI18n {
       }
 
       console.log(`Successfully loaded translations for ${languageCode}`);
+      console.log(`Translation data keys:`, Object.keys(translationData));
+      
+      // Verify key sections are present
+      if (translationData.pages) {
+        console.log(`Pages available:`, Object.keys(translationData.pages));
+      }
+      if (translationData.navigation) {
+        console.log(`Navigation available:`, Object.keys(translationData.navigation));
+      }
     } catch (error) {
       console.error(`Failed to load language ${languageCode}:`, error);
       

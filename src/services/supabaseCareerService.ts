@@ -1,391 +1,446 @@
-import { SupabaseClient } from '@supabase/supabase-js';
-import { ICareerNode, ICareerPath, IndustryCategory, ICareerSearchResult, CareerLevel } from '@/types/career';
-import { dataVersioningService } from './dataVersioningService';
 import { supabase } from '@/lib/supabase';
+import { ICareerNode, ICareerPath, CareerLevel } from '@/types/career';
 
-export interface SupabaseCareerData {
+export interface SupabaseCareerNode {
   id: string;
+  career_path_id: string;
+  level: string;
+  salary_range: string;
+  time_to_achieve: string;
+  requirements: any;
+  language_code: string;
   title: string;
   description: string;
   skills: string[];
-  salary: string;
-  experience: string;
-  level: 'E' | 'I' | 'A' | 'X';
-  industry: IndustryCategory;
-  job_titles: string[];
   certifications: string[];
-  requirements: {
-    education: string[];
-    experience: string;
-    skills: string[];
-  };
-  created_at: string;
-  updated_at: string;
-  last_updated_by: string;
+  job_titles: string[];
+  path_name: string;
+  category: string;
+  industry: string;
 }
 
-export interface CareerSearchResult {
-  careers: SupabaseCareerData[];
-  total: number;
-  suggestions: string[];
+export interface SupabaseCareerPath {
+  id: string;
+  name: string;
+  category: string;
+  industry: string;
+  description: string;
+  language_code: string;
+  translated_name: string;
+  translated_description: string;
 }
 
 class SupabaseCareerService {
-  private cache: Map<string, SupabaseCareerData[]> = new Map();
-  private readonly CACHE_TTL = 60 * 60 * 1000; // 1 hour
-  private cacheTimestamps: Map<string, number> = new Map();
+  private static instance: SupabaseCareerService;
+  private currentLanguage: string = 'en';
+
+  private constructor() {}
+
+  public static getInstance(): SupabaseCareerService {
+    if (!SupabaseCareerService.instance) {
+      SupabaseCareerService.instance = new SupabaseCareerService();
+    }
+    return SupabaseCareerService.instance;
+  }
+
+  public setLanguage(language: string): void {
+    this.currentLanguage = language;
+  }
+
+  public getCurrentLanguage(): string {
+    return this.currentLanguage;
+  }
 
   /**
-   * Get all careers from Supabase with versioning
+   * Get all career nodes with translations for the current language
    */
-  async getAllCareers(): Promise<SupabaseCareerData[]> {
-    // Check if we have fresh cached data
-    const cachedData = dataVersioningService.getCachedData();
-    if (cachedData?.careerData && dataVersioningService.isDataFresh('careers')) {
-      console.log('Using cached career data');
-      return cachedData.careerData;
-    }
-
-    // Check if update is needed
-    if (!dataVersioningService.isUpdateNeeded('careers')) {
-      // Use cached data even if not "fresh" but not needing update
-      if (cachedData?.careerData) {
-        console.log('Using cached career data (update not needed)');
-        return cachedData.careerData;
-      }
-    }
-
-    // Attempt to fetch fresh data
+  public async getAllCareerNodes(): Promise<ICareerNode[]> {
     try {
-      console.log('Fetching fresh career data from Supabase');
-      dataVersioningService.updateDataVersion('careers', 'pending');
-
       const { data, error } = await supabase
-        .from('careers')
+        .from('career_nodes_with_translations')
         .select('*')
-        .order('updated_at', { ascending: false });
+        .eq('language_code', this.currentLanguage)
+        .order('career_path_id, level');
 
       if (error) {
-        console.error('Error fetching careers from Supabase:', error);
-        dataVersioningService.updateDataVersion('careers', 'failed', error.message);
-        
-        // Return cached data if available
-        if (cachedData?.careerData) {
-          console.log('Using cached career data due to fetch error');
-          return cachedData.careerData;
+        console.error('Error fetching career nodes:', error);
+        // Fallback to English if current language fails
+        if (this.currentLanguage !== 'en') {
+          return this.getAllCareerNodesWithFallback();
         }
         return [];
       }
 
-      if (data) {
-        // Cache the successful result
-        dataVersioningService.cacheData('careers', data);
-        console.log('Successfully fetched and cached career data');
-        return data;
-      }
-
-      return [];
+      return this.convertToCareerNodes(data || []);
     } catch (error) {
-      console.error('Failed to fetch careers from Supabase:', error);
-      
-      // Log the failure
-      dataVersioningService.updateDataVersion('careers', 'failed', error instanceof Error ? error.message : 'Unknown error');
-      
-      // Return cached data if available
-      if (cachedData?.careerData) {
-        console.log('Using cached career data due to fetch failure');
-        return cachedData.careerData;
-      }
-      
-      // Return empty array instead of fallback
-      console.log('No cached data available, returning empty career data');
+      console.error('Error in getAllCareerNodes:', error);
       return [];
     }
   }
 
   /**
-   * Search careers by query using Supabase full-text search
+   * Get all career nodes with English fallback
    */
-  async searchCareers(query: string): Promise<CareerSearchResult> {
-    const allCareers = await this.getAllCareers();
-    const searchQuery = query.toLowerCase().trim();
-
-    if (!searchQuery) {
-      return {
-        careers: allCareers,
-        total: allCareers.length,
-        suggestions: []
-      };
-    }
-
-    try {
-      // Use Supabase full-text search for better performance
-      const { data, error } = await supabase
-        .from('careers')
-        .select('*')
-        .textSearch('title,description,skills,job_titles', searchQuery)
-        .order('updated_at', { ascending: false });
-
-      if (error) {
-        console.warn('Supabase search failed, using local filtering:', error);
-        // Fallback to local filtering
-        return this.localSearch(allCareers, searchQuery);
-      }
-
-      const suggestions = this.generateSuggestions(searchQuery, data || []);
-      
-      return {
-        careers: data || [],
-        total: data?.length || 0,
-        suggestions
-      };
-    } catch (error) {
-      console.warn('Search failed, using local filtering:', error);
-      return this.localSearch(allCareers, searchQuery);
-    }
-  }
-
-  /**
-   * Local search fallback
-   */
-  private localSearch(careers: SupabaseCareerData[], query: string): CareerSearchResult {
-    const filteredCareers = careers.filter(career => {
-      // Search in title
-      if (career.title.toLowerCase().includes(query)) return true;
-      
-      // Search in description
-      if (career.description.toLowerCase().includes(query)) return true;
-      
-      // Search in skills
-      if (career.skills.some(skill => skill.toLowerCase().includes(query))) return true;
-      
-      // Search in job titles
-      if (career.job_titles.some(title => title.toLowerCase().includes(query))) return true;
-      
-      // Search in industry
-      if (career.industry.toLowerCase().includes(query)) return true;
-      
-      return false;
-    });
-
-    const suggestions = this.generateSuggestions(query, careers);
-
-    return {
-      careers: filteredCareers,
-      total: filteredCareers.length,
-      suggestions
-    };
-  }
-
-  /**
-   * Get careers by industry
-   */
-  async getCareersByIndustry(industry: IndustryCategory): Promise<SupabaseCareerData[]> {
+  private async getAllCareerNodesWithFallback(): Promise<ICareerNode[]> {
     try {
       const { data, error } = await supabase
-        .from('careers')
+        .from('career_nodes_with_translations')
         .select('*')
-        .eq('industry', industry)
-        .order('updated_at', { ascending: false });
+        .eq('language_code', 'en')
+        .order('career_path_id, level');
 
       if (error) {
-        console.error('Error fetching careers by industry:', error);
+        console.error('Error fetching English fallback career nodes:', error);
         return [];
       }
 
-      return data || [];
+      return this.convertToCareerNodes(data || []);
     } catch (error) {
-      console.error('Failed to fetch careers by industry:', error);
+      console.error('Error in getAllCareerNodesWithFallback:', error);
       return [];
     }
   }
 
   /**
-   * Get career path by ID (convert career to career path format)
+   * Get career node by ID with translations
    */
-  async getCareerPath(pathId: string): Promise<ICareerPath | null> {
-    try {
-      const career = await this.getCareerById(pathId);
-      if (!career) return null;
-
-      return this.convertToCareerPath(career);
-    } catch (error) {
-      console.error('Error getting career path:', error);
-      return null;
-    }
-  }
-
-  /**
-   * Get career paths by industry
-   */
-  async getCareerPathsByIndustry(industry: IndustryCategory, page = 1, limit = 10): Promise<ICareerSearchResult> {
-    try {
-      const careers = await this.getCareersByIndustry(industry);
-      const startIndex = (page - 1) * limit;
-      const endIndex = startIndex + limit;
-      const paginatedCareers = careers.slice(startIndex, endIndex);
-
-      return {
-        careers: paginatedCareers.map(career => this.convertToCareerPath(career)),
-        total: careers.length,
-        filters: { industry: [industry], level: [], skills: [] },
-        suggestions: []
-      };
-    } catch (error) {
-      console.error('Error getting career paths by industry:', error);
-      return { careers: [], total: 0, filters: { industry: [industry], level: [], skills: [] }, suggestions: [] };
-    }
-  }
-
-  /**
-   * Get career node by ID
-   */
-  async getCareerNode(nodeId: string): Promise<ICareerNode | null> {
-    try {
-      const career = await this.getCareerById(nodeId);
-      if (!career) return null;
-
-      return this.convertToCareerNode(career);
-    } catch (error) {
-      console.error('Error getting career node:', error);
-      return null;
-    }
-  }
-
-  /**
-   * Convert Supabase career data to ICareerPath format
-   */
-  private convertToCareerPath(career: SupabaseCareerData): ICareerPath {
-    return {
-      id: career.id,
-      n: career.title,
-      cat: career.industry,
-      nodes: [this.convertToCareerNode(career)],
-      conn: []
-    };
-  }
-
-  /**
-   * Convert Supabase career data to ICareerNode format
-   */
-  private convertToCareerNode(career: SupabaseCareerData): ICareerNode {
-    return {
-      id: career.id,
-      t: career.title,
-      l: career.level as CareerLevel,
-      s: career.skills,
-      c: career.certifications,
-      sr: career.salary,
-      te: career.experience,
-      d: career.description,
-      jt: career.job_titles,
-      r: {
-        e: career.requirements.education || [],
-        exp: career.requirements.experience || '',
-        sk: career.requirements.skills || []
-      }
-    };
-  }
-
-  /**
-   * Get career by ID
-   */
-  async getCareerById(id: string): Promise<SupabaseCareerData | null> {
+  public async getCareerNodeById(id: string): Promise<ICareerNode | null> {
     try {
       const { data, error } = await supabase
-        .from('careers')
+        .from('career_nodes_with_translations')
         .select('*')
         .eq('id', id)
+        .eq('language_code', this.currentLanguage)
         .single();
 
       if (error) {
-        console.error('Error fetching career by ID:', error);
+        console.error('Error fetching career node:', error);
+        // Fallback to English
+        if (this.currentLanguage !== 'en') {
+          return this.getCareerNodeByIdWithFallback(id);
+        }
         return null;
       }
 
-      return data;
+      return this.convertToCareerNode(data);
     } catch (error) {
-      console.error('Failed to fetch career by ID:', error);
+      console.error('Error in getCareerNodeById:', error);
       return null;
     }
   }
 
-
   /**
-   * Generate search suggestions
+   * Get career node by ID with English fallback
    */
-  private generateSuggestions(query: string, careers: SupabaseCareerData[]): string[] {
-    const suggestions = new Set<string>();
-    
-    careers.forEach(career => {
-      // Add similar titles
-      if (career.title.toLowerCase().includes(query)) {
-        suggestions.add(career.title);
-      }
-      
-      // Add similar skills
-      career.skills.forEach(skill => {
-        if (skill.toLowerCase().includes(query)) {
-          suggestions.add(skill);
-        }
-      });
-      
-      // Add similar job titles
-      career.job_titles.forEach(title => {
-        if (title.toLowerCase().includes(query)) {
-          suggestions.add(title);
-        }
-      });
-    });
-
-    return Array.from(suggestions).slice(0, 5);
-  }
-
-  /**
-   * Get career update statistics
-   */
-  async getCareerStats(): Promise<any> {
+  private async getCareerNodeByIdWithFallback(id: string): Promise<ICareerNode | null> {
     try {
       const { data, error } = await supabase
-        .from('career_update_log')
+        .from('career_nodes_with_translations')
         .select('*')
-        .order('update_timestamp', { ascending: false })
-        .limit(1);
+        .eq('id', id)
+        .eq('language_code', 'en')
+        .single();
 
       if (error) {
-        console.error('Error fetching career stats:', error);
+        console.error('Error fetching English fallback career node:', error);
         return null;
       }
 
-      return data?.[0] || null;
+      return this.convertToCareerNode(data);
     } catch (error) {
-      console.error('Failed to fetch career stats:', error);
+      console.error('Error in getCareerNodeByIdWithFallback:', error);
       return null;
     }
   }
 
   /**
-   * Force refresh cache
+   * Get career path by ID with translations
    */
-  async refreshCache(): Promise<void> {
-    this.cache.clear();
-    this.cacheTimestamps.clear();
-    await this.getAllCareers();
+  public async getCareerPathById(id: string): Promise<ICareerPath | null> {
+    try {
+      // Get career path info
+      const { data: pathData, error: pathError } = await supabase
+        .from('career_path_translations')
+        .select(`
+          *,
+          career_paths!inner(*)
+        `)
+        .eq('career_path_id', id)
+        .eq('language_code', this.currentLanguage)
+        .single();
+
+      if (pathError) {
+        console.error('Error fetching career path:', pathError);
+        // Fallback to English
+        if (this.currentLanguage !== 'en') {
+          return this.getCareerPathByIdWithFallback(id);
+        }
+        return null;
+      }
+
+      // Get career nodes for this path
+      const { data: nodesData, error: nodesError } = await supabase
+        .from('career_nodes_with_translations')
+        .select('*')
+        .eq('career_path_id', id)
+        .eq('language_code', this.currentLanguage)
+        .order('level');
+
+      if (nodesError) {
+        console.error('Error fetching career path nodes:', nodesError);
+        return null;
+      }
+
+      return this.convertToCareerPath(pathData, nodesData || []);
+    } catch (error) {
+      console.error('Error in getCareerPathById:', error);
+      return null;
+    }
   }
 
   /**
-   * Check if cache needs refresh
+   * Get career path by ID with English fallback
    */
-  shouldRefreshCache(): boolean {
-    const cacheKey = 'all_careers';
-    if (!this.cacheTimestamps.has(cacheKey)) return true;
-    
-    const cacheTime = this.cacheTimestamps.get(cacheKey)!;
-    const now = Date.now();
-    const oneHour = 60 * 60 * 1000; // 1 hour
-    
-    return now - cacheTime > oneHour;
+  private async getCareerPathByIdWithFallback(id: string): Promise<ICareerPath | null> {
+    try {
+      // Get career path info
+      const { data: pathData, error: pathError } = await supabase
+        .from('career_path_translations')
+        .select(`
+          *,
+          career_paths!inner(*)
+        `)
+        .eq('career_path_id', id)
+        .eq('language_code', 'en')
+        .single();
+
+      if (pathError) {
+        console.error('Error fetching English fallback career path:', pathError);
+        return null;
+      }
+
+      // Get career nodes for this path
+      const { data: nodesData, error: nodesError } = await supabase
+        .from('career_nodes_with_translations')
+        .select('*')
+        .eq('career_path_id', id)
+        .eq('language_code', 'en')
+        .order('level');
+
+      if (nodesError) {
+        console.error('Error fetching English fallback career path nodes:', nodesError);
+        return null;
+      }
+
+      return this.convertToCareerPath(pathData, nodesData || []);
+    } catch (error) {
+      console.error('Error in getCareerPathByIdWithFallback:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Search career nodes with translations
+   */
+  public async searchCareerNodes(query: string, filters?: {
+    industry?: string;
+    level?: string;
+    category?: string;
+  }): Promise<ICareerNode[]> {
+    try {
+      let queryBuilder = supabase
+        .from('career_nodes_with_translations')
+        .select('*')
+        .eq('language_code', this.currentLanguage);
+
+      // Apply text search
+      if (query) {
+        queryBuilder = queryBuilder.or(
+          `title.ilike.%${query}%,description.ilike.%${query}%`
+        );
+      }
+
+      // Apply filters
+      if (filters?.industry) {
+        queryBuilder = queryBuilder.eq('industry', filters.industry);
+      }
+      if (filters?.level) {
+        queryBuilder = queryBuilder.eq('level', filters.level);
+      }
+      if (filters?.category) {
+        queryBuilder = queryBuilder.eq('category', filters.category);
+      }
+
+      const { data, error } = await queryBuilder.order('career_path_id, level');
+
+      if (error) {
+        console.error('Error searching career nodes:', error);
+        // Fallback to English if current language fails
+        if (this.currentLanguage !== 'en') {
+          return this.searchCareerNodesWithFallback(query, filters);
+        }
+        return [];
+      }
+
+      return this.convertToCareerNodes(data || []);
+    } catch (error) {
+      console.error('Error in searchCareerNodes:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Search career nodes with English fallback
+   */
+  private async searchCareerNodesWithFallback(query: string, filters?: {
+    industry?: string;
+    level?: string;
+    category?: string;
+  }): Promise<ICareerNode[]> {
+    try {
+      let queryBuilder = supabase
+        .from('career_nodes_with_translations')
+        .select('*')
+        .eq('language_code', 'en');
+
+      // Apply text search
+      if (query) {
+        queryBuilder = queryBuilder.or(
+          `title.ilike.%${query}%,description.ilike.%${query}%`
+        );
+      }
+
+      // Apply filters
+      if (filters?.industry) {
+        queryBuilder = queryBuilder.eq('industry', filters.industry);
+      }
+      if (filters?.level) {
+        queryBuilder = queryBuilder.eq('level', filters.level);
+      }
+      if (filters?.category) {
+        queryBuilder = queryBuilder.eq('category', filters.category);
+      }
+
+      const { data, error } = await queryBuilder.order('career_path_id, level');
+
+      if (error) {
+        console.error('Error searching English fallback career nodes:', error);
+        return [];
+      }
+
+      return this.convertToCareerNodes(data || []);
+    } catch (error) {
+      console.error('Error in searchCareerNodesWithFallback:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Get all career paths with translations
+   */
+  public async getAllCareerPaths(): Promise<ICareerPath[]> {
+    try {
+      const { data, error } = await supabase
+        .from('career_path_translations')
+        .select(`
+          *,
+          career_paths!inner(*)
+        `)
+        .eq('language_code', this.currentLanguage)
+        .order('name');
+
+      if (error) {
+        console.error('Error fetching career paths:', error);
+        // Fallback to English if current language fails
+        if (this.currentLanguage !== 'en') {
+          return this.getAllCareerPathsWithFallback();
+        }
+        return [];
+      }
+
+      return this.convertToCareerPaths(data || []);
+    } catch (error) {
+      console.error('Error in getAllCareerPaths:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Get all career paths with English fallback
+   */
+  private async getAllCareerPathsWithFallback(): Promise<ICareerPath[]> {
+    try {
+      const { data, error } = await supabase
+        .from('career_path_translations')
+        .select(`
+          *,
+          career_paths!inner(*)
+        `)
+        .eq('language_code', 'en')
+        .order('name');
+
+      if (error) {
+        console.error('Error fetching English fallback career paths:', error);
+        return [];
+      }
+
+      return this.convertToCareerPaths(data || []);
+    } catch (error) {
+      console.error('Error in getAllCareerPathsWithFallback:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Convert Supabase career node data to ICareerNode format
+   */
+  private convertToCareerNode(data: SupabaseCareerNode): ICareerNode {
+    return {
+      id: data.id,
+      t: data.title,
+      l: data.level as CareerLevel,
+      s: data.skills || [],
+      c: data.certifications || [],
+      sr: data.salary_range || '',
+      te: data.time_to_achieve || '',
+      d: data.description || '',
+      jt: data.job_titles || [],
+      r: data.requirements || {}
+    };
+  }
+
+  /**
+   * Convert array of Supabase career node data to ICareerNode array
+   */
+  private convertToCareerNodes(data: SupabaseCareerNode[]): ICareerNode[] {
+    return data.map(node => this.convertToCareerNode(node));
+  }
+
+  /**
+   * Convert Supabase career path data to ICareerPath format
+   */
+  private convertToCareerPath(pathData: any, nodesData: SupabaseCareerNode[]): ICareerPath {
+    return {
+      id: pathData.career_path_id,
+      n: pathData.name,
+      cat: pathData.career_paths.category,
+      nodes: nodesData.map(node => this.convertToCareerNode(node)),
+      conn: [] // Connections not implemented in current schema
+    };
+  }
+
+  /**
+   * Convert array of Supabase career path data to ICareerPath array
+   */
+  private convertToCareerPaths(data: any[]): ICareerPath[] {
+    return data.map(path => ({
+      id: path.career_path_id,
+      n: path.name,
+      cat: path.career_paths.category,
+      nodes: [], // Will be populated separately if needed
+      conn: []
+    }));
   }
 }
 
-export const supabaseCareerService = new SupabaseCareerService();
+export default SupabaseCareerService;

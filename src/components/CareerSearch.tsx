@@ -161,7 +161,7 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
                             <SelectItem value="all">{t('pages.search.allIndustries')}</SelectItem>
                             {INDUSTRY_CATEGORIES.map((industry) => (
                               <SelectItem key={industry.id} value={industry.id}>
-                                {industry.name}
+                                {t(`industries.${industry.id}`) || industry.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -337,7 +337,7 @@ const BrowseAllCareers: React.FC<{ onCareerSelect: (career: ICareerNode) => void
             <SelectItem value="all">{t('pages.search.allIndustries')}</SelectItem>
             {INDUSTRY_CATEGORIES.map((industry) => (
               <SelectItem key={industry.id} value={industry.id}>
-                {industry.name}
+                {t(`industries.${industry.id}`) || industry.name}
               </SelectItem>
             ))}
           </SelectContent>

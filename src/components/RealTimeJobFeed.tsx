@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { supabaseTrendingService, TrendingData } from '@/services/supabaseTrendingService';
+import { careerService } from '@/services/careerService';
 import DataStatusIndicator from './DataStatusIndicator';
 
 const RealTimeJobFeed: React.FC = React.memo(() => {
@@ -14,7 +15,75 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
   const { t } = useTranslation();
   const [trendingData, setTrendingData] = useState<TrendingData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [translatedSkills, setTranslatedSkills] = useState<Map<string, string>>(new Map());
+  const [translatedIndustries, setTranslatedIndustries] = useState<Map<string, string>>(new Map());
+  const [translatedRoles, setTranslatedRoles] = useState<Map<string, { title: string; description: string }>>(new Map());
   
+  // Function to translate skills, industries, and roles
+  const translateSkillsAndIndustries = async (data: TrendingData) => {
+    const skillMap = new Map<string, string>();
+    const industryMap = new Map<string, string>();
+    const roleMap = new Map<string, { title: string; description: string }>();
+
+    // Translate all unique skills
+    const allSkills = new Set<string>();
+    data.trendingSkills.forEach(skill => allSkills.add(skill.skill));
+    data.decliningSkills.forEach(skill => allSkills.add(skill.skill));
+
+    for (const skill of allSkills) {
+      try {
+        const translatedSkill = await careerService.getTranslatedSkill(skill);
+        skillMap.set(skill, translatedSkill);
+      } catch (error) {
+        console.warn(`Failed to translate skill: ${skill}`, error);
+        skillMap.set(skill, skill); // Fallback to original
+      }
+    }
+
+    // Translate all unique industries
+    const allIndustries = new Set<string>();
+    data.trendingIndustries.forEach(industry => allIndustries.add(industry.industry));
+    data.decliningIndustries.forEach(industry => allIndustries.add(industry.industry));
+
+    for (const industry of allIndustries) {
+      try {
+        const translatedIndustry = await careerService.getTranslatedIndustry(industry);
+        industryMap.set(industry, translatedIndustry);
+      } catch (error) {
+        console.warn(`Failed to translate industry: ${industry}`, error);
+        industryMap.set(industry, industry); // Fallback to original
+      }
+    }
+
+    // Translate all unique roles
+    const allRoles = new Set<string>();
+    data.emergingRoles.forEach(role => allRoles.add(role.title));
+
+    for (const roleTitle of allRoles) {
+      try {
+        const translatedTitle = t(`emergingRoles.${roleTitle}`);
+        const role = data.emergingRoles.find(r => r.title === roleTitle);
+        const translatedDescription = role ? t(`emergingRoles.${role.description}`) : role?.description || '';
+        
+        roleMap.set(roleTitle, {
+          title: translatedTitle !== `emergingRoles.${roleTitle}` ? translatedTitle : roleTitle,
+          description: translatedDescription !== `emergingRoles.${role?.description}` ? translatedDescription : role?.description || ''
+        });
+      } catch (error) {
+        console.warn(`Failed to translate role: ${roleTitle}`, error);
+        const role = data.emergingRoles.find(r => r.title === roleTitle);
+        roleMap.set(roleTitle, {
+          title: roleTitle,
+          description: role?.description || ''
+        });
+      }
+    }
+
+    setTranslatedSkills(skillMap);
+    setTranslatedIndustries(industryMap);
+    setTranslatedRoles(roleMap);
+  };
+
   // Load trending data from local sources
   useEffect(() => {
     const loadTrendingData = async () => {
@@ -24,6 +93,9 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
         // Use local trending data service (monthly updates only)
         const data = await supabaseTrendingService.getAllTrendingData();
         setTrendingData(data);
+        
+        // Translate skills and industries
+        await translateSkillsAndIndustries(data);
       } catch (error) {
         console.warn('Failed to load trending data:', error);
         // Set empty data if no local data available
@@ -210,7 +282,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                 >
                   <div className="flex items-center space-x-2">
                     {getDemandIcon(skill.demand)}
-                    <span className="font-medium">{skill.skill}</span>
+                    <span className="font-medium">{translatedSkills.get(skill.skill) || skill.skill}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="text-right">
@@ -254,7 +326,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                 >
                   <div className="flex items-center space-x-2">
                     <TrendingDown className="h-4 w-4 text-red-600" />
-                    <span className="font-medium">{skill.skill}</span>
+                    <span className="font-medium">{translatedSkills.get(skill.skill) || skill.skill}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="text-right">
@@ -298,7 +370,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                 >
                   <div className="flex items-center space-x-2">
                     <Users className="h-4 w-4 text-primary" />
-                    <span className="font-medium">{industry.industry}</span>
+                    <span className="font-medium">{translatedIndustries.get(industry.industry) || industry.industry}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="text-right">
@@ -342,7 +414,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                 >
                   <div className="flex items-center space-x-2">
                     <TrendingDown className="h-4 w-4 text-red-600" />
-                    <span className="font-medium">{industry.industry}</span>
+                    <span className="font-medium">{translatedIndustries.get(industry.industry) || industry.industry}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="text-right">
@@ -385,7 +457,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                   onClick={() => handleRoleClick(role.title)}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-sm">{role.title}</span>
+                    <span className="font-medium text-sm">{translatedRoles.get(role.title)?.title || role.title}</span>
                     <div className="flex items-center space-x-2">
                       <Badge variant="secondary" className="text-xs">
                         +{role.growth}%
@@ -394,7 +466,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
                     </div>
                   </div>
                   <p className="text-xs text-muted-foreground line-clamp-2">
-                    {role.description}
+                    {translatedRoles.get(role.title)?.description || role.description}
                   </p>
                 </motion.div>
               ))}
@@ -422,7 +494,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
               <div className="space-y-2">
                 {trendingData?.trendingSkills.slice(0, 3).map((skill, index) => (
                   <div key={skill.skill} className="flex items-center justify-between">
-                    <span className="text-sm">{skill.skill}</span>
+                    <span className="text-sm">{translatedSkills.get(skill.skill) || skill.skill}</span>
                     <div className="flex items-center space-x-2">
                       <span className={`text-xs font-medium ${getDemandColor(skill.demand)}`}>
                         {skill.demand}%
@@ -453,7 +525,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
               <div className="space-y-2">
                 {trendingData?.trendingIndustries.map((industry, index) => (
                   <div key={industry.industry} className="flex items-center justify-between">
-                    <span className="text-sm">{industry.industry}</span>
+                    <span className="text-sm">{translatedIndustries.get(industry.industry) || industry.industry}</span>
                     <div className="flex items-center space-x-2">
                       <span className="text-xs font-medium text-green-600">
                         +{industry.growth}%
@@ -484,7 +556,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
               <div className="space-y-2">
                 {trendingData?.emergingRoles.slice(0, 3).map((role, index) => (
                   <div key={role.title} className="flex items-center justify-between">
-                    <span className="text-sm">{role.title}</span>
+                    <span className="text-sm">{translatedRoles.get(role.title)?.title || role.title}</span>
                     <div className="flex items-center space-x-2">
                       <span className="text-xs font-medium text-muted-foreground">
                         +{role.growth}%

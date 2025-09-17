@@ -1,5 +1,6 @@
 import React, { memo, useMemo, useState, useCallback } from "react";
 import { Award, Clock, DollarSign, Briefcase, Star, TrendingUp, Bookmark, Check, ExternalLink, ChevronRight } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { Badge } from "./ui/badge";
@@ -26,6 +27,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
   onNavigate,
   onCareerClick 
 }) => {
+  const { t } = useTranslation();
   const [isPathTracked, setIsPathTracked] = useState(false);
   const [pathProgress, setPathProgress] = useState<any>(null);
   const [isBookmarked, setIsBookmarked] = useState(bookmarkService.isBookmarked(career.id));
@@ -107,13 +109,13 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
 
   const getLevelDisplayName = useMemo(() => (level: CareerLevel): string => {
     switch (level) {
-      case 'E': return 'Entry Level';
-      case 'I': return 'Mid Level';
-      case 'A': return 'Senior Level';
-      case 'X': return 'Expert Level';
-      default: return 'Unknown Level';
+      case 'E': return t('jobDetails.entryLevel');
+      case 'I': return t('jobDetails.midLevel');
+      case 'A': return t('jobDetails.seniorLevel');
+      case 'X': return t('jobDetails.expertLevel');
+      default: return t('jobDetails.unknownLevel');
     }
-  }, []);
+  }, [t]);
 
   const getLevelColor = useMemo(() => (level: CareerLevel): string => {
     switch (level) {
@@ -127,13 +129,13 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
 
   const getNextLevel = useMemo(() => (level: CareerLevel): string => {
     switch (level) {
-      case 'E': return 'Mid Level';
-      case 'I': return 'Senior Level';
-      case 'A': return 'Expert Level';
-      case 'X': return 'Top Executive';
-      default: return 'Next Level';
+      case 'E': return t('jobDetails.midLevel');
+      case 'I': return t('jobDetails.seniorLevel');
+      case 'A': return t('jobDetails.expertLevel');
+      case 'X': return t('jobDetails.topExecutive');
+      default: return t('jobDetails.nextLevel');
     }
-  }, []);
+  }, [t]);
 
   const handleBookmark = () => {
     if (isBookmarked) {
@@ -173,17 +175,17 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
             {bookmarkSuccess ? (
               <>
                 <Check className="h-4 w-4 mr-2" />
-                Saved!
+                {t('jobDetails.saved')}
               </>
             ) : isBookmarked ? (
               <>
                 <Bookmark className="h-4 w-4 mr-2" />
-                Saved
+                {t('jobDetails.savedStatus')}
               </>
             ) : (
               <>
                 <Bookmark className="h-4 w-4 mr-2" />
-                Save
+                {t('jobDetails.save')}
               </>
             )}
           </Button>
@@ -197,14 +199,14 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
         <Card>
           <CardContent className="p-4 text-center">
             <DollarSign className="h-6 w-6 text-primary mb-2 mx-auto" />
-            <p className="text-sm font-medium text-muted-foreground mb-1">Salary Range</p>
+            <p className="text-sm font-medium text-muted-foreground mb-1">{t('jobDetails.salaryRange')}</p>
             <p className="text-lg font-semibold leading-tight">{career.sr}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <Clock className="h-6 w-6 text-primary mb-2 mx-auto" />
-            <p className="text-sm font-medium text-muted-foreground mb-1">Time to Achieve</p>
+            <p className="text-sm font-medium text-muted-foreground mb-1">{t('jobDetails.timeToAchieve')}</p>
             <p className="text-lg font-semibold leading-tight">{career.te}</p>
           </CardContent>
         </Card>
@@ -215,7 +217,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
       <div className="mb-6">
         <h3 className="font-semibold mb-3 flex items-center">
           <Star className="h-4 w-4 mr-2" />
-          Required Skills
+          {t('jobDetails.requiredSkills')}
         </h3>
         <div className="flex flex-wrap gap-2">
           {career.s && career.s.length > 0 ? career.s.map((skill, index) => (
@@ -223,7 +225,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
               {skill}
             </Badge>
           )) : (
-            <p className="text-muted-foreground text-sm">No skills listed</p>
+            <p className="text-muted-foreground text-sm">{t('jobDetails.noSkillsListed')}</p>
           )}
         </div>
       </div>
@@ -233,7 +235,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
         <div className="mb-6">
           <h3 className="font-semibold mb-3 flex items-center">
             <Award className="h-4 w-4 mr-2" />
-            Recommended Certifications
+            {t('jobDetails.recommendedCertifications')}
           </h3>
           <div className="space-y-2">
             {career.c.map((cert, index) => (
@@ -250,7 +252,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
       <div className="mb-6">
         <h3 className="font-semibold mb-3 flex items-center">
           <Briefcase className="h-4 w-4 mr-2" />
-          Common Job Titles
+          {t('jobDetails.commonJobTitles')}
         </h3>
         <div className="flex flex-wrap gap-2">
           {career.jt && career.jt.length > 0 ? career.jt.map((title, index) => (
@@ -258,7 +260,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
               {title}
             </Badge>
           )) : (
-            <p className="text-muted-foreground text-sm">No job titles listed</p>
+            <p className="text-muted-foreground text-sm">{t('jobDetails.noJobTitlesListed')}</p>
           )}
         </div>
       </div>
@@ -269,11 +271,11 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold flex items-center">
               <TrendingUp className="h-4 w-4 mr-2" />
-              Career Path Progress
+              {t('jobDetails.careerPathProgress')}
             </h3>
             <div className="flex items-center space-x-2">
               <span className="text-sm text-muted-foreground whitespace-nowrap">
-                Step {currentIndex + 1} of {careerPath.nodes.length}
+                {t('jobDetails.stepOf', { current: currentIndex + 1, total: careerPath.nodes.length })}
               </span>
               {!isPathTracked && (
                 <Button 
@@ -283,13 +285,13 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
                   className="text-xs"
                 >
                   <Bookmark className="h-3 w-3 mr-1" />
-                  Save Progress
+                  {t('jobDetails.saveProgress')}
                 </Button>
               )}
               {isPathTracked && (
                 <Badge variant="secondary" className="text-xs">
                   <Check className="h-3 w-3 mr-1" />
-                  Tracking
+                  {t('jobDetails.tracking')}
                 </Badge>
               )}
             </div>
@@ -344,12 +346,12 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
                       </h4>
                       {pathProgress && pathProgress.completedSteps.includes(index) && (
                         <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                          Completed
+                          {t('jobDetails.completed')}
                         </Badge>
                       )}
                       {index === currentIndex && (
                         <Badge className="bg-primary text-primary-foreground">
-                          Current
+                          {t('jobDetails.current')}
                         </Badge>
                       )}
                     </div>
@@ -358,7 +360,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
                     <div className="flex items-center space-x-4 mt-1 text-sm text-muted-foreground">
                       <span className="flex items-center">
                         <Briefcase className="h-3 w-3 mr-1" />
-                        Level: {node.l}
+                        {t('jobDetails.level')} {node.l}
                       </span>
                       <span className="flex items-center">
                         <Clock className="h-3 w-3 mr-1" />
@@ -376,7 +378,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
                         ))}
                         {node.s.length > 3 && (
                           <Badge variant="outline" className="text-xs">
-                            +{node.s.length - 3} more
+                            +{node.s.length - 3} {t('jobDetails.more')}
                           </Badge>
                         )}
                       </div>
@@ -400,10 +402,10 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold flex items-center">
               <ChevronRight className="h-4 w-4 mr-2" />
-              Related Career Paths
+              {t('jobDetails.relatedCareerPaths')}
             </h3>
             <span className="text-sm text-muted-foreground">
-              Based on your skills
+              {t('jobDetails.basedOnYourSkills')}
             </span>
           </div>
           
@@ -461,7 +463,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
           
           {loadingBranches && (
             <div className="text-center py-4">
-              <div className="text-sm text-muted-foreground">Finding related careers...</div>
+              <div className="text-sm text-muted-foreground">{t('jobDetails.findingRelatedCareers')}</div>
             </div>
           )}
         </div>

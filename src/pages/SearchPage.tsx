@@ -269,7 +269,7 @@ const SearchPage: React.FC = React.memo(() => {
 
   return (
     <motion.div 
-      className="min-h-screen bg-background flex flex-col pb-20"
+      className="min-h-screen bg-background flex flex-col"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -285,7 +285,7 @@ const SearchPage: React.FC = React.memo(() => {
             className="flex items-center gap-2"
           >
             <Filter className="h-4 w-4" />
-{t('pages.search.filters')}
+            {t('pages.search.filters.title')}
           </Button>
         </div>
       </div>
@@ -313,7 +313,7 @@ const SearchPage: React.FC = React.memo(() => {
             className="mt-4 p-4 bg-muted rounded-lg space-y-4"
           >
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold">{t('pages.search.filters')}</h3>
+              <h3 className="font-semibold">{t('pages.search.filters.title')}</h3>
               <Button
                 variant="ghost"
                 size="sm"
@@ -325,33 +325,33 @@ const SearchPage: React.FC = React.memo(() => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium mb-2 block">{t('pages.search.industry')}</label>
+                <label className="text-sm font-medium mb-2 block">{t('pages.search.filters.industry')}</label>
                 <select
                   value={selectedIndustry}
                   onChange={(e) => setSelectedIndustry(e.target.value)}
                   className="w-full p-2 border border-border bg-background text-foreground rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary"
                 >
-                  <option value="all">{t('pages.search.allIndustries')}</option>
+                  <option value="all">{t('pages.search.filters.allIndustries')}</option>
                   {INDUSTRY_CATEGORIES.map(industry => (
                     <option key={industry.id} value={industry.id}>
-                      {industry.name}
+                      {t(`industries.${industry.id}`) || industry.name}
                     </option>
                   ))}
                 </select>
               </div>
               
               <div>
-                <label className="text-sm font-medium mb-2 block">{t('pages.search.experience')}</label>
+                <label className="text-sm font-medium mb-2 block">{t('pages.search.filters.experience')}</label>
                 <select
                   value={selectedLevel}
                   onChange={(e) => setSelectedLevel(e.target.value)}
                   className="w-full p-2 border border-border bg-background text-foreground rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary"
                 >
-                  <option value="all">{t('pages.search.allLevels')}</option>
-                  <option value="E">{t('pages.search.entryLevel')}</option>
-                  <option value="I">{t('pages.search.intermediate')}</option>
-                  <option value="A">{t('pages.search.advanced')}</option>
-                  <option value="X">{t('pages.search.expert')}</option>
+                  <option value="all">{t('pages.search.filters.allLevels')}</option>
+                  <option value="E">{t('pages.search.filters.entryLevel')}</option>
+                  <option value="I">{t('pages.search.filters.intermediate')}</option>
+                  <option value="A">{t('pages.search.filters.advanced')}</option>
+                  <option value="X">{t('pages.search.filters.expert')}</option>
                 </select>
               </div>
             </div>
@@ -386,7 +386,7 @@ const SearchPage: React.FC = React.memo(() => {
             </div>
           )}
         </div>
-      </div>
+        </div>
       </div>
 
       {/* Bottom Navigation - positioned at bottom */}
