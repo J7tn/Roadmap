@@ -472,5 +472,41 @@
     "unknownLevel": "不明なレベル",
     "nextLevel": "次のレベル",
     "topExecutive": "トップエグゼクティブ"
+  },
+  "assessment": {
+    "title": "スキル評価",
+    "subtitle": "あなたのキャリアの可能性を発見",
+    "step": "ステップ",
+    "assessmentUnavailable": "評価が利用できません",
+    "clickToViewDetails": "詳細なキャリア情報を表示するにはクリック",
+    "selectSkills": "あなたが得意なスキルを選択してください。カスタムスキルも追加できます。",
+    "selectRelevantSkills": "このカテゴリから関連するスキルを選択",
+    "selectCareerDirection": "最も興味のあるキャリアの方向性を選択してください。",
+    "failedToGenerateRecommendations": "推奨事項の生成に失敗しました",
+    "tryAgain": "再試行",
+    "step1of4": "ステップ 1/4",
+    "complete": "完了",
+    "skillsSelected": "選択されたスキル:",
+    "whatSkillsDoYouHave": "現在どのようなスキルをお持ちですか？",
+    "selectSkillsProficient": "あなたが得意なスキルを選択してください。カスタムスキルも追加できます",
+    "technicalSkills": "技術スキル",
+    "creativeSkills": "クリエイティブスキル",
+    "analyticalSkills": "分析スキル",
+    "communicationSkills": "コミュニケーションスキル",
+    "businessSkills": "ビジネススキル",
+    "languages": "言語",
+    "addCustomSkills": "カスタムスキルを追加",
+    "enterAdditionalSkills": "お持ちの追加スキルを入力してください（カンマ区切り）",
+    "selectAtLeastOneSkill": "続行するには少なくとも1つのスキルを選択してください",
+    "previous": "前へ",
+    "next": "次へ",
+    "skillCategories": {
+      "technical": "技術スキル",
+      "creative": "クリエイティブスキル",
+      "analytical": "分析スキル",
+      "communication": "コミュニケーションスキル",
+      "business": "ビジネススキル",
+      "languages": "言語"
+    }
   }
 }

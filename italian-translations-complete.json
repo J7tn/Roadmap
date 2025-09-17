@@ -472,5 +472,41 @@
     "unknownLevel": "Livello Sconosciuto",
     "nextLevel": "Livello Successivo",
     "topExecutive": "Alto Dirigente"
+  },
+  "assessment": {
+    "title": "Valutazione delle Competenze",
+    "subtitle": "Scopri il tuo potenziale professionale",
+    "step": "Passo",
+    "assessmentUnavailable": "Valutazione Non Disponibile",
+    "clickToViewDetails": "Clicca per visualizzare informazioni dettagliate sulla carriera",
+    "selectSkills": "Seleziona le competenze in cui sei competente. Puoi anche aggiungere competenze personalizzate.",
+    "selectRelevantSkills": "Seleziona competenze rilevanti da questa categoria",
+    "selectCareerDirection": "Seleziona la direzione di carriera che ti interessa di più.",
+    "failedToGenerateRecommendations": "Impossibile generare raccomandazioni",
+    "tryAgain": "Riprova",
+    "step1of4": "Passo 1 di 4",
+    "complete": "Completato",
+    "skillsSelected": "Competenze selezionate:",
+    "whatSkillsDoYouHave": "Quali competenze hai attualmente?",
+    "selectSkillsProficient": "Seleziona le competenze in cui sei competente. Puoi anche aggiungere competenze personalizzate",
+    "technicalSkills": "Competenze tecniche",
+    "creativeSkills": "Competenze creative",
+    "analyticalSkills": "Competenze analitiche",
+    "communicationSkills": "Competenze di comunicazione",
+    "businessSkills": "Competenze aziendali",
+    "languages": "Lingue",
+    "addCustomSkills": "Aggiungi Competenze Personalizzate",
+    "enterAdditionalSkills": "Inserisci eventuali competenze aggiuntive che hai (separate da virgole)",
+    "selectAtLeastOneSkill": "Seleziona almeno una competenza per continuare",
+    "previous": "Precedente",
+    "next": "Successivo",
+    "skillCategories": {
+      "technical": "Competenze Tecniche",
+      "creative": "Competenze Creative",
+      "analytical": "Competenze Analitiche",
+      "communication": "Competenze di Comunicazione",
+      "business": "Competenze Aziendali",
+      "languages": "Lingue"
+    }
   }
 }

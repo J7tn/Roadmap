@@ -472,5 +472,41 @@
     "unknownLevel": "Niveau Inconnu",
     "nextLevel": "Niveau Suivant",
     "topExecutive": "Haut Dirigeant"
+  },
+  "assessment": {
+    "title": "Évaluation des Compétences",
+    "subtitle": "Découvrez votre potentiel professionnel",
+    "step": "Étape",
+    "assessmentUnavailable": "Évaluation Indisponible",
+    "clickToViewDetails": "Cliquez pour voir les informations détaillées sur la carrière",
+    "selectSkills": "Sélectionnez les compétences dans lesquelles vous êtes compétent. Vous pouvez également ajouter des compétences personnalisées.",
+    "selectRelevantSkills": "Sélectionnez les compétences pertinentes de cette catégorie",
+    "selectCareerDirection": "Sélectionnez la direction de carrière qui vous intéresse le plus.",
+    "failedToGenerateRecommendations": "Échec de la génération de recommandations",
+    "tryAgain": "Réessayer",
+    "step1of4": "Étape 1 sur 4",
+    "complete": "Terminé",
+    "skillsSelected": "Compétences sélectionnées:",
+    "whatSkillsDoYouHave": "Quelles compétences avez-vous actuellement ?",
+    "selectSkillsProficient": "Sélectionnez les compétences dans lesquelles vous êtes compétent. Vous pouvez également ajouter des compétences personnalisées",
+    "technicalSkills": "Compétences techniques",
+    "creativeSkills": "Compétences créatives",
+    "analyticalSkills": "Compétences analytiques",
+    "communicationSkills": "Compétences de communication",
+    "businessSkills": "Compétences commerciales",
+    "languages": "Langues",
+    "addCustomSkills": "Ajouter des Compétences Personnalisées",
+    "enterAdditionalSkills": "Entrez toutes les compétences supplémentaires que vous avez (séparées par des virgules)",
+    "selectAtLeastOneSkill": "Veuillez sélectionner au moins une compétence pour continuer",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "skillCategories": {
+      "technical": "Compétences Techniques",
+      "creative": "Compétences Créatives",
+      "analytical": "Compétences Analytiques",
+      "communication": "Compétences de Communication",
+      "business": "Compétences Commerciales",
+      "languages": "Langues"
+    }
   }
 }

@@ -472,5 +472,41 @@
     "unknownLevel": "مستوى غير معروف",
     "nextLevel": "المستوى التالي",
     "topExecutive": "كبار التنفيذيين"
+  },
+  "assessment": {
+    "title": "تقييم المهارات",
+    "subtitle": "اكتشف إمكاناتك المهنية",
+    "step": "خطوة",
+    "assessmentUnavailable": "التقييم غير متاح",
+    "clickToViewDetails": "انقر لعرض معلومات مهنية مفصلة",
+    "selectSkills": "اختر المهارات التي تجيدها. يمكنك أيضًا إضافة مهارات مخصصة.",
+    "selectRelevantSkills": "اختر المهارات ذات الصلة من هذه الفئة",
+    "selectCareerDirection": "اختر الاتجاه المهني الذي يهمك أكثر.",
+    "failedToGenerateRecommendations": "فشل في توليد التوصيات",
+    "tryAgain": "حاول مرة أخرى",
+    "step1of4": "الخطوة 1 من 4",
+    "complete": "مكتمل",
+    "skillsSelected": "المهارات المختارة:",
+    "whatSkillsDoYouHave": "ما هي المهارات التي تملكها حاليًا؟",
+    "selectSkillsProficient": "اختر المهارات التي تجيدها. يمكنك أيضًا إضافة مهارات مخصصة",
+    "technicalSkills": "المهارات التقنية",
+    "creativeSkills": "المهارات الإبداعية",
+    "analyticalSkills": "المهارات التحليلية",
+    "communicationSkills": "مهارات التواصل",
+    "businessSkills": "المهارات التجارية",
+    "languages": "اللغات",
+    "addCustomSkills": "إضافة مهارات مخصصة",
+    "enterAdditionalSkills": "أدخل أي مهارات إضافية لديك (مفصولة بفواصل)",
+    "selectAtLeastOneSkill": "يرجى اختيار مهارة واحدة على الأقل للمتابعة",
+    "previous": "السابق",
+    "next": "التالي",
+    "skillCategories": {
+      "technical": "المهارات التقنية",
+      "creative": "المهارات الإبداعية",
+      "analytical": "المهارات التحليلية",
+      "communication": "مهارات التواصل",
+      "business": "المهارات التجارية",
+      "languages": "اللغات"
+    }
   }
 }

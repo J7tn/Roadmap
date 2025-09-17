@@ -472,5 +472,41 @@
     "unknownLevel": "Nível Desconhecido",
     "nextLevel": "Próximo Nível",
     "topExecutive": "Alto Executivo"
+  },
+  "assessment": {
+    "title": "Avaliação de Habilidades",
+    "subtitle": "Descubra seu potencial profissional",
+    "step": "Passo",
+    "assessmentUnavailable": "Avaliação Indisponível",
+    "clickToViewDetails": "Clique para ver informações detalhadas da carreira",
+    "selectSkills": "Selecione as habilidades em que você é competente. Você também pode adicionar habilidades personalizadas.",
+    "selectRelevantSkills": "Selecione habilidades relevantes desta categoria",
+    "selectCareerDirection": "Selecione a direção de carreira que mais lhe interessa.",
+    "failedToGenerateRecommendations": "Falha ao gerar recomendações",
+    "tryAgain": "Tentar Novamente",
+    "step1of4": "Passo 1 de 4",
+    "complete": "Completo",
+    "skillsSelected": "Habilidades selecionadas:",
+    "whatSkillsDoYouHave": "Quais habilidades você tem atualmente?",
+    "selectSkillsProficient": "Selecione as habilidades em que você é competente. Você também pode adicionar habilidades personalizadas",
+    "technicalSkills": "Habilidades técnicas",
+    "creativeSkills": "Habilidades criativas",
+    "analyticalSkills": "Habilidades analíticas",
+    "communicationSkills": "Habilidades de comunicação",
+    "businessSkills": "Habilidades empresariais",
+    "languages": "Idiomas",
+    "addCustomSkills": "Adicionar Habilidades Personalizadas",
+    "enterAdditionalSkills": "Digite quaisquer habilidades adicionais que você tem (separadas por vírgulas)",
+    "selectAtLeastOneSkill": "Por favor, selecione pelo menos uma habilidade para continuar",
+    "previous": "Anterior",
+    "next": "Próximo",
+    "skillCategories": {
+      "technical": "Habilidades Técnicas",
+      "creative": "Habilidades Criativas",
+      "analytical": "Habilidades Analíticas",
+      "communication": "Habilidades de Comunicação",
+      "business": "Habilidades Empresariais",
+      "languages": "Idiomas"
+    }
   }
 }

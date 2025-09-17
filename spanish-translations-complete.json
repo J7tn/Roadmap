@@ -472,5 +472,41 @@
     "unknownLevel": "Nivel Desconocido",
     "nextLevel": "Siguiente Nivel",
     "topExecutive": "Alto Ejecutivo"
+  },
+  "assessment": {
+    "title": "Evaluación de Habilidades",
+    "subtitle": "Descubre tu potencial profesional",
+    "step": "Paso",
+    "assessmentUnavailable": "Evaluación No Disponible",
+    "clickToViewDetails": "Haz clic para ver información detallada de la carrera",
+    "selectSkills": "Selecciona las habilidades en las que eres competente. También puedes agregar habilidades personalizadas.",
+    "selectRelevantSkills": "Selecciona habilidades relevantes de esta categoría",
+    "selectCareerDirection": "Selecciona la dirección profesional que más te interese.",
+    "failedToGenerateRecommendations": "Error al generar recomendaciones",
+    "tryAgain": "Intentar de Nuevo",
+    "step1of4": "Paso 1 de 4",
+    "complete": "Completo",
+    "skillsSelected": "Habilidades seleccionadas:",
+    "whatSkillsDoYouHave": "¿Qué habilidades tienes actualmente?",
+    "selectSkillsProficient": "Selecciona las habilidades en las que eres competente. También puedes agregar habilidades personalizadas",
+    "technicalSkills": "Habilidades técnicas",
+    "creativeSkills": "Habilidades creativas",
+    "analyticalSkills": "Habilidades analíticas",
+    "communicationSkills": "Habilidades de comunicación",
+    "businessSkills": "Habilidades empresariales",
+    "languages": "Idiomas",
+    "addCustomSkills": "Agregar Habilidades Personalizadas",
+    "enterAdditionalSkills": "Ingresa cualquier habilidad adicional que tengas (separadas por comas)",
+    "selectAtLeastOneSkill": "Por favor selecciona al menos una habilidad para continuar",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "skillCategories": {
+      "technical": "Habilidades Técnicas",
+      "creative": "Habilidades Creativas",
+      "analytical": "Habilidades Analíticas",
+      "communication": "Habilidades de Comunicación",
+      "business": "Habilidades Empresariales",
+      "languages": "Idiomas"
+    }
   }
 }

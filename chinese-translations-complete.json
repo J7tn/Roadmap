@@ -472,5 +472,41 @@
     "unknownLevel": "未知级别",
     "nextLevel": "下一级别",
     "topExecutive": "高级管理层"
+  },
+  "assessment": {
+    "title": "技能评估",
+    "subtitle": "发现您的职业潜力",
+    "step": "步骤",
+    "assessmentUnavailable": "评估不可用",
+    "clickToViewDetails": "点击查看详细的职业信息",
+    "selectSkills": "选择您精通的技能。您也可以添加自定义技能。",
+    "selectRelevantSkills": "从此类别中选择相关技能",
+    "selectCareerDirection": "选择您最感兴趣的职业方向。",
+    "failedToGenerateRecommendations": "生成推荐失败",
+    "tryAgain": "重试",
+    "step1of4": "第1步，共4步",
+    "complete": "完成",
+    "skillsSelected": "已选择技能:",
+    "whatSkillsDoYouHave": "您目前拥有哪些技能？",
+    "selectSkillsProficient": "选择您精通的技能。您也可以添加自定义技能",
+    "technicalSkills": "技术技能",
+    "creativeSkills": "创意技能",
+    "analyticalSkills": "分析技能",
+    "communicationSkills": "沟通技能",
+    "businessSkills": "商业技能",
+    "languages": "语言",
+    "addCustomSkills": "添加自定义技能",
+    "enterAdditionalSkills": "输入您拥有的任何额外技能（用逗号分隔）",
+    "selectAtLeastOneSkill": "请至少选择一个技能以继续",
+    "previous": "上一步",
+    "next": "下一步",
+    "skillCategories": {
+      "technical": "技术技能",
+      "creative": "创意技能",
+      "analytical": "分析技能",
+      "communication": "沟通技能",
+      "business": "商业技能",
+      "languages": "语言"
+    }
   }
 }

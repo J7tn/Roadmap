@@ -472,5 +472,41 @@
     "unknownLevel": "Unbekanntes Level",
     "nextLevel": "Nächstes Level",
     "topExecutive": "Top-Führungskraft"
+  },
+  "assessment": {
+    "title": "Kompetenzbewertung",
+    "subtitle": "Entdecken Sie Ihr berufliches Potenzial",
+    "step": "Schritt",
+    "assessmentUnavailable": "Bewertung Nicht Verfügbar",
+    "clickToViewDetails": "Klicken Sie, um detaillierte Karriereinformationen anzuzeigen",
+    "selectSkills": "Wählen Sie die Fähigkeiten aus, in denen Sie kompetent sind. Sie können auch benutzerdefinierte Fähigkeiten hinzufügen.",
+    "selectRelevantSkills": "Wählen Sie relevante Fähigkeiten aus dieser Kategorie",
+    "selectCareerDirection": "Wählen Sie die Karriererichtung aus, die Sie am meisten interessiert.",
+    "failedToGenerateRecommendations": "Fehler beim Generieren von Empfehlungen",
+    "tryAgain": "Erneut Versuchen",
+    "step1of4": "Schritt 1 von 4",
+    "complete": "Abgeschlossen",
+    "skillsSelected": "Ausgewählte Fähigkeiten:",
+    "whatSkillsDoYouHave": "Welche Fähigkeiten haben Sie derzeit?",
+    "selectSkillsProficient": "Wählen Sie die Fähigkeiten aus, in denen Sie kompetent sind. Sie können auch benutzerdefinierte Fähigkeiten hinzufügen",
+    "technicalSkills": "Technische Fähigkeiten",
+    "creativeSkills": "Kreative Fähigkeiten",
+    "analyticalSkills": "Analytische Fähigkeiten",
+    "communicationSkills": "Kommunikationsfähigkeiten",
+    "businessSkills": "Geschäftsfähigkeiten",
+    "languages": "Sprachen",
+    "addCustomSkills": "Benutzerdefinierte Fähigkeiten Hinzufügen",
+    "enterAdditionalSkills": "Geben Sie alle zusätzlichen Fähigkeiten ein, die Sie haben (durch Kommas getrennt)",
+    "selectAtLeastOneSkill": "Bitte wählen Sie mindestens eine Fähigkeit aus, um fortzufahren",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "skillCategories": {
+      "technical": "Technische Fähigkeiten",
+      "creative": "Kreative Fähigkeiten",
+      "analytical": "Analytische Fähigkeiten",
+      "communication": "Kommunikationsfähigkeiten",
+      "business": "Geschäftsfähigkeiten",
+      "languages": "Sprachen"
+    }
   }
 }
