@@ -171,6 +171,38 @@
       "noNotifications": "无通知",
       "personalizedForYou": "为您个性化：",
       "noNotificationsDescription": "当有与您的职业兴趣相关的更新时，我们会通知您。"
+    },
+    "careerPaths": {
+      "title": "我的职业道路",
+      "back": "返回",
+      "searchPlaceholder": "搜索您的道路...",
+      "tabs": {
+        "myCareer": "我的职业",
+        "bookmarks": "书签",
+        "assessments": "评估"
+      },
+      "myCareer": {
+        "noCareerSelected": "未选择职业",
+        "noCareerSelectedDescription": "选择职业开始规划您的专业路线",
+        "selectCareer": "选择职业",
+        "noProgress": "无职业进展",
+        "noProgressDescription": "通过探索不同的职业道路和设定目标来开始追踪您的职业旅程",
+        "exploreCareers": "探索职业",
+        "currentPosition": "当前位置",
+        "progress": "进度",
+        "nextStep": "下一步",
+        "nextStepDescription": "您的下一个专业目标"
+      },
+      "bookmarks": {
+        "noBookmarks": "无书签",
+        "noBookmarksDescription": "收藏您感兴趣的职业以在此查看",
+        "exploreCareers": "探索职业"
+      },
+      "assessments": {
+        "noAssessments": "无评估",
+        "noAssessmentsDescription": "参加技能评估以获得个性化推荐",
+        "takeAssessment": "参加评估"
+      }
     }
   },
   "common": {

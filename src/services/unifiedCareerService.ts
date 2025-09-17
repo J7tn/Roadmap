@@ -6,7 +6,7 @@
 import { ICareerPath, ICareerNode, ICareerFilters, ICareerSearchResult, IndustryCategory } from '@/types/career';
 import { appConfig } from '@/config/appConfig';
 import { careerService } from './careerService';
-import { supabaseCareerService } from './supabaseCareerService';
+import supabaseCareerService from './supabaseCareerService';
 
 // Strategy interface for different data sources
 export interface ICareerDataStrategy {

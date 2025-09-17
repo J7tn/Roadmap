@@ -171,6 +171,38 @@
       "noNotifications": "通知なし",
       "personalizedForYou": "あなたのためにパーソナライズされた：",
       "noNotificationsDescription": "キャリアの興味に関連する更新があるときに通知します。"
+    },
+    "careerPaths": {
+      "title": "私のキャリアパス",
+      "back": "戻る",
+      "searchPlaceholder": "パスを検索...",
+      "tabs": {
+        "myCareer": "私のキャリア",
+        "bookmarks": "ブックマーク",
+        "assessments": "評価"
+      },
+      "myCareer": {
+        "noCareerSelected": "キャリアが選択されていません",
+        "noCareerSelectedDescription": "プロフェッショナルなルートを計画するためにキャリアを選択してください",
+        "selectCareer": "キャリアを選択",
+        "noProgress": "キャリア進捗なし",
+        "noProgressDescription": "異なるキャリアパスを探索し、目標を設定してキャリアの旅を追跡し始めましょう",
+        "exploreCareers": "キャリアを探索",
+        "currentPosition": "現在のポジション",
+        "progress": "進捗",
+        "nextStep": "次のステップ",
+        "nextStepDescription": "あなたの次のプロフェッショナルな目標"
+      },
+      "bookmarks": {
+        "noBookmarks": "ブックマークなし",
+        "noBookmarksDescription": "興味のあるキャリアをブックマークして、ここで確認してください",
+        "exploreCareers": "キャリアを探索"
+      },
+      "assessments": {
+        "noAssessments": "評価なし",
+        "noAssessmentsDescription": "パーソナライズされた推奨事項を得るためにスキル評価を受けてください",
+        "takeAssessment": "評価を受ける"
+      }
     }
   },
   "common": {

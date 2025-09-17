@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
-import { SplashScreen } from '@capacitor/splash-screen';
 import './lib/dynamicI18n'; // Initialize dynamic i18n
+import SplashScreenService from './services/splashScreenService';
 
 // Temporarily disable Tempo devtools for mobile debugging
 // import { TempoDevtools } from "tempo-devtools";
@@ -12,22 +12,16 @@ import './lib/dynamicI18n'; // Initialize dynamic i18n
 
 const basename = import.meta.env.BASE_URL;
 
-// Hide splash screen when app is ready
-const hideSplashScreen = async () => {
-  try {
-    await SplashScreen.hide();
-  } catch (error) {
-    // Silently handle splash screen errors
+// Export splash screen service for use in components
+export const splashScreenService = SplashScreenService.getInstance();
+
+// Fallback: hide splash screen after maximum 5 seconds to prevent it from staying forever
+setTimeout(() => {
+  if (!splashScreenService.isSplashHidden()) {
+    console.log('⏰ Fallback: hiding splash screen after timeout');
+    splashScreenService.forceHide();
   }
-};
-
-// Hide splash screen after DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(hideSplashScreen, 500);
-});
-
-// Also try hiding after a longer delay as fallback
-setTimeout(hideSplashScreen, 2000);
+}, 5000);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

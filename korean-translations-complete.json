@@ -171,6 +171,38 @@
       "noNotifications": "알림 없음",
       "personalizedForYou": "당신을 위해 개인화된:",
       "noNotificationsDescription": "채용 관심사와 관련된 업데이트가 있을 때 알려드리겠습니다."
+    },
+    "careerPaths": {
+      "title": "내 경력 경로",
+      "back": "뒤로",
+      "searchPlaceholder": "경로 검색...",
+      "tabs": {
+        "myCareer": "내 경력",
+        "bookmarks": "북마크",
+        "assessments": "평가"
+      },
+      "myCareer": {
+        "noCareerSelected": "선택된 경력 없음",
+        "noCareerSelectedDescription": "전문적인 경로를 계획하기 위해 경력을 선택하세요",
+        "selectCareer": "경력 선택",
+        "noProgress": "진행 상황 없음",
+        "noProgressDescription": "다양한 경력 경로를 탐색하고 목표를 설정하여 경력 여정을 추적하기 시작하세요",
+        "exploreCareers": "경력 탐색",
+        "currentPosition": "현재 위치",
+        "progress": "진행률",
+        "nextStep": "다음 단계",
+        "nextStepDescription": "당신의 다음 전문적 목표"
+      },
+      "bookmarks": {
+        "noBookmarks": "북마크 없음",
+        "noBookmarksDescription": "관심 있는 경력을 북마크하여 여기서 확인하세요",
+        "exploreCareers": "경력 탐색"
+      },
+      "assessments": {
+        "noAssessments": "평가 없음",
+        "noAssessmentsDescription": "개인화된 추천을 받기 위해 기술 평가를 받으세요",
+        "takeAssessment": "평가 받기"
+      }
     }
   },
   "common": {

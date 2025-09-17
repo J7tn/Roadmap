@@ -171,6 +171,38 @@
       "noNotifications": "Sin notificaciones",
       "personalizedForYou": "Personalizado para ti:",
       "noNotificationsDescription": "Te notificaremos cuando haya actualizaciones relevantes para tus intereses de carrera."
+    },
+    "careerPaths": {
+      "title": "Mis Rutas de Carrera",
+      "back": "Atrás",
+      "searchPlaceholder": "Buscar tus rutas...",
+      "tabs": {
+        "myCareer": "Mi Carrera",
+        "bookmarks": "Marcadores",
+        "assessments": "Evaluaciones"
+      },
+      "myCareer": {
+        "noCareerSelected": "Ninguna carrera seleccionada",
+        "noCareerSelectedDescription": "Selecciona una carrera para comenzar a planificar tu ruta profesional",
+        "selectCareer": "Seleccionar Carrera",
+        "noProgress": "Sin Progreso de Carrera",
+        "noProgressDescription": "Comienza a rastrear tu viaje profesional explorando diferentes caminos y estableciendo objetivos",
+        "exploreCareers": "Explorar Carreras",
+        "currentPosition": "Posición Actual",
+        "progress": "Progreso",
+        "nextStep": "Siguiente Paso",
+        "nextStepDescription": "Tu próximo objetivo profesional"
+      },
+      "bookmarks": {
+        "noBookmarks": "Sin marcadores",
+        "noBookmarksDescription": "Marca las carreras que te interesen para verlas aquí",
+        "exploreCareers": "Explorar Carreras"
+      },
+      "assessments": {
+        "noAssessments": "Sin evaluaciones",
+        "noAssessmentsDescription": "Toma una evaluación de habilidades para obtener recomendaciones personalizadas",
+        "takeAssessment": "Tomar Evaluación"
+      }
     }
   },
   "common": {

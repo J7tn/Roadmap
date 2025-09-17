@@ -1,7 +1,7 @@
 import { NotificationService, Notification, NotificationPreferences } from './notificationService';
 import { bookmarkService, BookmarkedCareer } from './bookmarkService';
 import { careerPathProgressService, CareerPathProgress } from './careerPathProgressService';
-import { supabaseCareerService } from './supabaseCareerService';
+import supabaseCareerService from './supabaseCareerService';
 import { ICareerNode, IndustryCategory } from '@/types/career';
 import { supabase } from '@/lib/supabase';
 

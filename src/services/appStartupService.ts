@@ -1,6 +1,6 @@
 import { dataVersioningService } from './dataVersioningService';
 import { supabaseTrendingService } from './supabaseTrendingService';
-import { supabaseCareerService } from './supabaseCareerService';
+import supabaseCareerService from './supabaseCareerService';
 import { personalizedNotificationService } from './personalizedNotificationService';
 
 class AppStartupService {
@@ -60,7 +60,8 @@ class AppStartupService {
     if (dataStatus.careers.needsUpdate) {
       console.log('🔄 Career data needs update, attempting fetch...');
       try {
-        await supabaseCareerService.getAllCareers();
+        const careerService = supabaseCareerService.getInstance();
+        await careerService.getAllCareerPaths();
         console.log('✅ Career data update completed');
       } catch (error) {
         console.warn('⚠️ Career data update failed:', error);
@@ -111,7 +112,7 @@ class AppStartupService {
     try {
       await Promise.all([
         supabaseTrendingService.getAllTrendingData(),
-        supabaseCareerService.getAllCareers()
+        supabaseCareerService.getInstance().getAllCareerPaths()
       ]);
       console.log('✅ Force refresh completed');
     } catch (error) {

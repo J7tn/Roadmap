@@ -171,6 +171,38 @@
       "noNotifications": "Нет уведомлений",
       "personalizedForYou": "Персонализировано для вас:",
       "noNotificationsDescription": "Мы уведомим вас, когда появятся обновления, релевантные для ваших карьерных интересов."
+    },
+    "careerPaths": {
+      "title": "Мои Карьерные Пути",
+      "back": "Назад",
+      "searchPlaceholder": "Поиск ваших путей...",
+      "tabs": {
+        "myCareer": "Моя Карьера",
+        "bookmarks": "Закладки",
+        "assessments": "Оценки"
+      },
+      "myCareer": {
+        "noCareerSelected": "Карьера не выбрана",
+        "noCareerSelectedDescription": "Выберите карьеру, чтобы начать планировать свой профессиональный путь",
+        "selectCareer": "Выбрать Карьеру",
+        "noProgress": "Нет Прогресса Карьеры",
+        "noProgressDescription": "Начните отслеживать свой профессиональный путь, исследуя различные направления и ставя цели",
+        "exploreCareers": "Исследовать Карьеры",
+        "currentPosition": "Текущая Позиция",
+        "progress": "Прогресс",
+        "nextStep": "Следующий Шаг",
+        "nextStepDescription": "Ваша следующая профессиональная цель"
+      },
+      "bookmarks": {
+        "noBookmarks": "Нет закладок",
+        "noBookmarksDescription": "Отметьте карьеры, которые вас интересуют, чтобы видеть их здесь",
+        "exploreCareers": "Исследовать Карьеры"
+      },
+      "assessments": {
+        "noAssessments": "Нет оценок",
+        "noAssessmentsDescription": "Пройдите оценку навыков, чтобы получить персонализированные рекомендации",
+        "takeAssessment": "Пройти Оценку"
+      }
     }
   },
   "common": {

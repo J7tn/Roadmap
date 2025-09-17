@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { supabaseTrendingService, TrendingData } from '@/services/supabaseTrendingService';
 import { careerService } from '@/services/careerService';
 import DataStatusIndicator from './DataStatusIndicator';
+import LoadingStateService from '@/services/loadingStateService';
 
 const RealTimeJobFeed: React.FC = React.memo(() => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
   const [translatedSkills, setTranslatedSkills] = useState<Map<string, string>>(new Map());
   const [translatedIndustries, setTranslatedIndustries] = useState<Map<string, string>>(new Map());
   const [translatedRoles, setTranslatedRoles] = useState<Map<string, { title: string; description: string }>>(new Map());
+  const loadingStateService = LoadingStateService.getInstance();
   
   // Function to translate skills, industries, and roles
   const translateSkillsAndIndustries = async (data: TrendingData) => {
@@ -89,6 +91,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
     const loadTrendingData = async () => {
       try {
         setLoading(true);
+        loadingStateService.setLoading('trendingData', true);
         
         // Use local trending data service (monthly updates only)
         const data = await supabaseTrendingService.getAllTrendingData();
@@ -108,6 +111,7 @@ const RealTimeJobFeed: React.FC = React.memo(() => {
         });
       } finally {
         setLoading(false);
+        loadingStateService.setLoading('trendingData', false);
       }
     };
 

@@ -4,7 +4,7 @@
  */
 
 import { careerService } from '@/services/careerService';
-import { supabaseCareerService } from '@/services/supabaseCareerService';
+import supabaseCareerService from '@/services/supabaseCareerService';
 import { supabaseTrendingService } from '@/services/supabaseTrendingService';
 import { bookmarkService } from '@/services/bookmarkService';
 import { NotificationService } from '@/services/notificationService';

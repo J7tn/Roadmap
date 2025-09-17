@@ -56,12 +56,15 @@ import RealTimeJobFeed from "./RealTimeJobFeed";
 import ErrorBoundary from "./ErrorBoundary";
 import { NotificationService, Notification } from "@/services/notificationService";
 import PersonalizedNotificationCenter from "@/components/PersonalizedNotificationCenter";
+import LoadingStateService from "@/services/loadingStateService";
 import BottomNavigation from "@/components/BottomNavigation";
 
 const HomePage = React.memo(() => {
   // Temporarily simplified for debugging
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [isAnyComponentLoading, setIsAnyComponentLoading] = useState(true);
   const notificationService = NotificationService.getInstance();
+  const loadingStateService = LoadingStateService.getInstance();
   const navigate = useNavigate();
   const { isDarkMode } = useTheme();
   const { t } = useTranslation();
@@ -73,50 +76,70 @@ const HomePage = React.memo(() => {
     total
   } = useIndustryBrowser();
 
+  // Update loading state for career data
+  useEffect(() => {
+    loadingStateService.setLoading('careerData', loading);
+  }, [loading]);
+
+  // Subscribe to overall loading state changes
+  useEffect(() => {
+    const unsubscribe = loadingStateService.subscribe((isLoading) => {
+      setIsAnyComponentLoading(isLoading);
+    });
+
+    return unsubscribe;
+  }, []);
+
   // Debug logging
   useEffect(() => {
     console.log('Home component - careerData:', careerData);
     console.log('Home component - loading:', loading);
     console.log('Home component - error:', error);
-  }, [careerData, loading, error]);
+    console.log('Home component - isAnyComponentLoading:', isAnyComponentLoading);
+  }, [careerData, loading, error, isAnyComponentLoading]);
 
-  // Hide splash screen only after data loads
+  // Hide splash screen only after ALL components load
   useEffect(() => {
     const hideSplashWhenReady = async () => {
-      // Wait for career data to load (trending data will load independently)
-      if (!loading && (careerData || error)) {
-        console.log('Career data loaded, hiding splash screen');
+      // Wait for ALL components to finish loading
+      if (!isAnyComponentLoading && (careerData || error)) {
+        console.log('🎉 All components loaded, hiding splash screen');
         // Add a small delay to ensure smooth transition
         setTimeout(async () => {
           try {
-            // await SplashScreen.hide();
+            // Import and use the splash screen service
+            const { splashScreenService } = await import('../main');
+            await splashScreenService.hide();
+            
             // Show app content after splash screen is hidden
             const appContent = document.getElementById('app-content');
             if (appContent) {
               appContent.classList.add('loaded');
             }
           } catch (err) {
-            console.warn('Failed to hide splash screen:', err);
+            console.warn('⚠️ Failed to hide splash screen:', err);
             // Show app content even if splash screen hide fails
             const appContent = document.getElementById('app-content');
             if (appContent) {
               appContent.classList.add('loaded');
             }
           }
-        }, 500);
+        }, 500); // Increased delay for smoother transition
       }
     };
 
     hideSplashWhenReady();
-  }, [loading, careerData, error]);
+  }, [isAnyComponentLoading, careerData, error]);
 
 
 
 
   useEffect(() => {
     const loadNotifications = () => {
+      loadingStateService.setLoading('notifications', true);
       const notifs = notificationService.getNotifications();
       setNotifications(notifs);
+      loadingStateService.setLoading('notifications', false);
     };
 
     loadNotifications();

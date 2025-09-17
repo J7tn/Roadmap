@@ -1,5 +1,5 @@
 import { TrendingData } from './supabaseTrendingService';
-import { SupabaseCareerData } from './supabaseCareerService';
+// import { SupabaseCareerData } from './supabaseCareerService'; // Removed - not needed
 
 export interface DataVersion {
   id: string;
@@ -14,7 +14,7 @@ export interface DataVersion {
 
 export interface CachedData {
   trendingData?: TrendingData;
-  careerData?: SupabaseCareerData[];
+  careerData?: any[]; // Using any[] for career data for now
   lastFetched: string;
   version: string;
 }
@@ -90,11 +90,11 @@ class DataVersioningService {
   /**
    * Cache data with version information
    */
-  cacheData(type: 'trending' | 'careers', data: TrendingData | SupabaseCareerData[]): void {
+  cacheData(type: 'trending' | 'careers', data: TrendingData | any[]): void {
     try {
       const cachedData: CachedData = {
         trendingData: type === 'trending' ? data as TrendingData : undefined,
-        careerData: type === 'careers' ? data as SupabaseCareerData[] : undefined,
+        careerData: type === 'careers' ? data as any[] : undefined,
         lastFetched: new Date().toISOString(),
         version: this.generateVersion()
       };

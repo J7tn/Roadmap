@@ -171,6 +171,38 @@
       "noNotifications": "لا توجد إشعارات",
       "personalizedForYou": "مخصص لك:",
       "noNotificationsDescription": "سنخطرك عند وجود تحديثات ذات صلة باهتماماتك المهنية."
+    },
+    "careerPaths": {
+      "title": "مساراتي المهنية",
+      "back": "رجوع",
+      "searchPlaceholder": "البحث في مساراتك...",
+      "tabs": {
+        "myCareer": "مهنتي",
+        "bookmarks": "الإشارات المرجعية",
+        "assessments": "التقييمات"
+      },
+      "myCareer": {
+        "noCareerSelected": "لم يتم اختيار مهنة",
+        "noCareerSelectedDescription": "اختر مهنة لبدء التخطيط لمسارك المهني",
+        "selectCareer": "اختيار مهنة",
+        "noProgress": "لا يوجد تقدم مهني",
+        "noProgressDescription": "ابدأ في تتبع رحلتك المهنية من خلال استكشاف مسارات مختلفة ووضع الأهداف",
+        "exploreCareers": "استكشاف المهن",
+        "currentPosition": "المنصب الحالي",
+        "progress": "التقدم",
+        "nextStep": "الخطوة التالية",
+        "nextStepDescription": "هدفك المهني التالي"
+      },
+      "bookmarks": {
+        "noBookmarks": "لا توجد إشارات مرجعية",
+        "noBookmarksDescription": "ضع إشارة على المهن التي تهمك لرؤيتها هنا",
+        "exploreCareers": "استكشاف المهن"
+      },
+      "assessments": {
+        "noAssessments": "لا توجد تقييمات",
+        "noAssessmentsDescription": "قم بإجراء تقييم المهارات للحصول على توصيات مخصصة",
+        "takeAssessment": "إجراء التقييم"
+      }
     }
   },
   "common": {
