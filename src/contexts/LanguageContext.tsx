@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { setCareerLanguage } from '@/services/careerService';
+import { setCareerTrendLanguage } from '@/services/careerTrendService';
 import dynamicI18n from '@/lib/dynamicI18n';
 import { translationService } from '@/services/translationService';
 
@@ -67,6 +68,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         
         // Set career data language
         setCareerLanguage(initialLanguage);
+        setCareerTrendLanguage(initialLanguage);
         
         // Save the detected/set language
         localStorage.setItem('app-language', initialLanguage);
@@ -77,6 +79,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         // Fallback to English
         setCurrentLanguage('en');
         setCareerLanguage('en');
+        setCareerTrendLanguage('en');
       } finally {
         setIsLoading(false);
       }
@@ -98,6 +101,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       
       // Update career data language
       setCareerLanguage(language);
+      setCareerTrendLanguage(language);
       
       // Update document direction for RTL languages
       const isRTL = rtlLanguages.includes(language);

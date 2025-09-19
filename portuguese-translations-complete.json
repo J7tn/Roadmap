@@ -46,7 +46,7 @@
     },
     "roadmap": {
       "title": "Roteiro de Carreira",
-      "target": "Objetivo",
+      "target": "Alvo",
       "nextStep": "Próximo Passo",
       "subtitle": "Planeje sua jornada profissional",
       "setCareer": "Definir Carreira",
@@ -66,10 +66,15 @@
       "skillBasedTransitions": "Transições Baseadas em Habilidades",
       "startYourCareerRoadmap": "Iniciar seu Roteiro de Carreira",
       "yourCareerTransitionOptions": "Suas Opções de Transição de Carreira",
-      "yourRoadmapProgress": "Seu Progresso da Rota",
+      "yourRoadmapProgress": "Seu Progresso do Roteiro",
       "active": "Ativo",
-      "set": "Definir",
-      "targetSet": "Meta Definida"
+      "set": "Definido",
+      "targetSet": "Alvo Definido",
+      "notSet": "Não Definido",
+      "nextCareerGoal": "Próximo Objetivo de Carreira",
+      "selectNextCareerGoal": "Selecione seu próximo objetivo de carreira",
+      "targetCareer": "Carreira Alvo",
+      "setLongTermTarget": "Defina seu objetivo de carreira de longo prazo"
     },
     "settings": {
       "dark": "Escuro",
@@ -507,6 +512,7 @@
       "communication": "Habilidades de Comunicação",
       "business": "Habilidades Empresariais",
       "languages": "Idiomas"
-    }
+    },
+    "assessmentComplete": "Avaliação concluída!"
   }
 }

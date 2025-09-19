@@ -436,6 +436,24 @@ class CareerService {
     }
   }
 
+  // Get career nodes by specific industry (lazy loading)
+  public async getCareerNodesByIndustry(industry: string): Promise<ICareerNode[]> {
+    try {
+      // Use Supabase service to get careers for specific industry
+      return await this.supabaseCareerService.getCareerNodesByIndustry(industry);
+    } catch (error) {
+      console.error(`Error getting career nodes for industry ${industry}:`, error);
+      // Fallback to getting all nodes and filtering
+      try {
+        const allNodes = await this.getAllCareerNodesArray();
+        return allNodes.filter(node => node.industry === industry);
+      } catch (fallbackError) {
+        console.error('Error in fallback for industry-specific careers:', fallbackError);
+        return [];
+      }
+    }
+  }
+
   // Set language for translations
   public setLanguage(language: string): void {
     this.translationService.setLanguage(language);
@@ -510,6 +528,8 @@ export const getCareerRecommendations = (userSkills: string[], userInterests: st
 export const getCareerNode = (nodeId: string) => careerService.getCareerNode(nodeId);
 export const getAllCareerPaths = () => careerService.getAllCareerPaths();
 export const getAllCareerNodes = () => careerService.getAllCareerNodes();
+export const getAllCareerNodesArray = () => careerService.getAllCareerNodesArray();
+export const getCareerNodesByIndustry = (industry: string) => careerService.getCareerNodesByIndustry(industry);
 export const setCareerLanguage = (language: string) => careerService.setLanguage(language);
 export const clearCareerCache = () => careerService.clearCache();
 export const getCareerCacheStats = () => careerService.getCacheStats();

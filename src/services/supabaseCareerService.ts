@@ -2,19 +2,19 @@ import { supabase } from '@/lib/supabase';
 import { ICareerNode, ICareerPath, CareerLevel } from '@/types/career';
 
 export interface SupabaseCareerNode {
-  id: string;
+  career_node_id: string; // Changed from id to career_node_id
   career_path_id: string;
   level: string;
-  salary_range: string;
-  time_to_achieve: string;
-  requirements: any;
+  salary_range?: string; // Made optional since it might not be in the view
+  time_to_achieve?: string; // Made optional since it might not be in the view
+  requirements?: any; // Made optional since it might not be in the view
   language_code: string;
   title: string;
   description: string;
   skills: string[];
   certifications: string[];
   job_titles: string[];
-  path_name: string;
+  career_path_name?: string; // Changed from path_name to career_path_name
   category: string;
   industry: string;
 }
@@ -56,24 +56,101 @@ class SupabaseCareerService {
    */
   public async getAllCareerNodes(): Promise<ICareerNode[]> {
     try {
+      // First, get all unique industries
+      const { data: industries, error: industryError } = await supabase
+        .from('career_nodes_with_translations')
+        .select('industry')
+        .eq('language_code', this.currentLanguage)
+        .not('industry', 'is', null);
+
+      if (industryError) {
+        console.error('Error fetching industries:', industryError);
+        return [];
+      }
+
+      const uniqueIndustries = [...new Set(industries?.map(i => i.industry) || [])];
+      console.log('Available industries:', uniqueIndustries.join(','));
+
+      // Get a sample from each industry to ensure diversity
+      const allCareers: any[] = [];
+      for (const industry of uniqueIndustries) {
+        const { data: industryCareers, error: industryError } = await supabase
+          .from('career_nodes_with_translations')
+          .select('*')
+          .eq('language_code', this.currentLanguage)
+          .eq('industry', industry)
+          .order('career_node_id')
+          .limit(20); // Get up to 20 careers per industry
+
+        if (industryError) {
+          console.error(`Error fetching careers for industry ${industry}:`, JSON.stringify(industryError, null, 2));
+        } else if (industryCareers && industryCareers.length > 0) {
+          console.log(`Loaded ${industryCareers.length} careers for industry: ${industry}`);
+          allCareers.push(...industryCareers);
+        } else {
+          console.log(`No careers found for industry: ${industry}`);
+        }
+      }
+
+      console.log(`Loaded ${allCareers.length} careers from ${uniqueIndustries.length} industries`);
+      return this.convertToCareerNodes(allCareers);
+    } catch (error) {
+      console.error('Error in getAllCareerNodes:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Get career nodes by specific industry
+   */
+  public async getCareerNodesByIndustry(industry: string): Promise<ICareerNode[]> {
+    try {
+      console.log(`Loading careers for industry: ${industry}`);
+      
       const { data, error } = await supabase
         .from('career_nodes_with_translations')
         .select('*')
         .eq('language_code', this.currentLanguage)
-        .order('career_path_id, level');
+        .eq('industry', industry)
+        .order('career_node_id');
 
       if (error) {
-        console.error('Error fetching career nodes:', error);
+        console.error(`Error fetching careers for industry ${industry}:`, error);
         // Fallback to English if current language fails
         if (this.currentLanguage !== 'en') {
-          return this.getAllCareerNodesWithFallback();
+          return this.getCareerNodesByIndustryWithFallback(industry);
         }
+        return [];
+      }
+
+      console.log(`Loaded ${data?.length || 0} careers for industry: ${industry}`);
+      return this.convertToCareerNodes(data || []);
+    } catch (error) {
+      console.error(`Error in getCareerNodesByIndustry for ${industry}:`, error);
+      return [];
+    }
+  }
+
+  /**
+   * Get career nodes by specific industry with English fallback
+   */
+  private async getCareerNodesByIndustryWithFallback(industry: string): Promise<ICareerNode[]> {
+    try {
+      const { data, error } = await supabase
+        .from('career_nodes_with_translations')
+        .select('*')
+        .eq('language_code', 'en')
+        .eq('industry', industry)
+        .order('career_node_id');
+
+      if (error) {
+        console.error(`Error fetching English fallback careers for industry ${industry}:`, error);
         return [];
       }
 
       return this.convertToCareerNodes(data || []);
     } catch (error) {
-      console.error('Error in getAllCareerNodes:', error);
+      console.error(`Error in getCareerNodesByIndustryWithFallback for ${industry}:`, error);
       return [];
     }
   }
@@ -396,7 +473,7 @@ class SupabaseCareerService {
    */
   private convertToCareerNode(data: SupabaseCareerNode): ICareerNode {
     return {
-      id: data.id,
+      id: data.career_node_id, // Use career_node_id instead of id
       t: data.title,
       l: data.level as CareerLevel,
       s: data.skills || [],
@@ -405,7 +482,8 @@ class SupabaseCareerService {
       te: data.time_to_achieve || '',
       d: data.description || '',
       jt: data.job_titles || [],
-      r: data.requirements || {}
+      industry: data.industry,
+      r: data.requirements || { e: [], exp: '', sk: [] } // Provide default structure
     };
   }
 

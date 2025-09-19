@@ -66,10 +66,15 @@
       "skillBasedTransitions": "Переходы на Основе Навыков",
       "startYourCareerRoadmap": "Начните Свою Карьерную Дорожную Карту",
       "yourCareerTransitionOptions": "Ваши Варианты Карьерного Перехода",
-      "yourRoadmapProgress": "Ваш Прогресс Дорожной Карты",
-      "active": "Активный",
-      "set": "Установить",
-      "targetSet": "Цель Установлена"
+      "yourRoadmapProgress": "Ваш Прогресс Плана",
+      "active": "Активен",
+      "set": "Установлено",
+      "targetSet": "Цель Установлена",
+      "notSet": "Не Установлено",
+      "nextCareerGoal": "Следующая Цель Карьеры",
+      "selectNextCareerGoal": "Выберите следующую цель карьеры",
+      "targetCareer": "Целевая Карьера",
+      "setLongTermTarget": "Установите долгосрочную цель карьеры"
     },
     "settings": {
       "dark": "Темная",
@@ -507,6 +512,7 @@
       "communication": "Навыки Общения",
       "business": "Бизнес-Навыки",
       "languages": "Языки"
-    }
+    },
+    "assessmentComplete": "Оценка завершена!"
   }
 }

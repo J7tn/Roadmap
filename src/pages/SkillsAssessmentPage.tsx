@@ -244,7 +244,7 @@ const SkillsAssessmentPage = () => {
             <motion.div initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}>
-              <h3 className="text-lg md:text-xl font-semibold mb-4">What skills do you currently have?</h3>
+              <h3 className="text-lg md:text-xl font-semibold mb-4">{t('assessment.whatSkillsDoYouHave')}</h3>
               <p className="text-sm md:text-base text-muted-foreground mb-6">
                 {t('assessment.selectSkills')}
               </p>
@@ -315,11 +315,11 @@ const SkillsAssessmentPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}>
                <Label htmlFor="custom-skills" className="text-sm md:text-base font-medium">
-                 Add Custom Skills
+                 {t('assessment.addCustomSkills')}
                </Label>
                <Textarea
                  id="custom-skills"
-                 placeholder="Enter any additional skills you have (comma-separated)"
+                 placeholder={t('assessment.enterAdditionalSkills')}
                  className="min-h-[80px] md:min-h-[100px]"
                  value={assessmentData.interests.join(", ")}
                  onChange={(e) => {
@@ -333,7 +333,7 @@ const SkillsAssessmentPage = () => {
              {currentStep === 1 && assessmentData.skills.length === 0 && (
                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
                  <p className="text-sm text-amber-700">
-                   ⚠️ Please select at least one skill to continue
+                   ⚠️ {t('assessment.selectAtLeastOneSkill')}
                  </p>
                </div>
              )}
@@ -411,7 +411,7 @@ const SkillsAssessmentPage = () => {
                  </Label>
                  <Textarea
                    id="experience-details"
-                   placeholder="Describe your work experience, projects, achievements, or any relevant background..."
+                   placeholder={t('assessment.describeExperience')}
                    className="mt-2 min-h-[100px] md:min-h-[120px]"
                    value={assessmentData.experienceDetails}
                    onChange={(e) => updateField("experienceDetails", e.target.value)}
@@ -479,7 +479,7 @@ const SkillsAssessmentPage = () => {
                  </Label>
                  <Textarea
                    id="goals-details"
-                   placeholder="Tell us more about your specific career goals, interests, or what you're looking for..."
+                   placeholder={t('assessment.describeGoals')}
                    className="mt-2 min-h-[100px] md:min-h-[120px]"
                    value={assessmentData.goalsDetails}
                    onChange={(e) => updateField("goalsDetails", e.target.value)}
@@ -740,7 +740,7 @@ const SkillsAssessmentPage = () => {
         <div className="container mx-auto px-4 py-3 flex items-center justify-center">
           <div className="flex items-center space-x-2">
             <BookOpen className="h-5 w-5 text-primary" />
-            <h1 className="text-lg md:text-xl font-bold">Skills Assessment</h1>
+            <h1 className="text-lg md:text-xl font-bold">{t('assessment.title')}</h1>
           </div>
         </div>
       </motion.header>
@@ -754,9 +754,9 @@ const SkillsAssessmentPage = () => {
        >
          <div className="container mx-auto px-4 py-3">
            <div className="flex items-center justify-between mb-2">
-             <span className="text-sm font-medium">Step {currentStep} of 4</span>
+             <span className="text-sm font-medium">{t('assessment.step')} {currentStep} of 4</span>
              <span className="text-sm text-muted-foreground">
-               {Math.round((currentStep / 4) * 100)}% Complete
+               {Math.round((currentStep / 4) * 100)}% {t('assessment.complete')}
              </span>
            </div>
            <Progress value={(currentStep / 4) * 100} className="h-2" />
@@ -764,7 +764,7 @@ const SkillsAssessmentPage = () => {
            {/* Step completion indicator */}
            <div className="mt-2 text-xs text-muted-foreground">
              {currentStep === 1 && (
-               <span>Skills selected: {assessmentData.skills.length}</span>
+               <span>{t('assessment.skillsSelected')} {assessmentData.skills.length}</span>
              )}
              {currentStep === 2 && (
                <span>{t('assessment.stepProgress.experienceLevel')} {assessmentData.experienceLevel ? t('assessment.stepProgress.selected') : t('assessment.stepProgress.notSelected')}</span>
@@ -773,7 +773,7 @@ const SkillsAssessmentPage = () => {
                <span>{t('assessment.stepProgress.careerGoal')} {assessmentData.selectedCareerGoal ? t('assessment.stepProgress.selected') : t('assessment.stepProgress.notSelected')}</span>
              )}
              {currentStep === 4 && (
-               <span>Assessment complete!</span>
+               <span>{t('assessment.assessmentComplete')}</span>
              )}
            </div>
          </div>
@@ -801,7 +801,7 @@ const SkillsAssessmentPage = () => {
                 disabled={currentStep === 1}
                 className="h-11"
               >
-                Previous
+                {t('assessment.previous')}
               </Button>
                              <Button 
                  onClick={handleNextStep}

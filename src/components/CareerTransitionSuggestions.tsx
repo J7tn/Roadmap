@@ -652,7 +652,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
                 <h4 className="font-medium">{suggestion.title}</h4>
               </div>
               <Badge variant="outline" className="text-xs">
-                {suggestion.careers.length} options
+                {suggestion.careers.length} {t('pages.roadmap.options')}
               </Badge>
             </div>
             
@@ -704,7 +704,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
                           className={`justify-between ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}`}
                           disabled={isLocked}
                         >
-                          {isLocked ? 'Locked' : 'Set Career'}
+                          {isLocked ? t('pages.roadmap.locked') : t('pages.roadmap.setCareer')}
                           <ChevronDown className="h-3 w-3 ml-1" />
                         </Button>
                       </DropdownMenuTrigger>

@@ -66,10 +66,15 @@
       "skillBasedTransitions": "Transiciones Basadas en Habilidades",
       "startYourCareerRoadmap": "Comienza tu Hoja de Ruta de Carrera",
       "yourCareerTransitionOptions": "Tus Opciones de Transición de Carrera",
-      "yourRoadmapProgress": "Tu Progreso de Hoja de Ruta",
+      "yourRoadmapProgress": "Tu Progreso de Ruta",
       "active": "Activo",
-      "set": "Establecer",
-      "targetSet": "Objetivo Establecido"
+      "set": "Establecido",
+      "targetSet": "Objetivo Establecido",
+      "notSet": "No Establecido",
+      "nextCareerGoal": "Próximo Objetivo de Carrera",
+      "selectNextCareerGoal": "Selecciona tu próximo objetivo de carrera",
+      "targetCareer": "Carrera Objetivo",
+      "setLongTermTarget": "Establece tu objetivo de carrera a largo plazo"
     },
     "settings": {
       "dark": "Oscuro",
@@ -507,6 +512,7 @@
       "communication": "Habilidades de Comunicación",
       "business": "Habilidades Empresariales",
       "languages": "Idiomas"
-    }
+    },
+    "assessmentComplete": "¡Evaluación completada!"
   }
 }

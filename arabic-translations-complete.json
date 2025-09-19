@@ -66,10 +66,15 @@
       "skillBasedTransitions": "الانتقالات القائمة على المهارات",
       "startYourCareerRoadmap": "ابدأ خريطة مسارك الوظيفي",
       "yourCareerTransitionOptions": "خيارات الانتقال الوظيفي الخاصة بك",
-      "yourRoadmapProgress": "تقدم خريطتك",
+      "yourRoadmapProgress": "تقدم خريطتك المهنية",
       "active": "نشط",
-      "set": "تعيين",
-      "targetSet": "تم تعيين الهدف"
+      "set": "محدد",
+      "targetSet": "تم تحديد الهدف",
+      "notSet": "غير محدد",
+      "nextCareerGoal": "الهدف المهني التالي",
+      "selectNextCareerGoal": "اختر هدفك المهني التالي",
+      "targetCareer": "المهنة المستهدفة",
+      "setLongTermTarget": "حدد هدفك المهني طويل المدى"
     },
     "settings": {
       "dark": "داكن",
@@ -507,6 +512,7 @@
       "communication": "مهارات التواصل",
       "business": "المهارات التجارية",
       "languages": "اللغات"
-    }
+    },
+    "assessmentComplete": "اكتمل التقييم!"
   }
 }

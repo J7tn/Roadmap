@@ -39,6 +39,7 @@ export interface ICareerNode {
   te: string;          // time estimate
   d: string;           // description
   jt: string[];        // job titles
+  industry?: string;   // industry category
   r: {                 // requirements
     e: string[];       // education
     exp: string;       // experience

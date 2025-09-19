@@ -200,7 +200,7 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
                   <div className="text-center py-8">
                     <p className="text-destructive">Failed to search careers</p>
                     <Button variant="outline" size="sm" className="mt-2">
-                      Try Again
+                      {t('buttons.tryAgain')}
                     </Button>
                   </div>
                 )}

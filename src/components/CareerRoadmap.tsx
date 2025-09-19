@@ -1,5 +1,6 @@
 import React, { useState, memo, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +32,7 @@ const CareerRoadmap: React.FC<CareerRoadmapProps> = memo(({
   onNodeClick = () => {},
   pathId = "software-development",
 }) => {
+  const { t } = useTranslation();
   const { useCareerPath } = useCareerData();
   const { data: careerPath, loading, error, refetch } = useCareerPath(pathId);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
@@ -89,7 +91,7 @@ const CareerRoadmap: React.FC<CareerRoadmapProps> = memo(({
         <div className="flex flex-col items-center space-y-4 text-center">
           <p className="text-destructive">Failed to load career path</p>
           <Button onClick={refetch} variant="outline" size="sm">
-            Try Again
+            {t('buttons.tryAgain')}
           </Button>
         </div>
       </div>

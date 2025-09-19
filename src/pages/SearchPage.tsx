@@ -15,8 +15,9 @@ import { ICareerNode } from "@/types/career";
 // Extended career node with category for search page
 interface ICareerNodeWithCategory extends ICareerNode {
   cat?: string;
+  industry?: string;
 }
-import { getAllCareerNodes } from "@/services/careerService";
+import { getAllCareerNodesArray, getCareerNodesByIndustry } from "@/services/careerService";
 import { INDUSTRY_CATEGORIES } from "@/data/industries";
 import CareerBlock from "@/components/CareerBlock";
 import BottomNavigation from "@/components/BottomNavigation";
@@ -42,20 +43,37 @@ const SearchPage: React.FC = React.memo(() => {
   const urlSearchQuery = searchParams.get('search') || "";
   const urlIndustry = searchParams.get('industry') || "";
 
-  // Load all career data
+  // Load career data based on industry selection (lazy loading)
   useEffect(() => {
     const loadCareers = async () => {
       try {
         setError(null);
         setLoading(true);
         
-        const careerData = await getAllCareerNodes();
+        console.log('SearchPage: Loading careers for industry:', selectedIndustry);
         
-        // Extract career nodes and add category from path
+        let careerData: ICareerNode[] = [];
+        
+        if (selectedIndustry === "all") {
+          // Don't load all careers at once - show empty state with message
+          console.log('SearchPage: No industry selected, showing empty state');
+          careerData = [];
+        } else {
+          // Load careers for specific industry
+          careerData = await getCareerNodesByIndustry(selectedIndustry);
+          console.log(`SearchPage: Loaded ${careerData.length} careers for industry: ${selectedIndustry}`);
+        }
+        
+        // Map career nodes (career nodes from Supabase already have translations and industry info)
         const careers: ICareerNodeWithCategory[] = careerData.map(item => ({
-          ...item.node,
-          cat: item.path.cat // Add category from path to node
+          ...item,
+          cat: item.industry || 'technology' // Use industry from database as category
         }));
+        
+        console.log('SearchPage: Sample careers:');
+        careers.slice(0, 5).forEach((c, index) => {
+          console.log(`  ${index + 1}. ${c.t} (Industry: ${c.industry})`);
+        });
         
         setAllCareers(careers);
         setLoading(false);
@@ -66,7 +84,7 @@ const SearchPage: React.FC = React.memo(() => {
       }
     };
     loadCareers();
-  }, []);
+  }, [selectedIndustry]);
 
   // Update local search query when URL changes
   useEffect(() => {
@@ -85,8 +103,16 @@ const SearchPage: React.FC = React.memo(() => {
 
   // Filter careers based on search query and filters
   const filteredCareers = useMemo(() => {
-    if (!searchQuery.trim() && selectedIndustry === "all" && selectedLevel === "all") {
-      return []; // Show no careers when no filters are applied
+    console.log('SearchPage: Filtering careers with:');
+    console.log('  - searchQuery:', `"${searchQuery}"`);
+    console.log('  - selectedIndustry:', `"${selectedIndustry}"`);
+    console.log('  - selectedLevel:', `"${selectedLevel}"`);
+    console.log('  - totalCareers:', allCareers.length);
+    
+    // When no industry is selected, show empty state
+    if (selectedIndustry === "all") {
+      console.log('SearchPage: No industry selected, showing empty state');
+      return [];
     }
 
     const query = searchQuery.toLowerCase();
@@ -104,19 +130,36 @@ const SearchPage: React.FC = React.memo(() => {
       
       // Apply industry filter
       const matchesIndustry = selectedIndustry === "all" || 
-        career.cat === selectedIndustry;
+        career.industry === selectedIndustry;
 
       // Apply level filter
       const matchesLevel = selectedLevel === "all" || 
         career.l === selectedLevel;
+      
+      // Debug level matching for first few careers
+      if (allCareers.indexOf(career) < 3) {
+        console.log(`SearchPage: Career ${career.t} - Level: ${career.l}, Selected: ${selectedLevel}, Matches: ${matchesLevel}`);
+      }
+
+      // Debug logging for first few careers and business careers
+      if (allCareers.indexOf(career) < 3 || career.industry === 'business') {
+        console.log(`SearchPage: Career ${career.t} - Industry: ${career.industry}, Selected: ${selectedIndustry}, Matches: ${matchesIndustry}`);
+        console.log(`SearchPage: Career level: ${career.l}, Selected level: ${selectedLevel}, Matches level: ${matchesLevel}`);
+      }
 
       // If filters don't match, return 0 score
       if (!matchesIndustry || !matchesLevel) {
+        if (allCareers.indexOf(career) < 3) {
+          console.log(`SearchPage: Career ${career.t} filtered out - Industry match: ${matchesIndustry}, Level match: ${matchesLevel}`);
+        }
         return { career, score: 0 };
       }
 
       // If no search query, return all items that match filters
       if (!searchQuery.trim()) {
+        if (allCareers.indexOf(career) < 3) {
+          console.log(`SearchPage: Career ${career.t} passed filters with score 1 (no search query)`);
+        }
         return { career, score: 1 };
       }
 
@@ -197,6 +240,8 @@ const SearchPage: React.FC = React.memo(() => {
       .map(({ career }) => career);
     
     console.log('SearchPage: Filtered results:', filtered.length);
+    console.log('SearchPage: Scored careers count:', scoredCareers.length);
+    console.log('SearchPage: Sample scored careers:', scoredCareers.slice(0, 3).map(({ career, score }) => `${career.t} (score: ${score})`));
     return filtered;
   }, [searchQuery, allCareers, selectedIndustry, selectedLevel]);
 
@@ -361,15 +406,23 @@ const SearchPage: React.FC = React.memo(() => {
         {/* Results */}
         <div className="mt-6">
           {filteredCareers.length === 0 ? (
-            <EmptyState
-              icon="search"
-              title={t('pages.search.noResults')}
-              description={t('pages.search.tryAdjustingSearch')}
-              action={{
-                label: t('pages.search.clearSearch'),
-                onClick: clearSearch
-              }}
-            />
+            selectedIndustry === "all" ? (
+              <EmptyState
+                icon="filter"
+                title={t('pages.search.selectIndustry')}
+                description={t('pages.search.selectIndustryDescription')}
+              />
+            ) : (
+              <EmptyState
+                icon="search"
+                title={t('pages.search.noResults')}
+                description={t('pages.search.tryAdjustingSearch')}
+                action={{
+                  label: t('pages.search.clearSearch'),
+                  onClick: clearSearch
+                }}
+              />
+            )
           ) : (
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">

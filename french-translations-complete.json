@@ -66,10 +66,15 @@
       "skillBasedTransitions": "Transitions Basées sur les Compétences",
       "startYourCareerRoadmap": "Commencez votre Feuille de Route de Carrière",
       "yourCareerTransitionOptions": "Vos Options de Transition de Carrière",
-      "yourRoadmapProgress": "Votre Progrès de Feuille de Route",
+      "yourRoadmapProgress": "Votre Progrès de Parcours",
       "active": "Actif",
-      "set": "Définir",
-      "targetSet": "Cible Définie"
+      "set": "Défini",
+      "targetSet": "Cible Définie",
+      "notSet": "Non Défini",
+      "nextCareerGoal": "Prochain Objectif de Carrière",
+      "selectNextCareerGoal": "Sélectionnez votre prochain objectif de carrière",
+      "targetCareer": "Carrière Cible",
+      "setLongTermTarget": "Définissez votre objectif de carrière à long terme"
     },
     "settings": {
       "dark": "Sombre",
@@ -507,6 +512,7 @@
       "communication": "Compétences de Communication",
       "business": "Compétences Commerciales",
       "languages": "Langues"
-    }
+    },
+    "assessmentComplete": "Évaluation terminée !"
   }
 }

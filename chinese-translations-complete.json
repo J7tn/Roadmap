@@ -53,7 +53,7 @@
       "careerDetails": "职业详情",
       "setAsNextGoal": "设为下一个目标",
       "loadingRoadmap": "正在加载您的职业路线图...",
-      "currentPosition": "当前职位",
+      "currentPosition": "当前位置",
       "planYourNextStep": "规划您的下一步",
       "lateralCareerMove": "横向职业转换",
       "levelUpYourCareer": "提升您的职业",
@@ -68,8 +68,13 @@
       "yourCareerTransitionOptions": "您的职业转换选项",
       "yourRoadmapProgress": "您的路线图进度",
       "active": "活跃",
-      "set": "设置",
-      "targetSet": "目标已设定"
+      "set": "已设置",
+      "targetSet": "目标已设置",
+      "notSet": "未设置",
+      "nextCareerGoal": "下一个职业目标",
+      "selectNextCareerGoal": "选择您的下一个职业目标",
+      "targetCareer": "目标职业",
+      "setLongTermTarget": "设置您的长期职业目标"
     },
     "settings": {
       "dark": "深色",
@@ -507,6 +512,7 @@
       "communication": "沟通技能",
       "business": "商业技能",
       "languages": "语言"
-    }
+    },
+    "assessmentComplete": "评估完成！"
   }
 }

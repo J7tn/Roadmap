@@ -155,7 +155,9 @@
       "advanced": "Advanced",
       "expert": "Expert",
       "careersFound": "careers found",
-      "careerFound": "career found"
+      "careerFound": "career found",
+      "selectIndustry": "Select an Industry",
+      "selectIndustryDescription": "Choose an industry from the filter above to explore available careers"
     },
     "careerPaths": {
       "title": "My Career Paths",
@@ -217,6 +219,8 @@
       "nextStep": "Next Step",
       "target": "Target",
       "setCareer": "Set Career",
+      "locked": "Locked",
+      "options": "options",
       "careerDetails": "Career Details",
       "setAsNextGoal": "Set as Next Goal",
       "setAsTargetCareer": "Set as Target Career",
@@ -267,6 +271,8 @@
     "selectAtLeastOneSkill": "Please select at least one skill to continue",
     "previous": "Previous",
     "next": "Next",
+    "describeExperience": "Describe your work experience, projects, achievements, or any relevant background...",
+    "describeGoals": "Tell us more about your specific career goals, interests, or what you're looking for...",
     "skillCategories": {
       "technical": "Technical Skills",
       "creative": "Creative Skills",
@@ -373,6 +379,11 @@
     "minutesAgo": "{{minutes}}m ago",
     "hoursAgo": "{{hours}}h ago",
     "daysAgo": "{{days}}d ago"
+  },
+  "buttons": {
+    "tryAgain": "Try Again",
+    "viewRoadmap": "View Roadmap",
+    "learningResources": "Learning Resources"
   },
   "common": {
     "loading": "Loading...",

@@ -68,8 +68,13 @@
       "yourCareerTransitionOptions": "あなたのキャリア移行オプション",
       "yourRoadmapProgress": "あなたのロードマップ進捗",
       "active": "アクティブ",
-      "set": "設定",
-      "targetSet": "目標設定済み"
+      "set": "設定済み",
+      "targetSet": "目標設定済み",
+      "notSet": "未設定",
+      "nextCareerGoal": "次のキャリア目標",
+      "selectNextCareerGoal": "次のキャリア目標を選択してください",
+      "targetCareer": "目標キャリア",
+      "setLongTermTarget": "長期的なキャリア目標を設定してください"
     },
     "settings": {
       "dark": "ダーク",
@@ -507,6 +512,7 @@
       "communication": "コミュニケーションスキル",
       "business": "ビジネススキル",
       "languages": "言語"
-    }
+    },
+    "assessmentComplete": "評価完了！"
   }
 }

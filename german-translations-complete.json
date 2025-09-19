@@ -68,8 +68,13 @@
       "yourCareerTransitionOptions": "Ihre Karriereübergangsmöglichkeiten",
       "yourRoadmapProgress": "Ihr Roadmap-Fortschritt",
       "active": "Aktiv",
-      "set": "Festlegen",
-      "targetSet": "Ziel Gesetzt"
+      "set": "Festgelegt",
+      "targetSet": "Ziel Festgelegt",
+      "notSet": "Nicht Festgelegt",
+      "nextCareerGoal": "Nächstes Karriereziel",
+      "selectNextCareerGoal": "Wählen Sie Ihr nächstes Karriereziel",
+      "targetCareer": "Zielkarriere",
+      "setLongTermTarget": "Setzen Sie Ihr langfristiges Karriereziel"
     },
     "settings": {
       "dark": "Dunkel",
@@ -507,6 +512,7 @@
       "communication": "Kommunikationsfähigkeiten",
       "business": "Geschäftsfähigkeiten",
       "languages": "Sprachen"
-    }
+    },
+    "assessmentComplete": "Bewertung abgeschlossen!"
   }
 }

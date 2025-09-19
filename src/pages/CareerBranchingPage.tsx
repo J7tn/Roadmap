@@ -355,11 +355,11 @@ const CareerBranchingPage = () => {
                         <div className="flex flex-col sm:flex-row gap-3">
                           <Button className="flex-1 h-10 text-sm">
                             <Target className="h-4 w-4 mr-2" />
-                            View Roadmap
+                            {t('buttons.viewRoadmap')}
                           </Button>
                           <Button variant="outline" className="flex-1 h-10 text-sm">
                             <BookOpen className="h-4 w-4 mr-2" />
-                            Learning Resources
+                            {t('buttons.learningResources')}
                           </Button>
                         </div>
                       </motion.div>

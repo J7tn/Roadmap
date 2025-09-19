@@ -47,6 +47,7 @@ class CareerTrendService {
   private cache = new Map<string, CareerTrendData>();
   private cacheExpiry = new Map<string, number>();
   private readonly CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+  private currentLanguage: string = 'en'; // Default language
 
   private constructor() {}
 
@@ -55,6 +56,64 @@ class CareerTrendService {
       CareerTrendService.instance = new CareerTrendService();
     }
     return CareerTrendService.instance;
+  }
+
+  /**
+   * Set the current language for trend data
+   */
+  public setLanguage(language: string): void {
+    this.currentLanguage = language;
+    console.log(`CareerTrendService language set to: ${this.currentLanguage}`);
+    // Clear cache when language changes to ensure fresh data
+    this.clearCache();
+  }
+
+  /**
+   * Get the current language
+   */
+  public getCurrentLanguage(): string {
+    return this.currentLanguage;
+  }
+
+  /**
+   * Format trend data from database record
+   */
+  private formatTrendData(trendRecord: any, originalCareerId: string): CareerTrendData {
+    return {
+      career_id: trendRecord.career_id,
+      trend_score: trendRecord.trend_score,
+      trend_direction: trendRecord.trend_direction,
+      demand_level: trendRecord.demand_level,
+      growth_rate: trendRecord.growth_rate,
+      market_insights: trendRecord.market_insights,
+      key_skills_trending: trendRecord.key_skills_trending || [],
+      salary_trend: trendRecord.salary_trend,
+      job_availability_score: trendRecord.job_availability_score,
+      top_locations: trendRecord.top_locations || [],
+      remote_work_trend: trendRecord.remote_work_trend,
+      industry_impact: trendRecord.industry_impact,
+      automation_risk: trendRecord.automation_risk,
+      future_outlook: trendRecord.future_outlook,
+      confidence_score: trendRecord.confidence_score,
+      last_updated: trendRecord.last_updated
+    };
+  }
+
+  /**
+   * Format industry trend data from database record
+   */
+  private formatIndustryTrendData(data: any): IndustryTrendData {
+    return {
+      industry: data.industry,
+      avg_trend_score: data.avg_trend_score,
+      total_careers: data.total_careers,
+      rising_careers: data.rising_careers,
+      stable_careers: data.stable_careers,
+      declining_careers: data.declining_careers,
+      top_trending_careers: data.top_trending_careers || [],
+      emerging_skills: data.emerging_skills || [],
+      last_updated: data.last_updated
+    };
   }
 
   /**
@@ -95,47 +154,68 @@ class CareerTrendService {
       const trendCareerId = this.getTrendCareerId(careerId);
       console.log('🔍 Mapping career ID:', careerId, '→', trendCareerId);
       
-      // Fetch from Supabase (monthly updates)
-      console.log('🔍 Querying career_trends table for career_id:', trendCareerId);
+      // Fetch from Supabase using multilingual view
+      console.log('🔍 Querying career_trends_with_translations view for career_id:', trendCareerId, 'language:', this.currentLanguage);
       const { data, error } = await supabase
-        .from('career_trends')
+        .from('career_trends_with_translations')
         .select('*')
         .eq('career_id', trendCareerId)
+        .eq('language_code', this.currentLanguage)
         .limit(1);
 
       console.log('📊 Supabase query result:', { data, error });
 
       if (error) {
-        console.warn(`No trend data found for career ${careerId}:`, error.message);
+        console.warn(`No trend data found for career ${careerId} in ${this.currentLanguage}:`, error.message);
+        // Try fallback to English if current language is not English
+        if (this.currentLanguage !== 'en') {
+          console.log('🔄 Falling back to English trend data...');
+          const { data: fallbackData, error: fallbackError } = await supabase
+            .from('career_trends_with_translations')
+            .select('*')
+            .eq('career_id', trendCareerId)
+            .eq('language_code', 'en')
+            .limit(1);
+          
+          if (fallbackError || !fallbackData || fallbackData.length === 0) {
+            console.warn(`No English fallback trend data found for career ${careerId}`);
+            return null;
+          }
+          
+          // Use fallback data
+          const fallbackRecord = Array.isArray(fallbackData) ? fallbackData[0] : fallbackData;
+          return this.formatTrendData(fallbackRecord, careerId);
+        }
         return null;
       }
 
       if (!data || data.length === 0) {
-        console.warn(`No trend data found for career ${careerId}: No records found`);
+        console.warn(`No trend data found for career ${careerId} in ${this.currentLanguage}: No records found`);
+        // Try fallback to English if current language is not English
+        if (this.currentLanguage !== 'en') {
+          console.log('🔄 Falling back to English trend data...');
+          const { data: fallbackData, error: fallbackError } = await supabase
+            .from('career_trends_with_translations')
+            .select('*')
+            .eq('career_id', trendCareerId)
+            .eq('language_code', 'en')
+            .limit(1);
+          
+          if (fallbackError || !fallbackData || fallbackData.length === 0) {
+            console.warn(`No English fallback trend data found for career ${careerId}`);
+            return null;
+          }
+          
+          // Use fallback data
+          const fallbackRecord = Array.isArray(fallbackData) ? fallbackData[0] : fallbackData;
+          return this.formatTrendData(fallbackRecord, careerId);
+        }
         return null;
       }
 
       // Get the first record if multiple exist
       const trendRecord = Array.isArray(data) ? data[0] : data;
-
-      const trendData: CareerTrendData = {
-        career_id: trendRecord.career_id,
-        trend_score: trendRecord.trend_score,
-        trend_direction: trendRecord.trend_direction,
-        demand_level: trendRecord.demand_level,
-        growth_rate: trendRecord.growth_rate,
-        market_insights: trendRecord.market_insights,
-        key_skills_trending: trendRecord.key_skills_trending || [],
-        salary_trend: trendRecord.salary_trend,
-        job_availability_score: trendRecord.job_availability_score,
-        top_locations: trendRecord.top_locations || [],
-        remote_work_trend: trendRecord.remote_work_trend,
-        industry_impact: trendRecord.industry_impact,
-        automation_risk: trendRecord.automation_risk,
-        future_outlook: trendRecord.future_outlook,
-        confidence_score: trendRecord.confidence_score,
-        last_updated: trendRecord.last_updated
-      };
+      const trendData = this.formatTrendData(trendRecord, careerId);
 
       // Cache the result using the original career ID
       this.cache.set(careerId, trendData);
@@ -177,30 +257,41 @@ class CareerTrendService {
    */
   async getIndustryTrend(industry: string): Promise<IndustryTrendData | null> {
     try {
+      // Try to get translated industry trend data first
       const { data, error } = await supabase
-        .from('industry_trends')
+        .from('industry_trends_with_translations')
         .select('*')
         .eq('industry', industry)
-        .order('updated_at', { ascending: false })
+        .eq('language_code', this.currentLanguage)
+        .order('last_updated', { ascending: false })
         .limit(1)
         .single();
 
       if (error) {
-        console.warn(`No industry trend data found for ${industry}:`, error.message);
+        console.warn(`No industry trend data found for ${industry} in ${this.currentLanguage}:`, error.message);
+        // Try fallback to English if current language is not English
+        if (this.currentLanguage !== 'en') {
+          console.log('🔄 Falling back to English industry trend data...');
+          const { data: fallbackData, error: fallbackError } = await supabase
+            .from('industry_trends_with_translations')
+            .select('*')
+            .eq('industry', industry)
+            .eq('language_code', 'en')
+            .order('last_updated', { ascending: false })
+            .limit(1)
+            .single();
+          
+          if (fallbackError) {
+            console.warn(`No English fallback industry trend data found for ${industry}:`, fallbackError.message);
+            return null;
+          }
+          
+          return this.formatIndustryTrendData(fallbackData);
+        }
         return null;
       }
 
-      return {
-        industry: data.industry,
-        avg_trend_score: data.avg_trend_score,
-        total_careers: data.total_careers,
-        rising_careers: data.rising_careers,
-        stable_careers: data.stable_careers,
-        declining_careers: data.declining_careers,
-        top_trending_careers: data.top_trending_careers || [],
-        emerging_skills: data.emerging_skills || [],
-        last_updated: data.updated_at
-      };
+      return this.formatIndustryTrendData(data);
     } catch (error) {
       console.error('Failed to get industry trend:', error);
       return null;
@@ -332,3 +423,8 @@ class CareerTrendService {
 }
 
 export const careerTrendService = CareerTrendService.getInstance();
+
+/**
+ * Set the language for career trend service
+ */
+export const setCareerTrendLanguage = (language: string) => careerTrendService.setLanguage(language);
