@@ -137,7 +137,17 @@
       "subtitle": "Find your perfect career match",
       "placeholder": "Search for careers...",
       "searchPlaceholder": "Search for careers...",
-      "filters": "Filters",
+      "filters": {
+        "title": "Filters",
+        "industry": "Industry",
+        "experience": "Experience Level",
+        "allIndustries": "All Industries",
+        "allLevels": "All Levels",
+        "entryLevel": "Entry Level",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced",
+        "expert": "Expert"
+      },
       "clearFilters": "Clear Filters",
       "results": "Results",
       "noResults": "No results found",
@@ -384,6 +394,12 @@
     "tryAgain": "Try Again",
     "viewRoadmap": "View Roadmap",
     "learningResources": "Learning Resources"
+  },
+  "errors": {
+    "errorLoadingCareers": "Error Loading Careers",
+    "errorLoadingData": "Error Loading Data",
+    "genericError": "Something went wrong",
+    "serverError": "There was a problem connecting to the server. Please try again."
   },
   "common": {
     "loading": "Loading...",

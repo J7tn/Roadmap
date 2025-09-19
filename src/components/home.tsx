@@ -261,12 +261,9 @@ const HomePage = React.memo(() => {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <img 
-              src="/logo-small.png" 
+              src={isDarkMode ? "/logo small dark mode 64x64.png" : "/logo-small.png"} 
               alt={t('app.logoAlt')} 
               className="h-8 w-8"
-              style={{
-                filter: isDarkMode ? 'brightness(0) invert(1)' : 'none'
-              }}
               onError={(e) => {
                 // Fallback to icon if logo not found
                 e.currentTarget.style.display = 'none';
