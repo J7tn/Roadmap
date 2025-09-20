@@ -1,0 +1,22 @@
+# Ignore frontend files for Railway deployment
+src/
+public/
+dist/
+node_modules/
+package.json
+package-lock.json
+yarn.lock
+vite.config.*
+tailwind.config.js
+postcss.config.js
+tsconfig.json
+tsconfig.node.json
+index.html
+*.md
+docs/
+android/
+assets/
+*.json
+!backend/chat2api/requirements.txt
+!backend/chat2api/railway.json
+!backend/chat2api/Procfile
