@@ -54,6 +54,42 @@ class SupabaseCareerService:
         except Exception as e:
             logger.error(f"Failed to update career data: {str(e)}")
             return False
+    
+    async def update_career_data_with_translations(self, translated_careers: Dict[str, List[Dict[str, Any]]], update_type: str = "monthly") -> bool:
+        """
+        Update career data with translations for all languages
+        """
+        if not self.supabase:
+            logger.error("Supabase client not initialized")
+            return False
+
+        try:
+            logger.info(f"Starting {update_type} career data update with translations for {len(translated_careers)} languages")
+            
+            # Clear existing data
+            await self._clear_existing_careers()
+            await self._clear_existing_translations()
+            
+            # Insert career data for each language
+            total_careers_inserted = 0
+            for language_code, careers_data in translated_careers.items():
+                logger.info(f"Inserting {len(careers_data)} careers for language: {language_code}")
+                
+                # Insert careers for this language
+                careers_inserted = await self._insert_careers_with_translations(careers_data, language_code)
+                total_careers_inserted += careers_inserted
+                
+                logger.info(f"Inserted {careers_inserted} careers for {language_code}")
+            
+            # Log the update
+            await self._log_update(update_type, total_careers_inserted)
+            
+            logger.info(f"Career data update with translations completed: {total_careers_inserted} total careers inserted")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to update career data with translations: {str(e)}")
+            return False
 
     async def _clear_existing_careers(self):
         """Clear existing career data"""
@@ -100,6 +136,74 @@ class SupabaseCareerService:
             
         except Exception as e:
             logger.error(f"Failed to insert careers: {str(e)}")
+            raise
+    
+    async def _clear_existing_translations(self):
+        """Clear existing career translations"""
+        try:
+            result = self.supabase.table('career_translations').delete().neq('career_id', '').execute()
+            logger.info(f"Cleared {len(result.data)} existing career translations")
+        except Exception as e:
+            logger.error(f"Failed to clear existing translations: {str(e)}")
+            raise
+    
+    async def _insert_careers_with_translations(self, careers_data: List[Dict[str, Any]], language_code: str) -> int:
+        """Insert career data with translations for a specific language"""
+        try:
+            # Transform data to match Supabase schema
+            transformed_careers = []
+            translations = []
+            
+            for career in careers_data:
+                # Main career record (only for English)
+                if language_code == 'en':
+                    transformed_career = {
+                        'id': career['id'],
+                        'title': career['title'],
+                        'description': career['description'],
+                        'skills': career['skills'],
+                        'salary': career['salary'],
+                        'experience': career['experience'],
+                        'level': career['level'],
+                        'industry': career['industry'],
+                        'job_titles': career['jobTitles'],
+                        'certifications': career['certifications'],
+                        'requirements': career['requirements'],
+                        'last_updated_by': 'chat2api'
+                    }
+                    transformed_careers.append(transformed_career)
+                
+                # Translation record for all languages
+                translation = {
+                    'career_id': career['id'],
+                    'language_code': language_code,
+                    'title': career['title'],
+                    'description': career['description'],
+                    'skills': career['skills'],
+                    'job_titles': career['jobTitles'],
+                    'certifications': career['certifications']
+                }
+                translations.append(translation)
+
+            # Insert careers (only for English)
+            careers_inserted = 0
+            if language_code == 'en' and transformed_careers:
+                careers_inserted = await self._insert_careers(transformed_careers)
+            
+            # Insert translations for all languages
+            translations_inserted = 0
+            if translations:
+                batch_size = 50
+                for i in range(0, len(translations), batch_size):
+                    batch = translations[i:i + batch_size]
+                    result = self.supabase.table('career_translations').insert(batch).execute()
+                    translations_inserted += len(result.data)
+                    logger.info(f"Inserted translation batch {i//batch_size + 1}: {len(result.data)} translations for {language_code}")
+            
+            return careers_inserted + translations_inserted
+            
+        except Exception as e:
+            logger.error(f"Failed to insert careers with translations for {language_code}: {str(e)}")
             raise
 
     async def _log_update(self, update_type: str, careers_updated: int):

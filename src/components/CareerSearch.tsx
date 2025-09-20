@@ -62,10 +62,10 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
 
   const getLevelDisplayName = useCallback((level: CareerLevel): string => {
     switch (level) {
-      case 'E': return t('pages.search.entryLevel');
-      case 'I': return t('pages.search.intermediate');
-      case 'A': return t('pages.search.advanced');
-      case 'X': return t('pages.search.expert');
+      case 'E': return t('pages.search.filters.entryLevel');
+      case 'I': return t('pages.search.filters.intermediate');
+      case 'A': return t('pages.search.filters.advanced');
+      case 'X': return t('pages.search.filters.expert');
       default: return 'Unknown Level';
     }
   }, []);
@@ -132,7 +132,7 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
                   className="gap-2"
                 >
                   <Filter className="h-4 w-4" />
-                  {t('pages.search.filters')}
+                  {t('pages.search.filters.title')}
                 </Button>
                 {(selectedIndustry !== "all" || selectedLevel !== "all") && (
                   <Button variant="ghost" size="sm" onClick={handleClearFilters}>
@@ -152,13 +152,13 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
                   >
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-medium mb-2 block">{t('pages.search.industry')}</label>
+                        <label className="text-sm font-medium mb-2 block">{t('pages.search.filters.industry')}</label>
                         <Select value={selectedIndustry} onValueChange={setSelectedIndustry}>
                           <SelectTrigger>
-                            <SelectValue placeholder={t('pages.search.allIndustries')} />
+                            <SelectValue placeholder={t('pages.search.filters.allIndustries')} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="all">{t('pages.search.allIndustries')}</SelectItem>
+                            <SelectItem value="all">{t('pages.search.filters.allIndustries')}</SelectItem>
                             {INDUSTRY_CATEGORIES.map((industry) => (
                               <SelectItem key={industry.id} value={industry.id}>
                                 {t(`industries.${industry.id}`) || industry.name}
@@ -168,17 +168,17 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
                         </Select>
                       </div>
                       <div>
-                        <label className="text-sm font-medium mb-2 block">{t('pages.search.experience')}</label>
+                        <label className="text-sm font-medium mb-2 block">{t('pages.search.filters.experience')}</label>
                         <Select value={selectedLevel} onValueChange={setSelectedLevel}>
                           <SelectTrigger>
-                            <SelectValue placeholder={t('pages.search.allLevels')} />
+                            <SelectValue placeholder={t('pages.search.filters.allLevels')} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="all">{t('pages.search.allLevels')}</SelectItem>
-                <SelectItem value="E">{t('pages.search.entryLevel')}</SelectItem>
-                <SelectItem value="I">{t('pages.search.intermediate')}</SelectItem>
-                <SelectItem value="A">{t('pages.search.advanced')}</SelectItem>
-                <SelectItem value="X">{t('pages.search.expert')}</SelectItem>
+                            <SelectItem value="all">{t('pages.search.filters.allLevels')}</SelectItem>
+                <SelectItem value="E">{t('pages.search.filters.entryLevel')}</SelectItem>
+                <SelectItem value="I">{t('pages.search.filters.intermediate')}</SelectItem>
+                <SelectItem value="A">{t('pages.search.filters.advanced')}</SelectItem>
+                <SelectItem value="X">{t('pages.search.filters.expert')}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -317,10 +317,10 @@ const BrowseAllCareers: React.FC<{ onCareerSelect: (career: ICareerNode) => void
 
   const getLevelDisplayName = useCallback((level: CareerLevel): string => {
     switch (level) {
-      case 'E': return t('pages.search.entryLevel');
-      case 'I': return t('pages.search.intermediate');
-      case 'A': return t('pages.search.advanced');
-      case 'X': return t('pages.search.expert');
+      case 'E': return t('pages.search.filters.entryLevel');
+      case 'I': return t('pages.search.filters.intermediate');
+      case 'A': return t('pages.search.filters.advanced');
+      case 'X': return t('pages.search.filters.expert');
       default: return 'Unknown Level';
     }
   }, []);
@@ -331,10 +331,10 @@ const BrowseAllCareers: React.FC<{ onCareerSelect: (career: ICareerNode) => void
         <label className="text-sm font-medium mb-2 block">{t('pages.search.filterByIndustry')}</label>
         <Select value={selectedIndustry} onValueChange={setSelectedIndustry}>
           <SelectTrigger>
-            <SelectValue placeholder={t('pages.search.allIndustries')} />
+            <SelectValue placeholder={t('pages.search.filters.allIndustries')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">{t('pages.search.allIndustries')}</SelectItem>
+            <SelectItem value="all">{t('pages.search.filters.allIndustries')}</SelectItem>
             {INDUSTRY_CATEGORIES.map((industry) => (
               <SelectItem key={industry.id} value={industry.id}>
                 {t(`industries.${industry.id}`) || industry.name}

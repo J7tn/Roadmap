@@ -53,10 +53,10 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
 
   const getLevelDisplayName = useMemo(() => (level: CareerLevel): string => {
     switch (level) {
-      case 'E': return t('pages.search.entryLevel');
-      case 'I': return t('pages.search.intermediate');
-      case 'A': return t('pages.search.advanced');
-      case 'X': return t('pages.search.expert');
+      case 'E': return t('pages.search.filters.entryLevel');
+      case 'I': return t('pages.search.filters.intermediate');
+      case 'A': return t('pages.search.filters.advanced');
+      case 'X': return t('pages.search.filters.expert');
       default: return t('common.unknown');
     }
   }, [t]);

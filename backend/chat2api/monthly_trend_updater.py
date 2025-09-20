@@ -14,6 +14,7 @@ import aiohttp
 import asyncpg
 from dataclasses import dataclass
 import time
+from translation_service import translation_service
 
 # Configure logging
 logging.basicConfig(
@@ -77,7 +78,10 @@ class MonthlyTrendUpdater:
             # Create HTTP session
             self.session = aiohttp.ClientSession()
             
-            logger.info("Initialized database connection and HTTP session")
+            # Initialize translation service
+            await translation_service.initialize()
+            
+            logger.info("Initialized database connection, HTTP session, and translation service")
             
         except Exception as e:
             logger.error(f"Failed to initialize: {e}")
@@ -89,6 +93,7 @@ class MonthlyTrendUpdater:
             await self.db_pool.close()
         if self.session:
             await self.session.close()
+        await translation_service.cleanup()
     
     async def get_careers_to_update(self) -> List[Dict]:
         """Get careers that need trend updates"""
@@ -333,11 +338,64 @@ class MonthlyTrendUpdater:
                 )
                 
                 logger.info(f"Saved trend data for {trend_data.career_id}")
+                
+                # Save translations for all languages
+                await self.save_trend_translations(trend_data)
+                
                 return True
                 
         except Exception as e:
             logger.error(f"Failed to save trend data for {trend_data.career_id}: {e}")
             return False
+    
+    async def save_trend_translations(self, trend_data: CareerTrendData):
+        """Save trend data translations for all supported languages"""
+        try:
+            # Convert trend data to dict for translation
+            trend_dict = {
+                'market_insights': trend_data.market_insights,
+                'salary_trend': trend_data.salary_trend,
+                'industry_impact': trend_data.industry_impact,
+                'future_outlook': trend_data.future_outlook
+            }
+            
+            # Get translations for all languages
+            translations = await translation_service.translate_trend_data(trend_dict)
+            
+            # Save translations to database
+            async with self.db_pool.acquire() as conn:
+                for language_code, translation in translations.items():
+                    if language_code == 'en':
+                        continue  # Skip English as it's already saved
+                    
+                    # Insert or update trend translation
+                    translation_query = """
+                    INSERT INTO career_trend_translations (
+                        career_id, language_code, market_insights, salary_trend,
+                        industry_impact, future_outlook, created_at, updated_at
+                    ) VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+                    ON CONFLICT (career_id, language_code) DO UPDATE SET
+                        market_insights = EXCLUDED.market_insights,
+                        salary_trend = EXCLUDED.salary_trend,
+                        industry_impact = EXCLUDED.industry_impact,
+                        future_outlook = EXCLUDED.future_outlook,
+                        updated_at = NOW()
+                    """
+                    
+                    await conn.execute(
+                        translation_query,
+                        trend_data.career_id,
+                        language_code,
+                        translation.get('market_insights', ''),
+                        translation.get('salary_trend', ''),
+                        translation.get('industry_impact', ''),
+                        translation.get('future_outlook', '')
+                    )
+                    
+                    logger.info(f"Saved trend translation for {trend_data.career_id} in {language_code}")
+                
+        except Exception as e:
+            logger.error(f"Failed to save trend translations for {trend_data.career_id}: {e}")
     
     async def update_industry_trends(self):
         """Update industry-level trend summaries"""

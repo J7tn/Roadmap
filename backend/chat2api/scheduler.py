@@ -10,6 +10,7 @@ from typing import List, Dict, Any
 import httpx
 from supabase_career_service import supabase_career_service
 from supabase_trending_service import supabase_trending_service
+from translation_service import translation_service
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -29,6 +30,9 @@ class MonthlyScheduler:
         self.running = True
         logger.info("Starting monthly scheduler")
         
+        # Initialize translation service
+        await translation_service.initialize()
+        
         # Start the scheduler task
         self.task = asyncio.create_task(self._scheduler_loop())
 
@@ -44,6 +48,9 @@ class MonthlyScheduler:
                 await self.task
             except asyncio.CancelledError:
                 pass
+        
+        # Cleanup translation service
+        await translation_service.cleanup()
         
         logger.info("Monthly scheduler stopped")
 
@@ -77,8 +84,12 @@ class MonthlyScheduler:
             # Generate fresh career data using AI
             careers_data = await self._generate_career_data()
             
-            # Update Supabase
-            success = await supabase_career_service.update_career_data(careers_data, "monthly")
+            # Translate career data for all languages
+            logger.info("Translating career data for all supported languages...")
+            translated_careers = await translation_service.batch_translate_careers(careers_data)
+            
+            # Update Supabase with translated data
+            success = await supabase_career_service.update_career_data_with_translations(translated_careers, "monthly")
             
             if success:
                 logger.info("Monthly career data update completed successfully")

@@ -58,7 +58,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
               className="flex items-center gap-2"
             >
               <Filter className="h-4 w-4" />
-              {t('pages.search.filters')}
+              {t('pages.search.filters.title')}
             </Button>
           )}
           <Button type="submit" disabled={loading}>

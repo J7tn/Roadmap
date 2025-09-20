@@ -1,5 +1,6 @@
-# Requirements for Monthly Trend Updater
+# Requirements for Monthly Trend Updater with Translation Support
 aiohttp>=3.8.0
 asyncpg>=0.28.0
 schedule>=1.2.0
 python-dotenv>=1.0.0
+openai>=1.0.0
