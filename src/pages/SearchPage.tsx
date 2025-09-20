@@ -320,7 +320,7 @@ const SearchPage: React.FC = React.memo(() => {
       transition={{ duration: 0.5 }}
     >
       {/* Header */}
-      <div className="sticky top-0 z-50 bg-background border-b safe-area-top">
+      <div className="sticky top-0 z-50 bg-background border-b safe-area-top" style={{ touchAction: 'none' }}>
         <div className="flex items-center justify-between p-4">
           <h1 className="text-lg font-semibold">{t('pages.search.title')}</h1>
           <Button

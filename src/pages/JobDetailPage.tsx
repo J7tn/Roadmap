@@ -61,7 +61,7 @@ const JobDetailPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Navigation Header */}
-      <header className="border-b bg-background sticky top-0 z-50 safe-area-top">
+      <header className="border-b bg-background sticky top-0 z-50 safe-area-top" style={{ touchAction: 'none' }}>
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Button 

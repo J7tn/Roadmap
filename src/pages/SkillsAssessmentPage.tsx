@@ -733,6 +733,7 @@ const SkillsAssessmentPage = () => {
       {/* Mobile-Optimized Navigation Header */}
       <motion.header 
         className="border-b bg-background sticky top-0 z-50 safe-area-top"
+        style={{ touchAction: 'none' }}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
