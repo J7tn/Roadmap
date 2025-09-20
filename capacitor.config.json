@@ -6,6 +6,13 @@
     "androidScheme": "https",
     "allowNavigation": ["*"]
   },
+  "android": {
+    "webContentsDebuggingEnabled": false,
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webViewBounce": false,
+    "disallowOverscroll": true
+  },
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 5000,

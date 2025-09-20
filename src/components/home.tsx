@@ -257,7 +257,7 @@ const HomePage = React.memo(() => {
   return (
     <div className="min-h-screen bg-background flex flex-col pb-20">
       {/* Top Header - Fixed with proper status bar spacing */}
-      <header className="border-b bg-background/95 backdrop-blur-sm sticky top-0 z-50 safe-area-top">
+      <header className="border-b bg-background/95 backdrop-blur-sm sticky top-0 z-50 safe-area-top" style={{ touchAction: 'none' }}>
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <img 
@@ -304,7 +304,7 @@ const HomePage = React.memo(() => {
       </header>
 
       {/* Main Content Area - Scrollable */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto" style={{ touchAction: 'pan-y' }}>
         {/* Career Market Trends */}
         <div className="container mx-auto px-4 py-6">
           {/* Debug Info */}

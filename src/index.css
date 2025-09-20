@@ -43,6 +43,15 @@
     z-index: 9999;
   }
 
+  /* Prevent touch dragging on headers */
+  header {
+    touch-action: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
   /* Ensure app content is hidden until splash screen is dismissed */
   .app-content {
     opacity: 0;
