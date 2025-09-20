@@ -55,6 +55,9 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         // Wait for dynamic i18n to be ready
         await dynamicI18n.waitForReady();
         
+        // Ensure English fallback is always available
+        dynamicI18n.ensureEnglishFallback();
+        
         const savedLanguage = localStorage.getItem('app-language');
         const deviceLanguage = detectDeviceLanguage();
         
@@ -92,6 +95,9 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     try {
       setIsLoading(true);
       console.log(`🔄 Changing language to: ${language}`);
+      
+      // Ensure English fallback is always available
+      dynamicI18n.ensureEnglishFallback();
       
       // Load the language translations
       await dynamicI18n.changeLanguage(language);

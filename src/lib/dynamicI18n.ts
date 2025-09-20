@@ -81,13 +81,29 @@ class DynamicI18n {
         return;
       }
 
-      // Download and load translations
-      await this.loadLanguage(deviceLanguage);
+      // Always ensure English is loaded first as fallback
+      if (!i18n.hasResourceBundle('en', 'translation')) {
+        console.log('Loading English translations as fallback...');
+        i18n.addResourceBundle('en', 'translation', enTranslations, true, true);
+      }
+
+      // Try to download and load translations for device language
+      if (deviceLanguage !== 'en') {
+        try {
+          await this.loadLanguage(deviceLanguage);
+        } catch (error) {
+          console.warn(`Failed to load ${deviceLanguage} translations, using English fallback`);
+          await i18n.changeLanguage('en');
+        }
+      } else {
+        // For English, just ensure it's set as current language
+        await i18n.changeLanguage('en');
+      }
     } catch (error) {
       console.error('Failed to load device language translations:', error);
       // Fallback to English if device language fails
       if (i18n.language !== 'en') {
-        await this.loadLanguage('en');
+        await i18n.changeLanguage('en');
       }
     }
   }
@@ -132,18 +148,10 @@ class DynamicI18n {
     } catch (error) {
       console.error(`Failed to load language ${languageCode}:`, error);
       
-      // If loading fails and it's not English, try English as fallback
-      if (languageCode !== 'en') {
-        console.log('Falling back to English translations');
-        // Use local English translations as fallback
-        i18n.addResourceBundle('en', 'translation', enTranslations, true, true);
-        await i18n.changeLanguage('en');
-      } else {
-        // For English, use local translations if Supabase fails
-        console.log('Using local English translations as fallback');
-        i18n.addResourceBundle('en', 'translation', enTranslations, true, true);
-        await i18n.changeLanguage('en');
-      }
+      // Always fall back to local English translations
+      console.log('Falling back to local English translations');
+      i18n.addResourceBundle('en', 'translation', enTranslations, true, true);
+      await i18n.changeLanguage('en');
     }
   }
 
@@ -187,6 +195,14 @@ class DynamicI18n {
   public async waitForReady(): Promise<void> {
     if (this.initializationPromise) {
       await this.initializationPromise;
+    }
+  }
+
+  public ensureEnglishFallback(): void {
+    // Always ensure English translations are available
+    if (!i18n.hasResourceBundle('en', 'translation')) {
+      console.log('Ensuring English translations are available...');
+      i18n.addResourceBundle('en', 'translation', enTranslations, true, true);
     }
   }
 }
