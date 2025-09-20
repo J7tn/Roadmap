@@ -1025,6 +1025,17 @@ def parse_market_data_response(response: str) -> Dict[str, Any]:
     # Throw error instead of returning fallback data
     raise ValueError("Failed to parse market data from AI response")
 
+# Health check endpoint for deployment platforms
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for deployment platforms"""
+    return {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat(),
+        "scheduler_running": monthly_scheduler.running,
+        "redis_connected": redis_client is not None
+    }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
