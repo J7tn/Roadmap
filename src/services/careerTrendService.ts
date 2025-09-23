@@ -85,15 +85,16 @@ class CareerTrendService {
       trend_direction: trendRecord.trend_direction,
       demand_level: trendRecord.demand_level,
       growth_rate: trendRecord.growth_rate,
-      market_insights: trendRecord.market_insights,
-      key_skills_trending: trendRecord.key_skills_trending || [],
-      salary_trend: trendRecord.salary_trend,
+      // Use translated fields if available, otherwise fall back to original fields
+      market_insights: trendRecord.market_insights_translated || trendRecord.market_insights,
+      key_skills_trending: trendRecord.key_skills_trending_translated || trendRecord.key_skills_trending || [],
+      salary_trend: trendRecord.salary_trend_translated || trendRecord.salary_trend,
       job_availability_score: trendRecord.job_availability_score,
-      top_locations: trendRecord.top_locations || [],
+      top_locations: trendRecord.top_locations_translated || trendRecord.top_locations || [],
       remote_work_trend: trendRecord.remote_work_trend,
-      industry_impact: trendRecord.industry_impact,
+      industry_impact: trendRecord.industry_impact_translated || trendRecord.industry_impact,
       automation_risk: trendRecord.automation_risk,
-      future_outlook: trendRecord.future_outlook,
+      future_outlook: trendRecord.future_outlook_translated || trendRecord.future_outlook,
       confidence_score: trendRecord.confidence_score,
       last_updated: trendRecord.last_updated
     };

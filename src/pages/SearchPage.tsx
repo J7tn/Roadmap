@@ -17,8 +17,9 @@ interface ICareerNodeWithCategory extends ICareerNode {
   cat?: string;
   industry?: string;
 }
-import { getAllCareerNodesArray, getCareerNodesByIndustry } from "@/services/careerService";
+import { getAllCareerNodesArray, getCareerNodesByIndustry, careerService } from "@/services/careerService";
 import { INDUSTRY_CATEGORIES } from "@/data/industries";
+import { getTranslatedIndustryName } from "@/utils/translationHelpers";
 import CareerBlock from "@/components/CareerBlock";
 import BottomNavigation from "@/components/BottomNavigation";
 import SearchInput from "@/components/SearchInput";
@@ -59,9 +60,19 @@ const SearchPage: React.FC = React.memo(() => {
           console.log('SearchPage: No industry selected, showing empty state');
           careerData = [];
         } else {
-          // Load careers for specific industry
-          careerData = await getCareerNodesByIndustry(selectedIndustry);
-          console.log(`SearchPage: Loaded ${careerData.length} careers for industry: ${selectedIndustry}`);
+          // Load translated careers for specific industry
+          try {
+            const filters = {
+              industry: [selectedIndustry as any]
+            };
+            careerData = await careerService.searchCareersTranslated("", filters);
+            console.log(`SearchPage: Loaded ${careerData.length} translated careers for industry: ${selectedIndustry}`);
+          } catch (error) {
+            console.error('Error loading translated careers, falling back to regular careers:', error);
+            // Fallback to regular careers
+            careerData = await getCareerNodesByIndustry(selectedIndustry);
+            console.log(`SearchPage: Loaded ${careerData.length} regular careers for industry: ${selectedIndustry}`);
+          }
         }
         
         // Map career nodes (career nodes from Supabase already have translations and industry info)
@@ -101,6 +112,43 @@ const SearchPage: React.FC = React.memo(() => {
     }
   }, [urlIndustry]);
 
+  // State for translated search results
+  const [translatedSearchResults, setTranslatedSearchResults] = useState<ICareerNodeWithCategory[]>([]);
+  const [loadingTranslatedSearch, setLoadingTranslatedSearch] = useState(false);
+
+  // Search translated careers when search query changes
+  useEffect(() => {
+    const searchTranslatedCareers = async () => {
+      if (!searchQuery.trim() || selectedIndustry === "all") {
+        setTranslatedSearchResults([]);
+        return;
+      }
+
+      setLoadingTranslatedSearch(true);
+      try {
+        const filters = {
+          industry: [selectedIndustry as any],
+          level: selectedLevel !== "all" ? [selectedLevel as any] : undefined
+        };
+        const translated = await careerService.searchCareersTranslated(searchQuery, filters);
+        const careersWithCategory = translated.map(item => ({
+          ...item,
+          cat: item.industry || selectedIndustry
+        }));
+        setTranslatedSearchResults(careersWithCategory);
+        console.log(`SearchPage: Found ${careersWithCategory.length} translated careers for query: "${searchQuery}"`);
+      } catch (error) {
+        console.error('Error searching translated careers:', error);
+        setTranslatedSearchResults([]);
+      } finally {
+        setLoadingTranslatedSearch(false);
+      }
+    };
+
+    const timeoutId = setTimeout(searchTranslatedCareers, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, selectedIndustry, selectedLevel]);
+
   // Filter careers based on search query and filters
   const filteredCareers = useMemo(() => {
     console.log('SearchPage: Filtering careers with:');
@@ -108,11 +156,18 @@ const SearchPage: React.FC = React.memo(() => {
     console.log('  - selectedIndustry:', `"${selectedIndustry}"`);
     console.log('  - selectedLevel:', `"${selectedLevel}"`);
     console.log('  - totalCareers:', allCareers.length);
+    console.log('  - translatedSearchResults:', translatedSearchResults.length);
     
     // When no industry is selected, show empty state
     if (selectedIndustry === "all") {
       console.log('SearchPage: No industry selected, showing empty state');
       return [];
+    }
+
+    // Use translated search results if available and there's a search query
+    if (searchQuery.trim() && translatedSearchResults.length > 0) {
+      console.log('SearchPage: Using translated search results');
+      return translatedSearchResults;
     }
 
     const query = searchQuery.toLowerCase();
@@ -292,7 +347,7 @@ const SearchPage: React.FC = React.memo(() => {
   }, [navigate]);
 
 
-  if (loading) {
+  if (loading || loadingTranslatedSearch) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <LoadingSpinner message={t('pages.search.loadingCareers')} size="lg" />
@@ -379,7 +434,7 @@ const SearchPage: React.FC = React.memo(() => {
                   <option value="all">{t('pages.search.filters.allIndustries')}</option>
                   {INDUSTRY_CATEGORIES.map(industry => (
                     <option key={industry.id} value={industry.id}>
-                      {t(`industries.${industry.id}`) || industry.name}
+                      {getTranslatedIndustryName(t, industry.name)}
                     </option>
                   ))}
                 </select>

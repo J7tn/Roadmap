@@ -222,18 +222,18 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BarChart3 className="h-5 w-5" />
-            Market Trends for {career.t}
+            {t('jobDetails.marketTrends')} {career.t}
           </CardTitle>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="h-4 w-4" />
-            Last updated: {new Date(trendData.last_updated).toLocaleDateString()}
+            {t('jobDetails.lastUpdated')} {new Date(trendData.last_updated).toLocaleDateString()}
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Region Indicator */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
             <MapPin className="h-4 w-4" />
-            <span>Data customized for {getRegionDisplayName()}</span>
+            <span>{t('jobDetails.dataCustomizedFor')} {getRegionDisplayName()}</span>
           </div>
 
           {/* Trend Score and Direction */}
@@ -243,8 +243,8 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
                 {trendData.trend_score.toFixed(1)}
               </div>
               <div>
-                <div className="text-sm text-muted-foreground">Trend Score</div>
-                <div className="text-xs text-muted-foreground">Out of 10</div>
+                <div className="text-sm text-muted-foreground">{t('jobDetails.trendScore')}</div>
+                <div className="text-xs text-muted-foreground">{t('jobDetails.outOf10')}</div>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -261,32 +261,32 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
               <div className="text-lg font-semibold text-blue-600 dark:text-blue-400">
                 {trendData.growth_rate.toFixed(1)}%
               </div>
-              <div className="text-xs text-muted-foreground">Growth Rate</div>
+              <div className="text-xs text-muted-foreground">{t('jobDetails.growthRate')}</div>
             </div>
             <div className="text-center p-3 bg-muted/50 rounded-lg">
               <div className={`text-lg font-semibold ${getScoreColor(trendData.job_availability_score)}`}>
                 {trendData.job_availability_score.toFixed(1)}
               </div>
-              <div className="text-xs text-muted-foreground">Job Availability</div>
+              <div className="text-xs text-muted-foreground">{t('jobDetails.jobAvailability')}</div>
             </div>
             <div className="text-center p-3 bg-muted/50 rounded-lg">
               <div className={`text-lg font-semibold ${getScoreColor(trendData.remote_work_trend)}`}>
                 {trendData.remote_work_trend.toFixed(1)}
               </div>
-              <div className="text-xs text-muted-foreground">Remote Work</div>
+              <div className="text-xs text-muted-foreground">{t('jobDetails.remoteWork')}</div>
             </div>
             <div className="text-center p-3 bg-muted/50 rounded-lg">
               <div className={`text-lg font-semibold ${getScoreColor(10 - trendData.automation_risk)}`}>
                 {(10 - trendData.automation_risk).toFixed(1)}
               </div>
-              <div className="text-xs text-muted-foreground">Job Security</div>
+              <div className="text-xs text-muted-foreground">{t('jobDetails.jobSecurity')}</div>
             </div>
           </div>
 
           {/* Demand Level */}
           <div className="flex items-center gap-2">
             <Briefcase className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">Demand Level:</span>
+            <span className="text-sm text-muted-foreground">{t('jobDetails.demandLevel')}</span>
             <Badge className={getDemandColor(trendData.demand_level)}>
               {trendData.demand_level}
             </Badge>
@@ -295,7 +295,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
           {/* Market Insights */}
           {trendData.market_insights && (
             <div className="p-4 bg-muted/50 dark:bg-muted/30 rounded-lg">
-              <h4 className="font-semibold mb-2">Market Insights</h4>
+              <h4 className="font-semibold mb-2">{t('jobDetails.marketInsights')}</h4>
               <p className="text-sm text-muted-foreground">{trendData.market_insights}</p>
             </div>
           )}
@@ -303,7 +303,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
           {/* Trending Skills */}
           {trendData.key_skills_trending.length > 0 && (
             <div>
-              <h4 className="font-semibold text-foreground mb-2">{t('marketTrends.trendingSkills')}</h4>
+              <h4 className="font-semibold text-foreground mb-2">{t('jobDetails.trendingSkills')}</h4>
               <div className="flex flex-wrap gap-2">
                 {trendData.key_skills_trending.map((skill, index) => (
                   <Badge key={index} variant="outline" className="text-primary border-primary/20">
@@ -317,7 +317,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
           {/* Top Locations */}
           {trendData.top_locations.length > 0 && (
             <div>
-              <h4 className="font-semibold text-foreground mb-2">Top Locations</h4>
+              <h4 className="font-semibold text-foreground mb-2">{t('jobDetails.topLocations')}</h4>
               <div className="flex flex-wrap gap-2">
                 {trendData.top_locations.map((location, index) => (
                   <div key={index} className="flex items-center gap-1 text-sm text-muted-foreground">
@@ -334,7 +334,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
             <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
               <h4 className="font-semibold text-green-900 dark:text-green-400 mb-2 flex items-center gap-2">
                 <DollarSign className="h-4 w-4" />
-                Salary Trend
+                {t('jobDetails.salaryTrend')}
               </h4>
               <p className="text-sm text-green-800 dark:text-green-300">{trendData.salary_trend}</p>
             </div>
@@ -345,7 +345,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
             <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
               <h4 className="font-semibold text-purple-900 dark:text-purple-400 mb-2 flex items-center gap-2">
                 <Target className="h-4 w-4" />
-                Future Outlook
+                {t('jobDetails.futureOutlook')}
               </h4>
               <p className="text-sm text-purple-800 dark:text-purple-300">{trendData.future_outlook}</p>
             </div>
@@ -354,7 +354,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
           {/* Industry Impact */}
           {trendData.industry_impact && (
             <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-              <h4 className="font-semibold text-orange-900 dark:text-orange-400 mb-2">Industry Impact</h4>
+              <h4 className="font-semibold text-orange-900 dark:text-orange-400 mb-2">{t('jobDetails.industryImpact')}</h4>
               <p className="text-sm text-orange-800 dark:text-orange-300">{trendData.industry_impact}</p>
             </div>
           )}

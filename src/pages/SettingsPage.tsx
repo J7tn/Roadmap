@@ -25,8 +25,9 @@ const SettingsPage: React.FC = () => {
   const { selectedRegion, setSelectedRegion, getRegionDisplayName } = useRegion();
   const { isDarkMode, toggleDarkMode } = useTheme();
   const { currentLanguage, setLanguage, availableLanguages } = useLanguage();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(true);
+
 
   useEffect(() => {
     // Load saved settings from localStorage
@@ -45,6 +46,25 @@ const SettingsPage: React.FC = () => {
   };
 
   const selectedRegionData = REGIONS.find(r => r.id === selectedRegion) || REGIONS[0];
+
+  // Helper function to get translated region name
+  const getRegionName = (regionId: string) => {
+    const regionKeyMap: { [key: string]: string } = {
+      'north-america': 'northAmerica',
+      'europe': 'europe',
+      'asia-pacific': 'asiaPacific',
+      'south-america': 'southAmerica',
+      'africa': 'africa',
+      'middle-east': 'middleEast'
+    };
+    const regionKey = regionKeyMap[regionId] || regionId;
+    return t(`regions.${regionKey}`);
+  };
+
+  // Helper function to get translated country names
+  const getCountryNames = (countryKeys: string[]) => {
+    return countryKeys.map(key => t(`countries.${key}`));
+  };
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -77,11 +97,11 @@ const SettingsPage: React.FC = () => {
               <div>
                 <h3 className="font-medium text-gray-900 dark:text-gray-100">{t('settings.currentRegion')}</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {selectedRegionData.flag} {selectedRegionData.name}
+                  {selectedRegionData.flag} {getRegionName(selectedRegionData.id)}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                  {selectedRegionData.countries.slice(0, 3).join(', ')}
-                  {selectedRegionData.countries.length > 3 && ` +${selectedRegionData.countries.length - 3} more`}
+                  {getCountryNames(selectedRegionData.countries).slice(0, 3).join(', ')}
+                  {selectedRegionData.countries.length > 3 && ` +${selectedRegionData.countries.length - 3} ${t('common.more')}`}
                 </p>
               </div>
               <RegionSelector

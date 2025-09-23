@@ -2,7 +2,9 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { ICareerNode } from "@/types/career";
+import { getTranslatedCareerTitle, getTranslatedCareerDescription } from "@/utils/translationHelpers";
 
 interface CareerBlockProps {
   career: ICareerNode;
@@ -18,6 +20,7 @@ const CareerBlock: React.FC<CareerBlockProps> = ({
   className = "" 
 }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleClick = () => {
     if (onClick) {
@@ -42,11 +45,13 @@ const CareerBlock: React.FC<CareerBlockProps> = ({
       >
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <h3 className="font-medium text-base mb-1">{career.t || 'Unknown Career'}</h3>
+            <h3 className="font-medium text-base mb-1">
+              {getTranslatedCareerTitle(t, career.id, career.t || 'Unknown Career')}
+            </h3>
             
             {career.d && (
               <p className="text-muted-foreground text-sm line-clamp-2">
-                {career.d}
+                {getTranslatedCareerDescription(t, career.id, career.d)}
               </p>
             )}
           </div>

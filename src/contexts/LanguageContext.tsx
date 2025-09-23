@@ -99,8 +99,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       // Ensure English fallback is always available
       dynamicI18n.ensureEnglishFallback();
       
-      // Load the language translations
-      await dynamicI18n.changeLanguage(language);
+      // Load the language translations with force refresh to get latest data
+      await dynamicI18n.changeLanguage(language, true);
       
       setCurrentLanguage(language);
       localStorage.setItem('app-language', language);
@@ -117,6 +117,14 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       console.log(`✅ Language successfully changed to: ${language}`);
       console.log(`📊 Current i18n language: ${i18n.language}`);
       console.log(`📊 Available resource bundles:`, i18n.getResourceBundle(language, 'translation') ? 'Loaded' : 'Not loaded');
+      
+      // Verify settings translations are available
+      const resourceBundle = i18n.getResourceBundle(language, 'translation');
+      if (resourceBundle && resourceBundle.settings) {
+        console.log(`✅ Settings translations available:`, Object.keys(resourceBundle.settings).length, 'keys');
+      } else {
+        console.warn(`⚠️ Settings translations not found for ${language}`);
+      }
     } catch (error) {
       console.error(`❌ Failed to change language to ${language}:`, error);
       throw error;

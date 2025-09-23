@@ -1,0 +1,226 @@
+# Careering Development Roadmap & Rules
+
+This document contains development guidelines, rules, and best practices for the Careering project.
+
+## 📋 Development Rules
+
+### 🌍 Translation Management
+**RULE**: Always check `TRANSLATION_UPDATE_GUIDE.md` before making any translation-related changes.
+
+**Why**: Translation updates require specific procedures to avoid version conflicts, cache issues, and missing translations. The guide contains:
+- Step-by-step update procedures
+- Common issues and solutions
+- Testing procedures
+- Troubleshooting guides
+
+**When to Apply**:
+- Adding new translation keys
+- Updating existing translations
+- Adding new languages
+- Fixing translation issues
+- Any changes to the translation system
+
+**Process**:
+1. Read `TRANSLATION_UPDATE_GUIDE.md` first
+2. Follow the documented procedures
+3. Test all affected languages
+4. Update documentation if needed
+
+### 🏗️ Component Development
+**RULE**: Create reusable components when possible.
+
+**Why**: Promotes code reusability, consistency, and maintainability.
+
+**Implementation**:
+- Extract common UI patterns into reusable components
+- Use consistent naming conventions
+- Document component props and usage
+- Place in appropriate directory structure
+
+### 🧪 Testing Requirements
+**RULE**: Test on Android device/emulator after major updates.
+
+**Why**: Mobile-specific issues may not be visible in web development.
+
+**Process**:
+1. `npm run build`
+2. `npx cap sync`
+3. `npx cap open android`
+4. Test all changes on Android device/emulator
+
+### 📱 Mobile-First Development
+**RULE**: This is a mobile app - testing should be done in Android Studio, not as a web app.
+
+**Why**: Ensures mobile compatibility and catches platform-specific issues early.
+
+### 🔧 Environment Configuration
+**RULE**: Environment variables must be prefixed with `VITE_` to avoid mismatches.
+
+**Why**: Vite requires the `VITE_` prefix for client-side environment variables.
+
+### 📊 Data Management
+**RULE**: Use real data rather than mock data in the project.
+
+**Why**: Ensures the app works with actual data structures and API responses.
+
+### 🔍 Search Logic
+**RULE**: Search logic should use local career data exclusively; Supabase is used only to update the jobs, careers, and industries database monthly.
+
+**Why**: Improves performance and reduces API calls for search operations.
+
+### 🎨 UI/UX Guidelines
+**RULE**: Notifications should hide the count when there are no notifications (do not show 0) and display the notification count in red color by default.
+
+**Why**: Improves user experience by not showing unnecessary zero counts.
+
+### 🔐 Security & Permissions
+**RULE**: Types in the Unity project should rely on generated bindings in the autogen folder; manual type bindings should not be created due to server–Unity mismatch.
+
+**Why**: Prevents type mismatches and ensures consistency.
+
+### 🔑 Supabase Service Role Key
+**RULE**: Always use the Supabase service role key for administrative translation updates.
+
+**Why**: Supabase Row Level Security (RLS) policies prevent updates to the translations table using the anon key. The service role key bypasses these policies for administrative operations.
+
+**Requirements**:
+- Add `SUPABASE_SERVICE_ROLE_KEY` to `.env` file
+- Use service role key in translation update scripts
+- Never commit service role key to version control
+- Only use for administrative operations, not regular app functionality
+
+**When to Use**:
+- Updating translation data in Supabase
+- Adding new language translations
+- Fixing translation version conflicts
+- Any administrative database operations on translations table
+
+### 📝 Code Documentation
+**RULE**: For scripts created by others, add 'Edited by Flare on (YYYY-MM-DD)' comments for major edits; no comments needed for own scripts.
+
+**Why**: Maintains clear attribution and change tracking.
+
+## 🚀 Development Workflow
+
+### Before Starting Work
+1. Check relevant documentation
+2. Review existing code patterns
+3. Understand the current architecture
+4. Plan the implementation approach
+
+### During Development
+1. Follow established patterns
+2. Write clean, readable code
+3. Add appropriate comments
+4. Test frequently
+
+### After Development
+1. Run complete build and deployment process
+2. Test on Android device/emulator
+3. Verify all functionality works
+4. Update documentation if needed
+
+## 📚 Documentation Standards
+
+### Required Documentation
+- **Translation Updates**: Must follow `TRANSLATION_UPDATE_GUIDE.md`
+- **New Features**: Document in appropriate guide files
+- **API Changes**: Update relevant service documentation
+- **Database Changes**: Document schema changes
+
+### Documentation Maintenance
+- Keep guides up to date
+- Add new procedures as they're developed
+- Review and update quarterly
+- Link related documentation
+
+## 🔄 Update Procedures
+
+### Translation Updates
+1. Read `TRANSLATION_UPDATE_GUIDE.md`
+2. Ensure `SUPABASE_SERVICE_ROLE_KEY` is in `.env` file
+3. Use service role key in update scripts
+4. Follow documented procedures
+5. Test all languages
+6. Update version numbers
+7. Verify console logs
+
+### Feature Updates
+1. Plan implementation
+2. Follow component development rules
+3. Test on mobile device
+4. Update documentation
+5. Deploy following build process
+
+### Bug Fixes
+1. Identify root cause
+2. Check existing documentation
+3. Implement fix following established patterns
+4. Test thoroughly
+5. Document the fix if it's a common issue
+
+## 🎯 Quality Assurance
+
+### Code Quality
+- Follow TypeScript best practices
+- Use consistent naming conventions
+- Write self-documenting code
+- Add appropriate error handling
+
+### Testing Standards
+- Test on actual Android devices
+- Verify all supported languages
+- Check both light and dark themes
+- Test offline scenarios
+
+### Performance
+- Optimize for mobile devices
+- Minimize API calls
+- Use appropriate caching strategies
+- Monitor bundle sizes
+
+## 📞 Support & Troubleshooting
+
+### Common Issues
+- **Translation Issues**: Check `TRANSLATION_UPDATE_GUIDE.md` and ensure service role key is configured
+- **RLS Policy Errors**: Use service role key for administrative updates
+- **Build Issues**: Follow complete build process
+- **Mobile Issues**: Test on Android device
+- **API Issues**: Check environment variables
+
+### Getting Help
+1. Check relevant documentation first
+2. Review existing code patterns
+3. Test on actual devices
+4. Document new solutions
+
+---
+
+**Last Updated**: 2025-01-23
+**Version**: 1.1
+**Maintainer**: Development Team
+
+## 📝 Change Log
+
+### Version 1.1 (2025-01-23)
+- Added Supabase service role key requirement for translation updates
+- Updated translation update procedures to include service role key
+- Added RLS policy error troubleshooting
+- Enhanced security guidelines for administrative operations
+
+### Version 1.0 (2025-01-22)
+- Initial creation of development roadmap
+- Added translation management rule
+- Added component development guidelines
+- Added testing requirements
+- Added mobile-first development rule
+- Added environment configuration rules
+- Added data management guidelines
+- Added UI/UX guidelines
+- Added security and permissions rules
+- Added code documentation standards
+- Added development workflow
+- Added documentation standards
+- Added update procedures
+- Added quality assurance guidelines
+- Added support and troubleshooting section

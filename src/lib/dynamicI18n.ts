@@ -120,14 +120,14 @@ class DynamicI18n {
     );
   }
 
-  public async loadLanguage(languageCode: string): Promise<void> {
+  public async loadLanguage(languageCode: string, forceRefresh: boolean = false): Promise<void> {
     try {
-      console.log(`Loading translations for language: ${languageCode}`);
+      console.log(`Loading translations for language: ${languageCode}${forceRefresh ? ' (force refresh)' : ''}`);
 
       // Download translation data from Supabase
-      const translationData = await translationService.getTranslation(languageCode);
+      const translationData = await translationService.getTranslation(languageCode, forceRefresh);
 
-      // Add to i18n resources
+      // Add to i18n resources (force update if forceRefresh is true)
       i18n.addResourceBundle(languageCode, 'translation', translationData, true, true);
 
       // Change language if it's different from current
@@ -145,6 +145,9 @@ class DynamicI18n {
       if (translationData.navigation) {
         console.log(`Navigation available:`, Object.keys(translationData.navigation));
       }
+      if (translationData.settings) {
+        console.log(`Settings available:`, Object.keys(translationData.settings));
+      }
     } catch (error) {
       console.error(`Failed to load language ${languageCode}:`, error);
       
@@ -155,16 +158,30 @@ class DynamicI18n {
     }
   }
 
-  public async changeLanguage(languageCode: string): Promise<void> {
+  public async changeLanguage(languageCode: string, forceRefresh: boolean = false): Promise<void> {
     try {
-      // Check if language is already loaded
+      // Always force refresh when changing languages to ensure latest translations
+      if (forceRefresh || languageCode !== i18n.language) {
+        console.log(`🔄 Changing language to ${languageCode}${forceRefresh ? ' (force refresh)' : ''}`);
+        
+        // Clear cache for the target language to ensure fresh data
+        if (forceRefresh) {
+          translationService.clearCache(languageCode);
+        }
+        
+        // Load language with force refresh
+        await this.loadLanguage(languageCode, forceRefresh);
+        return;
+      }
+
+      // Check if language is already loaded and current
       if (i18n.hasResourceBundle(languageCode, 'translation') && this.hasFullTranslations(languageCode)) {
         await i18n.changeLanguage(languageCode);
         return;
       }
 
       // Load language first, then change
-      await this.loadLanguage(languageCode);
+      await this.loadLanguage(languageCode, forceRefresh);
     } catch (error) {
       console.error(`Failed to change language to ${languageCode}:`, error);
       throw error;

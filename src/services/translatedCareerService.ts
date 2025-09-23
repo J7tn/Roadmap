@@ -298,7 +298,8 @@ class TranslatedCareerService {
       te: career.experience, // time estimate
       d: translation.description || career.description, // description
       jt: translation.job_titles || career.job_titles || [], // job titles
-      r: career.requirements || { e: [], exp: '', sk: [] } // requirements
+      r: career.requirements || { e: [], exp: '', sk: [] }, // requirements
+      industry: career.industry // Add industry field
     };
   }
 

@@ -11,6 +11,8 @@ import { ICareerNode, ICareerPath, CareerLevel } from "@/types/career";
 import { bookmarkService } from "@/services/bookmarkService";
 import { getAllCareerNodes } from "@/services/careerService";
 import { careerPathProgressService } from "@/services/careerPathProgressService";
+import { formatSalary } from "@/utils/currencyUtils";
+import { getTranslatedCareerTitle, getTranslatedCareerDescription, getTranslatedSkills } from "@/utils/translationHelpers";
 
 interface CareerDetailsContentProps {
   career: ICareerNode;
@@ -162,7 +164,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
       <div className="mb-6 pt-4">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 className="text-2xl font-bold mb-2">{career.t}</h2>
+            <h2 className="text-2xl font-bold mb-2">{getTranslatedCareerTitle(t, career.id, career.t)}</h2>
             <Badge variant="outline" className={getLevelColor(career.l)}>
               {getLevelDisplayName(career.l)}
             </Badge>
@@ -191,7 +193,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
           </Button>
         </div>
         
-        <p className="text-muted-foreground text-base leading-relaxed">{career.d}</p>
+        <p className="text-muted-foreground text-base leading-relaxed">{getTranslatedCareerDescription(t, career.id, career.d)}</p>
       </div>
 
       {/* Key Information Cards */}
@@ -200,7 +202,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
           <CardContent className="p-4 text-center">
             <DollarSign className="h-6 w-6 text-primary mb-2 mx-auto" />
             <p className="text-sm font-medium text-muted-foreground mb-1">{t('jobDetails.salaryRange')}</p>
-            <p className="text-lg font-semibold leading-tight">{career.sr}</p>
+            <p className="text-lg font-semibold leading-tight">{formatSalary(parseInt(career.sr?.replace(/[^0-9]/g, '') || '0'))}</p>
           </CardContent>
         </Card>
         <Card>
@@ -220,7 +222,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
           {t('jobDetails.requiredSkills')}
         </h3>
         <div className="flex flex-wrap gap-2">
-          {career.s && career.s.length > 0 ? career.s.map((skill, index) => (
+          {career.s && career.s.length > 0 ? getTranslatedSkills(t, career.s).map((skill, index) => (
             <Badge key={index} variant="secondary">
               {skill}
             </Badge>

@@ -107,15 +107,30 @@ class TranslationService {
   /**
    * Get translation data with caching
    */
-  public async getTranslation(languageCode: string): Promise<TranslationData> {
-    // Check cache first
-    if (this.cache.has(languageCode) && this.isCacheValid(languageCode)) {
+  public async getTranslation(languageCode: string, forceRefresh: boolean = false): Promise<TranslationData> {
+    // Check cache first (unless force refresh is requested)
+    if (!forceRefresh && this.cache.has(languageCode) && this.isCacheValid(languageCode)) {
       console.log(`Using cached translations for ${languageCode}`);
       return this.cache.get(languageCode)!;
     }
 
     // Download fresh data
     return await this.downloadTranslation(languageCode);
+  }
+
+  /**
+   * Clear cache for a specific language or all languages
+   */
+  public clearCache(languageCode?: string): void {
+    if (languageCode) {
+      this.cache.delete(languageCode);
+      this.cacheTimestamp.delete(languageCode);
+      console.log(`Cleared cache for language: ${languageCode}`);
+    } else {
+      this.cache.clear();
+      this.cacheTimestamp.clear();
+      console.log('Cleared all translation cache');
+    }
   }
 
   /**
@@ -138,21 +153,6 @@ class TranslationService {
     } catch (error) {
       console.error('Failed to fetch available languages:', error);
       return ['en']; // Fallback to English
-    }
-  }
-
-  /**
-   * Clear cache for a specific language or all languages
-   */
-  public clearCache(languageCode?: string): void {
-    if (languageCode) {
-      this.cache.delete(languageCode);
-      this.cacheTimestamp.delete(languageCode);
-      console.log(`Cleared cache for language: ${languageCode}`);
-    } else {
-      this.cache.clear();
-      this.cacheTimestamp.clear();
-      console.log('Cleared all translation cache');
     }
   }
 

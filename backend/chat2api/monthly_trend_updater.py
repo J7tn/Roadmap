@@ -45,6 +45,8 @@ class CareerTrendData:
     automation_risk: float  # 0-10 scale
     future_outlook: str
     confidence_score: float  # 0-10 scale
+    currency_code: str = 'USD'  # Default to USD
+    salary_data: Dict = None  # Salary data by region/currency
 
 class MonthlyTrendUpdater:
     """Main class for updating career trends monthly"""
@@ -60,6 +62,58 @@ class MonthlyTrendUpdater:
         
         self.db_pool = None
         self.session = None
+        
+        # Currency mapping for regions
+        self.currency_mapping = {
+            'north-america': 'USD',
+            'europe': 'EUR', 
+            'asia-pacific': 'JPY',
+            'south-america': 'BRL',
+            'africa': 'ZAR',
+            'middle-east': 'AED'
+        }
+        
+    def get_currency_for_region(self, region: str) -> str:
+        """Get currency code for a given region"""
+        return self.currency_mapping.get(region, 'USD')
+    
+    def generate_salary_data(self, base_salary: float, currency_code: str) -> dict:
+        """Generate salary data with currency-specific formatting"""
+        # Currency symbols mapping
+        currency_symbols = {
+            'USD': '$',
+            'EUR': '€',
+            'JPY': '¥',
+            'BRL': 'R$',
+            'ZAR': 'R',
+            'AED': 'د.إ'
+        }
+        
+        # Currency names mapping
+        currency_names = {
+            'USD': 'US Dollar',
+            'EUR': 'Euro',
+            'JPY': 'Japanese Yen',
+            'BRL': 'Brazilian Real',
+            'ZAR': 'South African Rand',
+            'AED': 'UAE Dirham'
+        }
+        
+        symbol = currency_symbols.get(currency_code, '$')
+        name = currency_names.get(currency_code, 'US Dollar')
+        
+        return {
+            'currency_code': currency_code,
+            'currency_symbol': symbol,
+            'currency_name': name,
+            'base_salary': base_salary,
+            'formatted_salary': f"{symbol}{base_salary:,.0f}",
+            'salary_range': {
+                'min': base_salary * 0.8,
+                'max': base_salary * 1.2,
+                'median': base_salary
+            }
+        }
         
     async def initialize(self):
         """Initialize database connection and HTTP session"""
@@ -194,7 +248,11 @@ class MonthlyTrendUpdater:
             "industry_impact": "AI and automation are driving demand for this role",
             "automation_risk": 3.2,
             "future_outlook": "Strong growth expected over next 2-3 years",
-            "confidence_score": 8.5
+            "confidence_score": 8.5,
+            "salary_info": {{
+                "base_salary": 85000,
+                "region": "north-america"
+            }}
         }}
         
         Guidelines:
@@ -206,6 +264,8 @@ class MonthlyTrendUpdater:
         - remote_work_trend: 0-10 scale (10 = very remote-friendly)
         - automation_risk: 0-10 scale (10 = high risk of automation)
         - confidence_score: 0-10 scale (10 = very confident in analysis)
+        - salary_info.base_salary: average salary in USD for this role
+        - salary_info.region: "north-america", "europe", "asia-pacific", "south-america", "africa", or "middle-east"
         
         Provide current, accurate market data based on recent trends and job market analysis.
         """
@@ -226,6 +286,17 @@ class MonthlyTrendUpdater:
             json_str = content[start_idx:end_idx]
             data = json.loads(json_str)
             
+            # Extract salary information for currency conversion
+            salary_info = data.get('salary_info', {})
+            base_salary = float(salary_info.get('base_salary', 75000))  # Default to $75k USD
+            region = salary_info.get('region', 'north-america')  # Default to North America
+            
+            # Get currency for the region
+            currency_code = self.get_currency_for_region(region)
+            
+            # Generate salary data with currency information
+            salary_data = self.generate_salary_data(base_salary, currency_code)
+            
             # Create CareerTrendData object
             trend_data = CareerTrendData(
                 career_id=career_id,
@@ -242,7 +313,9 @@ class MonthlyTrendUpdater:
                 industry_impact=data.get('industry_impact', ''),
                 automation_risk=float(data.get('automation_risk', 5.0)),
                 future_outlook=data.get('future_outlook', ''),
-                confidence_score=float(data.get('confidence_score', 5.0))
+                confidence_score=float(data.get('confidence_score', 5.0)),
+                currency_code=currency_code,
+                salary_data=salary_data
             )
             
             return trend_data
@@ -303,13 +376,15 @@ class MonthlyTrendUpdater:
                     trend_data.automation_risk,
                     trend_data.future_outlook,
                     trend_data.confidence_score,
+                    trend_data.currency_code,
+                    trend_data.salary_data,
                     next_update
                 )
                 
                 # Save to history
                 history_query = """
-                INSERT INTO career_trend_history (career_id, trend_data, month_year)
-                VALUES ($1, $2, $3)
+                INSERT INTO career_trend_history (career_id, trend_data, currency_code, month_year)
+                VALUES ($1, $2, $3, $4)
                 """
                 
                 current_month = datetime.now().strftime('%Y-%m')
@@ -334,6 +409,7 @@ class MonthlyTrendUpdater:
                     history_query,
                     trend_data.career_id,
                     json.dumps(trend_json),
+                    trend_data.currency_code,
                     current_month
                 )
                 

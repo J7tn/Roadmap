@@ -11,6 +11,9 @@ import { ICareerPath, ICareerNode, CareerLevel, IndustryCategory } from "@/types
 import { useCareerData } from "@/hooks/useCareerData";
 import { INDUSTRY_CATEGORIES } from "@/data/industries";
 import { useTranslation } from 'react-i18next';
+import { formatSalary } from '@/utils/currencyUtils';
+import { careerService } from '@/services/careerService';
+import { getTranslatedIndustryName } from '@/utils/translationHelpers';
 
 interface CareerSearchProps {
   onCareerSelect?: (career: ICareerNode) => void;
@@ -27,6 +30,8 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
   const [showFilters, setShowFilters] = useState(false);
   const [activeTab, setActiveTab] = useState("search");
+  const [translatedCareers, setTranslatedCareers] = useState<ICareerNode[]>([]);
+  const [loadingTranslated, setLoadingTranslated] = useState(false);
 
   const { useOptimizedSearch } = useCareerData();
   
@@ -36,6 +41,30 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
   }), [selectedIndustry, selectedLevel]);
 
   const { data: searchResults, loading, error } = useOptimizedSearch(searchQuery, filters);
+
+  // Search translated careers when query changes
+  React.useEffect(() => {
+    const searchTranslatedCareers = async () => {
+      if (!searchQuery.trim()) {
+        setTranslatedCareers([]);
+        return;
+      }
+
+      setLoadingTranslated(true);
+      try {
+        const translated = await careerService.searchCareersTranslated(searchQuery, filters);
+        setTranslatedCareers(translated);
+      } catch (error) {
+        console.error('Error searching translated careers:', error);
+        setTranslatedCareers([]);
+      } finally {
+        setLoadingTranslated(false);
+      }
+    };
+
+    const timeoutId = setTimeout(searchTranslatedCareers, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, selectedIndustry, selectedLevel]);
 
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
@@ -71,6 +100,14 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
   }, []);
 
   const allCareers = useMemo(() => {
+    // Use translated careers if available, otherwise fall back to regular search results
+    if (translatedCareers.length > 0) {
+      return translatedCareers.map(node => ({
+        node,
+        path: { id: 'translated', n: 'Translated Results', cat: 'healthcare', nodes: [], conn: [] } as ICareerPath
+      }));
+    }
+    
     if (!searchResults?.careers) return [];
     
     const careers: Array<{ node: ICareerNode; path: ICareerPath }> = [];
@@ -81,7 +118,7 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
     });
     
     return careers;
-  }, [searchResults]);
+  }, [searchResults, translatedCareers]);
 
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex justify-end">
@@ -161,7 +198,7 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
                             <SelectItem value="all">{t('pages.search.filters.allIndustries')}</SelectItem>
                             {INDUSTRY_CATEGORIES.map((industry) => (
                               <SelectItem key={industry.id} value={industry.id}>
-                                {t(`industries.${industry.id}`) || industry.name}
+                                {getTranslatedIndustryName(t, industry.name)}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -242,7 +279,7 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
                                   <div className="flex items-center gap-4 text-xs text-muted-foreground">
                                     <div className="flex items-center gap-1">
                                       <DollarSign className="h-3 w-3" />
-                                      <span>{node.sr}</span>
+                                      <span>{formatSalary(parseInt(node.sr?.replace(/[^0-9]/g, '') || '0'))}</span>
                                     </div>
                                     <div className="flex items-center gap-1">
                                       <Clock className="h-3 w-3" />
@@ -289,10 +326,46 @@ const CareerSearch: React.FC<CareerSearchProps> = ({
 const BrowseAllCareers: React.FC<{ onCareerSelect: (career: ICareerNode) => void }> = ({ onCareerSelect }) => {
   const { t } = useTranslation();
   const [selectedIndustry, setSelectedIndustry] = useState<string>("all");
+  const [translatedCareers, setTranslatedCareers] = useState<ICareerNode[]>([]);
+  const [loadingTranslated, setLoadingTranslated] = useState(false);
   const { useCareerPathsByIndustry } = useCareerData();
   const { data: industryData, loading } = useCareerPathsByIndustry(selectedIndustry as IndustryCategory);
 
+  // Load translated careers when industry changes
+  React.useEffect(() => {
+    const loadTranslatedCareers = async () => {
+      if (selectedIndustry === "all") {
+        setTranslatedCareers([]);
+        return;
+      }
+
+      setLoadingTranslated(true);
+      try {
+        const filters = {
+          industry: [selectedIndustry as IndustryCategory]
+        };
+        const translated = await careerService.searchCareersTranslated("", filters);
+        setTranslatedCareers(translated);
+      } catch (error) {
+        console.error('Error loading translated careers:', error);
+        setTranslatedCareers([]);
+      } finally {
+        setLoadingTranslated(false);
+      }
+    };
+
+    loadTranslatedCareers();
+  }, [selectedIndustry]);
+
   const allCareers = useMemo(() => {
+    // Use translated careers if available, otherwise fall back to regular industry data
+    if (translatedCareers.length > 0) {
+      return translatedCareers.map(node => ({
+        node,
+        path: { id: 'translated', n: 'Translated Results', cat: selectedIndustry, nodes: [], conn: [] } as ICareerPath
+      }));
+    }
+    
     if (!industryData?.careers) return [];
     
     const careers: Array<{ node: ICareerNode; path: ICareerPath }> = [];
@@ -303,7 +376,7 @@ const BrowseAllCareers: React.FC<{ onCareerSelect: (career: ICareerNode) => void
     });
     
     return careers;
-  }, [industryData]);
+  }, [industryData, translatedCareers, selectedIndustry]);
 
   const getLevelBadgeColor = useCallback((level: CareerLevel): string => {
     switch (level) {
@@ -337,7 +410,7 @@ const BrowseAllCareers: React.FC<{ onCareerSelect: (career: ICareerNode) => void
             <SelectItem value="all">{t('pages.search.filters.allIndustries')}</SelectItem>
             {INDUSTRY_CATEGORIES.map((industry) => (
               <SelectItem key={industry.id} value={industry.id}>
-                {t(`industries.${industry.id}`) || industry.name}
+                {getTranslatedIndustryName(t, industry.name)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -345,14 +418,14 @@ const BrowseAllCareers: React.FC<{ onCareerSelect: (career: ICareerNode) => void
       </div>
 
       <div className="space-y-3">
-        {loading && (
+        {(loading || loadingTranslated) && (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
             <p className="text-muted-foreground mt-2">Loading careers...</p>
           </div>
         )}
 
-        {!loading && allCareers.map(({ node, path }) => (
+        {!(loading || loadingTranslated) && allCareers.map(({ node, path }) => (
           <motion.div
             key={`${path.id}-${node.id}`}
             initial={{ opacity: 0, y: 20 }}
@@ -375,7 +448,7 @@ const BrowseAllCareers: React.FC<{ onCareerSelect: (career: ICareerNode) => void
                     <div className="flex items-center gap-4 text-xs text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <DollarSign className="h-3 w-3" />
-                        <span>{node.sr}</span>
+                        <span>{formatSalary(parseInt(node.sr?.replace(/[^0-9]/g, '') || '0'))}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />

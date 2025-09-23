@@ -64,6 +64,25 @@ npx cap sync
 npx cap open android
 ```
 
+## ⚙️ Environment Configuration
+
+Create a `.env` file in the project root with the following variables:
+
+```bash
+# Supabase Configuration (Required)
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Supabase Service Role Key (Required for translation updates)
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+```
+
+**⚠️ Important Notes**:
+- All client-side environment variables must be prefixed with `VITE_`
+- The service role key is required for administrative translation updates
+- Never commit the service role key to version control
+- The service role key bypasses Row Level Security (RLS) policies
+
 ## 🛠️ Tech Stack
 
 - **Frontend**: React 18, TypeScript, Tailwind CSS
@@ -115,32 +134,33 @@ The app supports **11 languages** with comprehensive translation coverage:
 - **RTL Support**: Proper right-to-left layout for Arabic
 - **Fallback System**: Falls back to English if translation is missing
 - **Complete UI Coverage**: All pages, components, and user messages translated
+- **Dynamic Loading**: Translations loaded from Supabase with caching
+- **Force Refresh**: Ability to bypass cache for fresh translations
 
-### Translation Files
-Translation files are located in `src/locales/` with the following structure:
-```
-src/locales/
-├── en.json    # English (base)
-├── es.json    # Spanish
-├── fr.json    # French
-├── de.json    # German
-├── it.json    # Italian
-├── pt.json    # Portuguese
-├── ja.json    # Japanese
-├── ko.json    # Korean
-├── zh.json    # Chinese
-├── ru.json    # Russian
-└── ar.json    # Arabic
-```
+### Translation System
+- **Database Storage**: Translations stored in Supabase `translations` table
+- **Version Control**: Each translation update gets a new version number
+- **Caching**: 24-hour cache for improved performance
+- **Local Fallback**: English translations in `src/locales/en.json` as fallback
 
 ### Adding New Translations
-1. Add new keys to `src/locales/en.json`
-2. Add corresponding translations to all other language files
-3. Use the `useTranslation` hook in components: `const { t } = useTranslation()`
-4. Replace hardcoded strings with `t('key.path')`
+**⚠️ IMPORTANT**: Always check `TRANSLATION_UPDATE_GUIDE.md` before making translation changes.
+
+**Prerequisites**:
+- `SUPABASE_SERVICE_ROLE_KEY` must be configured in `.env` file
+- Service role key is required to bypass RLS policies for database updates
+
+**Process**:
+1. Read the translation update guide
+2. Ensure service role key is configured
+3. Follow documented procedures for database updates
+4. Test all affected languages
+5. Verify console logs for successful loading
 
 ## 📖 Documentation
 
+- [Development Roadmap & Rules](roadmap.mdc) - **Essential reading for all developers**
+- [Translation Update Guide](TRANSLATION_UPDATE_GUIDE.md) - **Required before any translation changes**
 - [Design Document](docs/DESIGN.md)
 - [Logo Integration Guide](docs/LOGO_INTEGRATION_GUIDE.md)
 

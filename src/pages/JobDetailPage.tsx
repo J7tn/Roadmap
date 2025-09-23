@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Home, Search, Target, BookOpen } from "lucide-react";
 import CareerDetailsContent from "@/components/CareerDetailsContent";
 import CareerTrendDisplay from "@/components/CareerTrendDisplay";
-import { getAllCareerNodes } from "@/services/careerService";
+import { getAllCareerNodes, careerService } from "@/services/careerService";
 import { ICareerNode, ICareerPath } from "@/types/career";
 import BottomNavigation from "@/components/BottomNavigation";
 
@@ -25,29 +25,56 @@ const JobDetailPage: React.FC = () => {
       
       try {
         console.log('Loading career data for ID:', id);
-        // Get all career nodes to find the path containing this node
-        const allNodes = await getAllCareerNodes();
-        console.log('Total nodes loaded:', allNodes.length);
         
-        const nodeWithPath = allNodes.find(item => item.node.id === id);
-        console.log('Found node with path:', nodeWithPath ? 'Yes' : 'No');
-        
-        if (nodeWithPath) {
-          setCareer(nodeWithPath.node);
-          setCareerPath(nodeWithPath.path);
-          
-          // Find the current node's index in the path
-          const index = nodeWithPath.path.nodes.findIndex(node => node.id === id);
-          console.log('Current index in path:', index);
-          setCurrentIndex(index >= 0 ? index : 0);
-        } else {
-          console.error('Career not found for ID:', id);
-          console.log('Available career IDs:', allNodes.map(item => item.node.id).slice(0, 10));
-          
-          // Try to find a similar career or show error
-          setCareer(null);
-          setCareerPath(null);
+        // Try to get translated career first
+        let career = null;
+        try {
+          career = await careerService.getCareerByIdTranslated(id);
+          console.log('Loaded translated career:', career ? 'Yes' : 'No');
+        } catch (error) {
+          console.log('Failed to load translated career, falling back to regular career:', error);
         }
+        
+        if (!career) {
+          // Fallback to regular career service
+          const allNodes = await getAllCareerNodes();
+          console.log('Total nodes loaded:', allNodes.length);
+          
+          const nodeWithPath = allNodes.find(item => item.node.id === id);
+          console.log('Found node with path:', nodeWithPath ? 'Yes' : 'No');
+          
+          if (nodeWithPath) {
+            career = nodeWithPath.node;
+            setCareerPath(nodeWithPath.path);
+            
+            // Find the current node's index in the path
+            const index = nodeWithPath.path.nodes.findIndex(node => node.id === id);
+            console.log('Current index in path:', index);
+            setCurrentIndex(index >= 0 ? index : 0);
+          } else {
+            console.error('Career not found for ID:', id);
+            console.log('Available career IDs:', allNodes.map(item => item.node.id).slice(0, 10));
+            
+            // Try to find a similar career or show error
+            setCareer(null);
+            setCareerPath(null);
+          }
+        } else {
+          // For translated career, we need to find the path separately
+          const allNodes = await getAllCareerNodes();
+          const nodeWithPath = allNodes.find(item => item.node.id === id);
+          
+          if (nodeWithPath) {
+            setCareerPath(nodeWithPath.path);
+            
+            // Find the current node's index in the path
+            const index = nodeWithPath.path.nodes.findIndex(node => node.id === id);
+            console.log('Current index in path:', index);
+            setCurrentIndex(index >= 0 ? index : 0);
+          }
+        }
+        
+        setCareer(career);
       } catch (error) {
         console.error('Failed to load career data:', error);
         setCareer(null);
@@ -95,7 +122,7 @@ const JobDetailPage: React.FC = () => {
       )}
       
       {!loading && career && careerPath && (
-        <div className="container mx-auto px-4 pb-12 space-y-6">
+        <div className="container mx-auto px-4 pb-12 space-y-6 pt-4">
           <CareerDetailsContent 
             career={career} 
             careerPath={careerPath}
