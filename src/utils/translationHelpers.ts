@@ -80,6 +80,42 @@ const industryTranslationMapping: { [key: string]: string } = {
   'Space & Aerospace': 'spaceAerospace'
 };
 
+// Frontend industry ID to translation key mapping
+const frontendIndustryToTranslationKey: { [key: string]: string } = {
+  'tech': 'technology',
+  'healthcare': 'healthcare',
+  'business': 'business',
+  'finance': 'finance',
+  'marketing': 'marketing',
+  'education': 'education',
+  'creative': 'creativeArts',
+  'engineering': 'engineering',
+  'science': 'science',
+  'legal': 'legal',
+  'skilled-trades': 'skilledTrades',
+  'hospitality': 'hospitality',
+  'media': 'mediaEntertainment',
+  'digital-creator': 'digitalCreator',
+  'public-service': 'publicService',
+  'sanitation': 'sanitationMaintenance',
+  'military': 'militaryDefense',
+  'music': 'musicAudio',
+  'gaming-casino': 'gamingCasino',
+  'transportation': 'transportationLogistics',
+  'retail': 'retailSales',
+  'agriculture': 'agricultureFood',
+  'construction': 'constructionRealEstate',
+  'specialized-trades': 'specializedTrades',
+  'drones-aviation': 'dronesAviation',
+  'marine-science': 'marineScience',
+  'investment-finance': 'investmentFinance',
+  'middle-management': 'middleManagement',
+  'real-estate': 'realEstate',
+  'emerging-tech': 'emergingTechnology',
+  'environmental': 'environmentalScience',
+  'space-aerospace': 'spaceAerospace'
+};
+
 // Skill name to translation key mapping
 const skillTranslationMapping: { [key: string]: string } = {
   'Network Security': 'networkSecurity',
@@ -144,6 +180,13 @@ export const getIndustryTranslationKey = (industryName: string): string => {
 };
 
 /**
+ * Get translation key for a frontend industry ID
+ */
+export const getFrontendIndustryTranslationKey = (frontendIndustryId: string): string => {
+  return frontendIndustryToTranslationKey[frontendIndustryId] || frontendIndustryId;
+};
+
+/**
  * Get translation key for a skill name
  */
 export const getSkillTranslationKey = (skillName: string): string => {
@@ -182,6 +225,21 @@ export const getTranslatedIndustryName = (t: any, industryName: string): string 
   // If translation key doesn't exist or returns the key itself, use fallback
   if (translated === `industries.${translationKey}.name` || translationKey === 'unknown') {
     return industryName;
+  }
+  
+  return translated;
+};
+
+/**
+ * Get translated industry name from frontend industry ID
+ */
+export const getTranslatedIndustryNameFromId = (t: any, frontendIndustryId: string): string => {
+  const translationKey = getFrontendIndustryTranslationKey(frontendIndustryId);
+  const translated = t(`industries.${translationKey}.name`);
+  
+  // If translation key doesn't exist or returns the key itself, use fallback
+  if (translated === `industries.${translationKey}.name` || translationKey === frontendIndustryId) {
+    return frontendIndustryId;
   }
   
   return translated;

@@ -13,7 +13,7 @@ import { INDUSTRY_CATEGORIES } from "@/data/industries";
 import { useTranslation } from 'react-i18next';
 import { formatSalary } from '@/utils/currencyUtils';
 import { careerService } from '@/services/careerService';
-import { getTranslatedIndustryName } from '@/utils/translationHelpers';
+import { getTranslatedIndustryNameFromId } from '@/utils/translationHelpers';
 
 interface CareerSearchProps {
   onCareerSelect?: (career: ICareerNode) => void;
@@ -410,7 +410,7 @@ const BrowseAllCareers: React.FC<{ onCareerSelect: (career: ICareerNode) => void
             <SelectItem value="all">{t('pages.search.filters.allIndustries')}</SelectItem>
             {INDUSTRY_CATEGORIES.map((industry) => (
               <SelectItem key={industry.id} value={industry.id}>
-                {getTranslatedIndustryName(t, industry.name)}
+                {getTranslatedIndustryNameFromId(t, industry.id)}
               </SelectItem>
             ))}
           </SelectContent>

@@ -19,7 +19,7 @@ interface ICareerNodeWithCategory extends ICareerNode {
 }
 import { getAllCareerNodesArray, getCareerNodesByIndustry, careerService } from "@/services/careerService";
 import { INDUSTRY_CATEGORIES } from "@/data/industries";
-import { getTranslatedIndustryName } from "@/utils/translationHelpers";
+import { getTranslatedIndustryNameFromId } from "@/utils/translationHelpers";
 import CareerBlock from "@/components/CareerBlock";
 import BottomNavigation from "@/components/BottomNavigation";
 import SearchInput from "@/components/SearchInput";
@@ -434,7 +434,7 @@ const SearchPage: React.FC = React.memo(() => {
                   <option value="all">{t('pages.search.filters.allIndustries')}</option>
                   {INDUSTRY_CATEGORIES.map(industry => (
                     <option key={industry.id} value={industry.id}>
-                      {getTranslatedIndustryName(t, industry.name)}
+                      {getTranslatedIndustryNameFromId(t, industry.id)}
                     </option>
                   ))}
                 </select>
