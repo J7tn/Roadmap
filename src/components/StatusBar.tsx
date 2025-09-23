@@ -15,8 +15,8 @@ const StatusBarComponent: React.FC = () => {
       if (typeof window !== 'undefined' && (window as any).Capacitor) {
         console.log('Updating status bar for', isDarkMode ? 'dark' : 'light', 'mode');
         
-        // Initial setup
-        await StatusBar.setOverlaysWebView({ overlay: false });
+        // Initial setup - overlay should be true to prevent positioning issues
+        await StatusBar.setOverlaysWebView({ overlay: true });
         await StatusBar.show();
         
         // Set status bar style based on theme

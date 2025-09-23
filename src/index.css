@@ -13,6 +13,18 @@
     padding-top: env(safe-area-inset-top);
   }
 
+  /* Ensure proper spacing for fixed headers */
+  .main-content-with-header {
+    padding-top: calc(env(safe-area-inset-top) + 88px);
+  }
+
+  /* Additional mobile-specific spacing */
+  @media screen and (max-width: 768px) {
+    .main-content-with-header {
+      padding-top: calc(env(safe-area-inset-top) + 92px);
+    }
+  }
+
   /* Handle bottom safe area spacing */
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom);
@@ -32,15 +44,9 @@
     }
   }
 
-  /* Status bar area styling */
+  /* Status bar area styling - removed since we're using overlay */
   .status-bar-area {
-    height: env(safe-area-inset-top);
-    background-color: hsl(var(--background));
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9999;
+    display: none;
   }
 
   /* Prevent touch dragging on headers */
@@ -50,6 +56,13 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 9999 !important;
   }
 
   /* Ensure app content is hidden until splash screen is dismissed */

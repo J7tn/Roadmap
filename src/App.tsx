@@ -32,9 +32,7 @@ function App() {
       <ThemeProvider>
         <RegionProvider>
         <StatusBarComponent />
-        {/* Status bar area spacer */}
-        <div className="status-bar-area"></div>
-        <div className="min-h-screen bg-background app-content" id="app-content" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+        <div className="min-h-screen bg-background app-content" id="app-content">
         <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><p className="text-lg">Loading...</p></div>}>
           <>
             <ScrollToTop />
