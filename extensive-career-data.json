@@ -1,0 +1,222 @@
+{
+  "industries": [
+    {
+      "id": "technology",
+      "name": "Technology",
+      "description": "Software development, IT services, cybersecurity, and digital innovation",
+      "job_count": 25000,
+      "avg_salary": "$95,000",
+      "growth_rate": "Very High",
+      "global_demand": "Very High",
+      "top_countries": ["United States", "Germany", "Japan", "United Kingdom", "Canada"]
+    },
+    {
+      "id": "healthcare",
+      "name": "Healthcare",
+      "description": "Medical services, patient care, pharmaceuticals, and health technology",
+      "job_count": 18000,
+      "avg_salary": "$75,000",
+      "growth_rate": "High",
+      "global_demand": "Very High",
+      "top_countries": ["United States", "Canada", "United Kingdom", "Australia", "Germany"]
+    },
+    {
+      "id": "finance",
+      "name": "Finance",
+      "description": "Banking, investment, insurance, and financial services",
+      "job_count": 12000,
+      "avg_salary": "$85,000",
+      "growth_rate": "Medium",
+      "global_demand": "High",
+      "top_countries": ["United States", "United Kingdom", "Singapore", "Switzerland", "Japan"]
+    },
+    {
+      "id": "education",
+      "name": "Education",
+      "description": "Teaching, training, educational technology, and academic services",
+      "job_count": 15000,
+      "avg_salary": "$60,000",
+      "growth_rate": "Medium",
+      "global_demand": "High",
+      "top_countries": ["United States", "Canada", "United Kingdom", "Australia", "Germany"]
+    },
+    {
+      "id": "manufacturing",
+      "name": "Manufacturing",
+      "description": "Production, engineering, quality control, and industrial operations",
+      "job_count": 8000,
+      "avg_salary": "$70,000",
+      "growth_rate": "Low",
+      "global_demand": "Medium",
+      "top_countries": ["China", "United States", "Germany", "Japan", "South Korea"]
+    },
+    {
+      "id": "retail",
+      "name": "Retail",
+      "description": "Sales, customer service, merchandising, and e-commerce",
+      "job_count": 10000,
+      "avg_salary": "$45,000",
+      "growth_rate": "Medium",
+      "global_demand": "High",
+      "top_countries": ["United States", "United Kingdom", "Germany", "Japan", "France"]
+    },
+    {
+      "id": "hospitality",
+      "name": "Hospitality",
+      "description": "Hotels, restaurants, tourism, and customer service",
+      "job_count": 6000,
+      "avg_salary": "$40,000",
+      "growth_rate": "Medium",
+      "global_demand": "High",
+      "top_countries": ["United States", "France", "Spain", "Italy", "United Kingdom"]
+    },
+    {
+      "id": "construction",
+      "name": "Construction",
+      "description": "Building, engineering, architecture, and infrastructure development",
+      "job_count": 5000,
+      "avg_salary": "$65,000",
+      "growth_rate": "Medium",
+      "global_demand": "High",
+      "top_countries": ["United States", "China", "Germany", "United Kingdom", "Canada"]
+    },
+    {
+      "id": "transportation",
+      "name": "Transportation",
+      "description": "Logistics, shipping, aviation, and transportation services",
+      "job_count": 4000,
+      "avg_salary": "$55,000",
+      "growth_rate": "Medium",
+      "global_demand": "High",
+      "top_countries": ["United States", "Germany", "Japan", "United Kingdom", "Netherlands"]
+    },
+    {
+      "id": "energy",
+      "name": "Energy",
+      "description": "Oil, gas, renewable energy, and utilities",
+      "job_count": 3000,
+      "avg_salary": "$80,000",
+      "growth_rate": "Medium",
+      "global_demand": "High",
+      "top_countries": ["United States", "Saudi Arabia", "Russia", "Canada", "Norway"]
+    },
+    {
+      "id": "agriculture",
+      "name": "Agriculture",
+      "description": "Farming, food production, and agricultural technology",
+      "job_count": 2000,
+      "avg_salary": "$50,000",
+      "growth_rate": "Low",
+      "global_demand": "High",
+      "top_countries": ["United States", "China", "India", "Brazil", "Germany"]
+    },
+    {
+      "id": "entertainment",
+      "name": "Entertainment",
+      "description": "Media, gaming, sports, and creative industries",
+      "job_count": 1500,
+      "avg_salary": "$70,000",
+      "growth_rate": "High",
+      "global_demand": "Medium",
+      "top_countries": ["United States", "United Kingdom", "Japan", "Canada", "Germany"]
+    },
+    {
+      "id": "government",
+      "name": "Government",
+      "description": "Public administration, policy, and civil service",
+      "job_count": 1000,
+      "avg_salary": "$65,000",
+      "growth_rate": "Low",
+      "global_demand": "Medium",
+      "top_countries": ["United States", "Canada", "United Kingdom", "Germany", "Australia"]
+    },
+    {
+      "id": "nonprofit",
+      "name": "Non-Profit",
+      "description": "Social services, advocacy, and charitable organizations",
+      "job_count": 800,
+      "avg_salary": "$55,000",
+      "growth_rate": "Medium",
+      "global_demand": "Medium",
+      "top_countries": ["United States", "Canada", "United Kingdom", "Australia", "Germany"]
+    },
+    {
+      "id": "legal",
+      "name": "Legal",
+      "description": "Law, compliance, and legal services",
+      "job_count": 600,
+      "avg_salary": "$90,000",
+      "growth_rate": "Medium",
+      "global_demand": "Medium",
+      "top_countries": ["United States", "United Kingdom", "Germany", "Canada", "Australia"]
+    },
+    {
+      "id": "real-estate",
+      "name": "Real Estate",
+      "description": "Property sales, development, and management",
+      "job_count": 700,
+      "avg_salary": "$60,000",
+      "growth_rate": "Medium",
+      "global_demand": "Medium",
+      "top_countries": ["United States", "United Kingdom", "Germany", "Canada", "Australia"]
+    },
+    {
+      "id": "consulting",
+      "name": "Consulting",
+      "description": "Professional advice and business services",
+      "job_count": 500,
+      "avg_salary": "$90,000",
+      "growth_rate": "High",
+      "global_demand": "High",
+      "top_countries": ["United States", "United Kingdom", "Germany", "France", "Canada"]
+    },
+    {
+      "id": "marketing",
+      "name": "Marketing",
+      "description": "Brand promotion, advertising, and customer engagement",
+      "job_count": 400,
+      "avg_salary": "$70,000",
+      "growth_rate": "High",
+      "global_demand": "High",
+      "top_countries": ["United States", "United Kingdom", "Germany", "Australia", "Canada"]
+    },
+    {
+      "id": "media",
+      "name": "Media",
+      "description": "Journalism, broadcasting, and digital content creation",
+      "job_count": 300,
+      "avg_salary": "$55,000",
+      "growth_rate": "Medium",
+      "global_demand": "Medium",
+      "top_countries": ["United States", "United Kingdom", "Germany", "Canada", "Australia"]
+    },
+    {
+      "id": "sports",
+      "name": "Sports",
+      "description": "Athletics, coaching, and sports management",
+      "job_count": 200,
+      "avg_salary": "$50,000",
+      "growth_rate": "Medium",
+      "global_demand": "Medium",
+      "top_countries": ["United States", "United Kingdom", "Germany", "Canada", "Australia"]
+    }
+  ],
+  "careers": [
+    {
+      "id": "software-engineer",
+      "level": "I",
+      "salary_range": "$80,000 - $150,000",
+      "experience_required": "3-5 years",
+      "title": "Software Engineer",
+      "description": "Design, develop, and maintain software applications and systems. Work with cross-functional teams to deliver high-quality software solutions.",
+      "skills": ["Programming", "Problem Solving", "Teamwork", "Communication", "Software Development", "Algorithms", "Data Structures", "Version Control"],
+      "job_titles": ["Software Developer", "Application Developer", "Systems Developer", "Full Stack Developer", "Backend Developer", "Frontend Developer"],
+      "certifications": ["AWS Certified Developer", "Microsoft Certified: Azure Developer Associate", "Google Cloud Professional Developer", "Oracle Certified Professional"],
+      "requirements": {
+        "education": ["Bachelor's Degree in Computer Science or related field"],
+        "experience": "3+ years of software development experience",
+        "skills": ["Proficiency in programming languages", "Understanding of software development lifecycle", "Database knowledge"]
+      }
+    }
+  ]
+}

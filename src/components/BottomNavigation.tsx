@@ -7,6 +7,7 @@ import {
   Map,
   User,
   Activity,
+  Building2,
 } from "lucide-react";
 
 interface BottomNavigationProps {
@@ -84,6 +85,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ className = "" }) =
             </div>
             <span className="text-[10px] font-medium text-center leading-tight px-1 truncate w-full">{t('navigation.assessment')}</span>
           </Link>
+
         </div>
       </div>
     </nav>

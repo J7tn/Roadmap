@@ -21,6 +21,7 @@ import TranslatedCareerService from './translatedCareerService';
 import SupabaseCareerService from './supabaseCareerService';
 import { organizedCareerService } from './organizedCareerService';
 import { simpleLanguageService } from './simpleLanguageService';
+import { comprehensiveCareerService } from './comprehensiveCareerService';
 
 // Performance-optimized career service
 // Implements lazy loading, caching, and efficient data management
@@ -416,30 +417,36 @@ class CareerService {
   // Get all career nodes as simple array with translation support
   public async getAllCareerNodesArray(): Promise<ICareerNode[]> {
     try {
-      // Use simple language service as primary source
-      return await simpleLanguageService.getAllCareers();
+      // Use comprehensive service as primary source
+      return await comprehensiveCareerService.getAllCareers();
     } catch (error) {
-      console.error('Error getting career nodes from simple language service:', error);
-      // Fallback to organized service
+      console.error('Error getting career nodes from comprehensive service:', error);
+      // Fallback to simple language service
       try {
-        return await this.organizedCareerService.getAllCareers();
+        return await simpleLanguageService.getAllCareers();
       } catch (fallbackError) {
-        console.error('Error getting career nodes from organized service:', fallbackError);
-        // Fallback to Supabase service
+        console.error('Error getting career nodes from simple language service:', fallbackError);
+        // Fallback to organized service
         try {
-          return await this.supabaseCareerService.getAllCareerNodes();
+          return await this.organizedCareerService.getAllCareers();
         } catch (fallbackError2) {
-          console.error('Error getting career nodes from Supabase:', fallbackError2);
-          // Final fallback to original method
-          const allPaths = await this.getAllCareerPaths();
-          const allNodes: ICareerNode[] = [];
-          
-          allPaths.forEach(path => {
-            allNodes.push(...path.nodes);
-          });
-          
-          // Apply translations based on current language
-          return this.translationService.translateCareerArray(allNodes);
+          console.error('Error getting career nodes from organized service:', fallbackError2);
+          // Fallback to Supabase service
+          try {
+            return await this.supabaseCareerService.getAllCareerNodes();
+          } catch (fallbackError3) {
+            console.error('Error getting career nodes from Supabase:', fallbackError3);
+            // Final fallback to original method
+            const allPaths = await this.getAllCareerPaths();
+            const allNodes: ICareerNode[] = [];
+            
+            allPaths.forEach(path => {
+              allNodes.push(...path.nodes);
+            });
+            
+            // Apply translations based on current language
+            return this.translationService.translateCareerArray(allNodes);
+          }
         }
       }
     }
@@ -448,27 +455,33 @@ class CareerService {
   // Get career nodes by specific industry (lazy loading)
   public async getCareerNodesByIndustry(industry: string): Promise<ICareerNode[]> {
     try {
-      // Use simple language service as primary source
-      return await simpleLanguageService.getCareersByIndustry(industry);
+      // Use comprehensive service as primary source
+      return await comprehensiveCareerService.getCareersByIndustry(industry);
     } catch (error) {
-      console.error(`Error getting career nodes for industry ${industry} from simple language service:`, error);
-      // Fallback to organized service
+      console.error(`Error getting career nodes for industry ${industry} from comprehensive service:`, error);
+      // Fallback to simple language service
       try {
-        return await this.organizedCareerService.getCareersByIndustry(industry);
+        return await simpleLanguageService.getCareersByIndustry(industry);
       } catch (fallbackError) {
-        console.error(`Error getting career nodes for industry ${industry} from organized service:`, fallbackError);
-        // Fallback to Supabase service
+        console.error(`Error getting career nodes for industry ${industry} from simple language service:`, fallbackError);
+        // Fallback to organized service
         try {
-          return await this.supabaseCareerService.getCareerNodesByIndustry(industry);
+          return await this.organizedCareerService.getCareersByIndustry(industry);
         } catch (fallbackError2) {
-          console.error(`Error getting career nodes for industry ${industry} from Supabase:`, fallbackError2);
-          // Fallback to getting all nodes and filtering
+          console.error(`Error getting career nodes for industry ${industry} from organized service:`, fallbackError2);
+          // Fallback to Supabase service
           try {
-            const allNodes = await this.getAllCareerNodesArray();
-            return allNodes.filter(node => node.industry === industry);
+            return await this.supabaseCareerService.getCareerNodesByIndustry(industry);
           } catch (fallbackError3) {
-            console.error('Error in fallback for industry-specific careers:', fallbackError3);
-            return [];
+            console.error(`Error getting career nodes for industry ${industry} from Supabase:`, fallbackError3);
+            // Fallback to getting all nodes and filtering
+            try {
+              const allNodes = await this.getAllCareerNodesArray();
+              return allNodes.filter(node => node.industry === industry);
+            } catch (fallbackError4) {
+              console.error('Error in fallback for industry-specific careers:', fallbackError4);
+              return [];
+            }
           }
         }
       }
@@ -482,28 +495,35 @@ class CareerService {
     this.supabaseCareerService.setLanguage(language);
     this.organizedCareerService.setLanguage(language);
     simpleLanguageService.setLanguage(language); // Use the new simple service
+    comprehensiveCareerService.setLanguage(language); // Use the comprehensive service
   }
 
   // Get career by ID with translations
   public async getCareerByIdTranslated(id: string): Promise<ICareerNode | null> {
     try {
-      // Use simple language service as primary source
-      return await simpleLanguageService.getCareerById(id);
+      // Use comprehensive service as primary source
+      return await comprehensiveCareerService.getCareerById(id);
     } catch (error) {
-      console.error('Error getting career by ID from simple language service:', error);
-      // Fallback to organized service
+      console.error('Error getting career by ID from comprehensive service:', error);
+      // Fallback to simple language service
       try {
-        return await this.organizedCareerService.getCareer(id);
+        return await simpleLanguageService.getCareerById(id);
       } catch (fallbackError) {
-        console.error('Error getting career by ID from organized service:', fallbackError);
-        // Fallback to translated career service
+        console.error('Error getting career by ID from simple language service:', fallbackError);
+        // Fallback to organized service
         try {
-          return await this.translatedCareerService.getCareerById(id);
+          return await this.organizedCareerService.getCareer(id);
         } catch (fallbackError2) {
-          console.error('Error getting translated career by ID:', fallbackError2);
-          // Fallback to getting from all nodes
-          const allNodes = await this.getAllCareerNodesArray();
-          return allNodes.find(node => node.id === id) || null;
+          console.error('Error getting career by ID from organized service:', fallbackError2);
+          // Fallback to translated career service
+          try {
+            return await this.translatedCareerService.getCareerById(id);
+          } catch (fallbackError3) {
+            console.error('Error getting translated career by ID:', fallbackError3);
+            // Fallback to getting from all nodes
+            const allNodes = await this.getAllCareerNodesArray();
+            return allNodes.find(node => node.id === id) || null;
+          }
         }
       }
     }
@@ -512,32 +532,38 @@ class CareerService {
   // Search careers with translations
   public async searchCareersTranslated(query: string, filters?: ICareerFilters): Promise<ICareerNode[]> {
     try {
-      // Use simple language service as primary source
-      return await simpleLanguageService.searchCareers(query);
+      // Use comprehensive service as primary source
+      return await comprehensiveCareerService.searchCareers(query);
     } catch (error) {
-      console.error('Error searching careers with simple language service:', error);
-      // Fallback to organized service
+      console.error('Error searching careers with comprehensive service:', error);
+      // Fallback to simple language service
       try {
-        const industry = filters?.industry?.[0]; // Take first industry if multiple
-        const level = filters?.level?.[0]; // Take first level if multiple
-        return await this.organizedCareerService.searchCareers(query, industry, level);
+        return await simpleLanguageService.searchCareers(query);
       } catch (fallbackError) {
-        console.error('Error searching careers with organized service:', fallbackError);
-        // Fallback to translated career service
+        console.error('Error searching careers with simple language service:', fallbackError);
+        // Fallback to organized service
         try {
-          const searchFilters = {
-            industry: filters?.industry?.[0], // Take first industry if multiple
-            level: filters?.level?.[0] // Take first level if multiple
-          };
-          return await this.translatedCareerService.searchCareers(query, searchFilters);
+          const industry = filters?.industry?.[0]; // Take first industry if multiple
+          const level = filters?.level?.[0]; // Take first level if multiple
+          return await this.organizedCareerService.searchCareers(query, industry, level);
         } catch (fallbackError2) {
-          console.error('Error searching translated careers:', fallbackError2);
-          // Fallback to getting all nodes and filtering
-          const allNodes = await this.getAllCareerNodesArray();
-          return allNodes.filter(node => 
-            node.t.toLowerCase().includes(query.toLowerCase()) ||
-            node.d.toLowerCase().includes(query.toLowerCase())
-          );
+          console.error('Error searching careers with organized service:', fallbackError2);
+          // Fallback to translated career service
+          try {
+            const searchFilters = {
+              industry: filters?.industry?.[0], // Take first industry if multiple
+              level: filters?.level?.[0] // Take first level if multiple
+            };
+            return await this.translatedCareerService.searchCareers(query, searchFilters);
+          } catch (fallbackError3) {
+            console.error('Error searching translated careers:', fallbackError3);
+            // Fallback to getting all nodes and filtering
+            const allNodes = await this.getAllCareerNodesArray();
+            return allNodes.filter(node => 
+              node.t.toLowerCase().includes(query.toLowerCase()) ||
+              node.d.toLowerCase().includes(query.toLowerCase())
+            );
+          }
         }
       }
     }
@@ -546,13 +572,21 @@ class CareerService {
   // Get translated industry name
   public async getTranslatedIndustry(industryKey: string): Promise<string> {
     try {
-      // Use simple language service to get industry name
-      const industries = await simpleLanguageService.getAllIndustries();
+      // Use comprehensive service to get industry name
+      const industries = await comprehensiveCareerService.getAllIndustries();
       const industry = industries.find(i => i.id === industryKey);
       return industry?.name || industryKey;
     } catch (error) {
       console.error('Error getting translated industry:', error);
-      return industryKey;
+      // Fallback to simple language service
+      try {
+        const industries = await simpleLanguageService.getAllIndustries();
+        const industry = industries.find(i => i.id === industryKey);
+        return industry?.name || industryKey;
+      } catch (fallbackError) {
+        console.error('Error getting translated industry from fallback:', fallbackError);
+        return industryKey;
+      }
     }
   }
 

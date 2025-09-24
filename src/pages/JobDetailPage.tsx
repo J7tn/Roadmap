@@ -60,18 +60,19 @@ const JobDetailPage: React.FC = () => {
             setCareerPath(null);
           }
         } else {
-          // For translated career, we need to find the path separately
-          const allNodes = await getAllCareerNodes();
-          const nodeWithPath = allNodes.find(item => item.node.id === id);
+          // For translated career, we need to create a mock path structure
+          console.log('Creating mock path for translated career:', career.id);
           
-          if (nodeWithPath) {
-            setCareerPath(nodeWithPath.path);
-            
-            // Find the current node's index in the path
-            const index = nodeWithPath.path.nodes.findIndex(node => node.id === id);
-            console.log('Current index in path:', index);
-            setCurrentIndex(index >= 0 ? index : 0);
-          }
+          // Create a mock path for the translated career
+          const mockPath: ICareerPath = {
+            id: career.industry || 'general',
+            n: career.industry || 'General',
+            cat: (career.industry as any) || 'other',
+            nodes: [career],
+            conn: []
+          };
+          setCareerPath(mockPath);
+          setCurrentIndex(0);
         }
         
         setCareer(career);

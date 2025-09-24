@@ -1,3 +1,10 @@
+/**
+ * Comprehensive Career Service
+ * 
+ * This service integrates the new comprehensive career and industry database
+ * with the existing app structure and templates
+ */
+
 import { createClient } from '@supabase/supabase-js';
 import { ICareerNode } from '@/types/career';
 
@@ -13,14 +20,49 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 // Supported languages
 const SUPPORTED_LANGUAGES = ['en', 'ja', 'de', 'es', 'fr'];
 
-class SimpleLanguageService {
+interface Industry {
+  id: string;
+  name: string;
+  description: string;
+  job_count: number;
+  avg_salary: string;
+  growth_rate: string;
+  global_demand: string;
+  top_countries: string[];
+  classification_type: 'naics' | 'gics' | 'custom';
+  classification_code: string;
+}
+
+interface CareerTrendData {
+  career_id: string;
+  trend_score: number;
+  trend_direction: string;
+  demand_level: string;
+  growth_rate: string;
+  market_insights: string;
+  trending_skills: string[];
+  top_locations: string[];
+  salary_trend: string;
+  future_outlook: string;
+  industry_impact: string;
+  last_updated: string;
+}
+
+class ComprehensiveCareerService {
   private currentLanguage: string = 'en';
 
   constructor() {
-    // Get initial language from localStorage
-    const savedLanguage = localStorage.getItem('app-language');
-    if (savedLanguage && SUPPORTED_LANGUAGES.includes(savedLanguage)) {
-      this.currentLanguage = savedLanguage;
+    // Get initial language from localStorage (if available)
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const savedLanguage = localStorage.getItem('app-language');
+        if (savedLanguage && SUPPORTED_LANGUAGES.includes(savedLanguage)) {
+          this.currentLanguage = savedLanguage;
+        }
+      }
+    } catch (error) {
+      // localStorage not available, use default language
+      console.log('localStorage not available, using default language');
     }
   }
 
@@ -122,7 +164,7 @@ class SimpleLanguageService {
   /**
    * Get all industries for the current language
    */
-  async getAllIndustries(): Promise<any[]> {
+  async getAllIndustries(): Promise<Industry[]> {
     try {
       const { data: industries, error } = await supabase
         .from(`industries_${this.currentLanguage}`)
@@ -144,7 +186,9 @@ class SimpleLanguageService {
         avg_salary: industry.industries_core.avg_salary,
         growth_rate: industry.industries_core.growth_rate,
         global_demand: industry.industries_core.global_demand,
-        top_countries: industry.industries_core.top_countries
+        top_countries: industry.industries_core.top_countries,
+        classification_type: this.getClassificationType(industry.industry_id),
+        classification_code: this.getClassificationCode(industry.industry_id)
       }));
     } catch (error) {
       console.error('Error in getAllIndustries:', error);
@@ -172,7 +216,7 @@ class SimpleLanguageService {
   /**
    * Get career trends for the current language
    */
-  async getCareerTrends(careerId: string): Promise<any | null> {
+  async getCareerTrends(careerId: string): Promise<CareerTrendData | null> {
     try {
       const { data: trends, error } = await supabase
         .from(`career_trends_${this.currentLanguage}`)
@@ -193,7 +237,89 @@ class SimpleLanguageService {
   }
 
   /**
-   * Check if a career belongs to a specific industry
+   * Get industries by classification type
+   */
+  async getIndustriesByClassification(type: 'naics' | 'gics' | 'custom'): Promise<Industry[]> {
+    const allIndustries = await this.getAllIndustries();
+    return allIndustries.filter(industry => industry.classification_type === type);
+  }
+
+  /**
+   * Get industries by demand level
+   */
+  async getIndustriesByDemand(demandLevel: 'Very High' | 'High' | 'Medium' | 'Low'): Promise<Industry[]> {
+    const allIndustries = await this.getAllIndustries();
+    return allIndustries.filter(industry => industry.global_demand === demandLevel);
+  }
+
+  /**
+   * Get top growing industries
+   */
+  async getTopGrowingIndustries(limit: number = 10): Promise<Industry[]> {
+    const allIndustries = await this.getAllIndustries();
+    return allIndustries
+      .sort((a, b) => {
+        const aGrowth = parseInt(a.growth_rate.replace('%', ''));
+        const bGrowth = parseInt(b.growth_rate.replace('%', ''));
+        return bGrowth - aGrowth;
+      })
+      .slice(0, limit);
+  }
+
+  /**
+   * Get industries by salary range
+   */
+  async getIndustriesBySalaryRange(minSalary: number, maxSalary: number): Promise<Industry[]> {
+    const allIndustries = await this.getAllIndustries();
+    return allIndustries.filter(industry => {
+      const salary = parseInt(industry.avg_salary.replace(/[$,]/g, ''));
+      return salary >= minSalary && salary <= maxSalary;
+    });
+  }
+
+  /**
+   * Convert database record to ICareerNode
+   */
+  private convertToCareerNode(career: any): ICareerNode {
+    return {
+      id: career.career_id,
+      t: career.title, // title
+      l: career.careers_core?.level || 'Unknown', // level
+      s: career.skills || [], // skills
+      c: career.certifications || [], // certifications
+      sr: career.careers_core?.salary_range || 'Not specified', // salary range
+      te: career.careers_core?.experience_required || 'Not specified', // time estimate
+      d: career.description || 'No description available', // description
+      jt: career.job_titles || [], // job titles
+      r: career.requirements || [], // requirements
+      industry: this.getIndustryFromCareerId(career.career_id) // Will need to fetch industry from mapping
+    } as ICareerNode;
+  }
+
+  /**
+   * Get classification type from industry ID
+   */
+  private getClassificationType(industryId: string): 'naics' | 'gics' | 'custom' {
+    if (industryId.startsWith('naics-')) return 'naics';
+    if (industryId.startsWith('gics-')) return 'gics';
+    return 'custom';
+  }
+
+  /**
+   * Get classification code from industry ID
+   */
+  private getClassificationCode(industryId: string): string {
+    if (industryId.startsWith('naics-')) {
+      return industryId.replace('naics-', '');
+    }
+    if (industryId.startsWith('gics-')) {
+      return industryId.replace('gics-', '');
+    }
+    return industryId;
+  }
+
+  /**
+   * Check if career belongs to industry (100% coverage mapping)
    */
   private isCareerInIndustry(careerId: string, industryId: string): boolean {
     // Complete mapping with 100% industry coverage
@@ -315,25 +441,126 @@ class SimpleLanguageService {
   }
 
   /**
-   * Convert database record to ICareerNode
+   * Get industry from career ID (100% coverage mapping)
    */
-  private convertToCareerNode(career: any): ICareerNode {
-    return {
-      id: career.career_id,
-      t: career.title, // title
-      l: career.careers_core.level, // level
-      s: career.skills || [], // skills
-      c: career.certifications || [], // certifications
-      sr: career.careers_core.salary_range, // salary range
-      te: career.careers_core.experience_required, // time estimate
-      d: career.description, // description
-      jt: career.job_titles || [], // job titles
-      r: career.requirements || { e: [], exp: '', sk: [] }, // requirements
-      industry: 'technology' // Default industry for now
+  private getIndustryFromCareerId(careerId: string): string {
+    // Complete mapping using the primary industry for each career
+    const careerIndustryMapping: { [key: string]: string } = {
+      'software-engineer': 'technology',
+      'data-scientist': 'technology',
+      'cybersecurity-analyst': 'technology',
+      'devops-engineer': 'technology',
+      'product-manager': 'technology',
+      'ux-designer': 'technology',
+      'cloud-architect': 'technology',
+      'ai-engineer': 'technology',
+      'blockchain-developer': 'technology',
+      'quantum-computing-engineer': 'technology',
+      'game-developer': 'technology',
+      'robotics-engineer': 'manufacturing',
+      'bioinformatics-scientist': 'biotechnology',
+      'registered-nurse': 'healthcare',
+      'physician': 'healthcare',
+      'physical-therapist': 'healthcare',
+      'pharmacist': 'pharmaceuticals',
+      'medical-technologist': 'biotechnology',
+      'genetic-counselor': 'biotechnology',
+      'art-therapist': 'healthcare',
+      'wildlife-veterinarian': 'healthcare',
+      'telemedicine-physician': 'healthcare',
+      'financial-analyst': 'finance',
+      'investment-banker': 'finance',
+      'accountant': 'accounting',
+      'insurance-agent': 'insurance',
+      'actuary': 'insurance',
+      'forensic-accountant': 'accounting',
+      'cryptocurrency-trader': 'finance',
+      'teacher': 'education',
+      'professor': 'education',
+      'training-specialist': 'education',
+      'mechanical-engineer': 'manufacturing',
+      'electrical-engineer': 'manufacturing',
+      'industrial-engineer': 'manufacturing',
+      'quality-control-inspector': 'manufacturing',
+      'master-electrician': 'construction',
+      'precision-machinist': 'manufacturing',
+      'wind-turbine-technician': 'energy',
+      'plumber': 'construction',
+      'sommelier': 'hospitality',
+      'event-planner': 'hospitality',
+      'personal-trainer': 'fitness',
+      'chef': 'hospitality',
+      'motion-graphics-designer': 'entertainment',
+      'sound-engineer': 'entertainment',
+      'food-stylist': 'entertainment',
+      'interior-designer': 'design',
+      'marine-biologist': 'science',
+      'astronomer': 'science',
+      'volcanologist': 'science',
+      'environmental-scientist': 'environmental',
+      'government-administrator': 'government',
+      'diplomat': 'government',
+      'law-enforcement-officer': 'government',
+      'firefighter': 'government',
+      'lawyer': 'legal',
+      'paralegal': 'legal',
+      'judge': 'legal',
+      'airline-pilot': 'transportation',
+      'ship-captain': 'transportation',
+      'logistics-coordinator': 'logistics',
+      'agricultural-engineer': 'agriculture',
+      'forestry-technician': 'agriculture',
+      'sustainable-energy-technician': 'energy',
+      'social-worker': 'nonprofit',
+      'nonprofit-manager': 'nonprofit',
+      'community-organizer': 'nonprofit',
+      'journalist': 'media',
+      'public-relations-specialist': 'media',
+      'content-creator': 'media',
+      'professional-athlete': 'sports',
+      'sports-analyst': 'sports',
+      'fitness-instructor': 'fitness',
+      // SPECIALIZED INDUSTRIES - NEW CAREERS
+      'fashion-designer': 'fashion',
+      'textile-engineer': 'apparel',
+      'merchandise-buyer': 'apparel',
+      'chemical-engineer': 'chemicals',
+      'process-chemist': 'chemicals',
+      'janitorial-supervisor': 'cleaning',
+      'sanitation-engineer': 'cleaning',
+      'cruise-director': 'cruise',
+      'marine-engineer': 'cruise',
+      'landscape-architect': 'landscaping',
+      'arborist': 'landscaping',
+      'materials-scientist': 'materials',
+      'metallurgist': 'materials',
+      'mining-engineer': 'mining',
+      'geologist': 'mining',
+      'petroleum-engineer': 'oil-gas',
+      'drilling-supervisor': 'oil-gas',
+      'property-manager': 'property-management',
+      'facilities-manager': 'property-management',
+      'real-estate-agent': 'gics-60',
+      'real-estate-appraiser': 'gics-60',
+      'satellite-engineer': 'satellite',
+      'ground-station-technician': 'satellite',
+      'semiconductor-engineer': 'semiconductors',
+      'chip-designer': 'semiconductors',
+      'telecommunications-engineer': 'telecommunications',
+      'network-architect': 'telecommunications',
+      'tour-guide': 'tourism',
+      'travel-agent': 'tourism',
+      'power-plant-operator': 'gics-55',
+      'utility-inspector': 'gics-55',
+      'waste-management-specialist': 'waste-management',
+      'recycling-coordinator': 'waste-management',
+      'water-treatment-operator': 'water-treatment',
+      'environmental-engineer': 'water-treatment'
     };
+
+    return careerIndustryMapping[careerId] || 'other';
   }
 }
 
 // Export singleton instance
-export const simpleLanguageService = new SimpleLanguageService();
-export default simpleLanguageService;
+export const comprehensiveCareerService = new ComprehensiveCareerService();

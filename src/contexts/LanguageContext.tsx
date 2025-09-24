@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { setCareerLanguage } from '@/services/careerService';
 import { setCareerTrendLanguage } from '@/services/careerTrendService';
 import { simpleLanguageService } from '@/services/simpleLanguageService';
+import { comprehensiveCareerService } from '@/services/comprehensiveCareerService';
 import dynamicI18n from '@/lib/dynamicI18n';
 import { translationService } from '@/services/translationService';
 
@@ -73,6 +74,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         // Set career data language
         setCareerLanguage(initialLanguage);
         setCareerTrendLanguage(initialLanguage);
+        simpleLanguageService.setLanguage(initialLanguage);
+        comprehensiveCareerService.setLanguage(initialLanguage);
         
         // Save the detected/set language
         localStorage.setItem('app-language', initialLanguage);
@@ -84,6 +87,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         setCurrentLanguage('en');
         setCareerLanguage('en');
         setCareerTrendLanguage('en');
+        simpleLanguageService.setLanguage('en');
+        comprehensiveCareerService.setLanguage('en');
       } finally {
         setIsLoading(false);
       }
@@ -110,6 +115,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
              setCareerLanguage(language);
              setCareerTrendLanguage(language);
              simpleLanguageService.setLanguage(language);
+             comprehensiveCareerService.setLanguage(language);
       
       // Update document direction for RTL languages
       const isRTL = rtlLanguages.includes(language);
