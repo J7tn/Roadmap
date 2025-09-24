@@ -546,7 +546,10 @@ class CareerService {
   // Get translated industry name
   public async getTranslatedIndustry(industryKey: string): Promise<string> {
     try {
-      return await this.translatedCareerService.getTranslatedIndustry(industryKey);
+      // Use simple language service to get industry name
+      const industries = await simpleLanguageService.getAllIndustries();
+      const industry = industries.find(i => i.id === industryKey);
+      return industry?.name || industryKey;
     } catch (error) {
       console.error('Error getting translated industry:', error);
       return industryKey;
@@ -556,7 +559,9 @@ class CareerService {
   // Get translated skill name
   public async getTranslatedSkill(skillKey: string): Promise<string> {
     try {
-      return await this.translatedCareerService.getTranslatedSkill(skillKey);
+      // For now, return the skill key as-is since skills are stored in the career content
+      // In the future, we could create a skills translation table
+      return skillKey;
     } catch (error) {
       console.error('Error getting translated skill:', error);
       return skillKey;
