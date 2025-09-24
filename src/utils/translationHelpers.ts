@@ -5,6 +5,8 @@
  * for comprehensive internationalization support.
  */
 
+import { TFunction } from 'i18next';
+
 // Career ID to translation key mapping
 const careerTranslationMapping: { [key: string]: string } = {
   'cybersecurity-analyst': 'cybersecurityAnalyst',
@@ -92,7 +94,9 @@ const frontendIndustryToTranslationKey: { [key: string]: string } = {
   'engineering': 'engineering',
   'science': 'science',
   'legal': 'legal',
-  'skilled-trades': 'skilledTrades',
+  'government': 'government',
+  'nonprofit': 'nonprofit',
+  'trades': 'skilledTrades',
   'hospitality': 'hospitality',
   'media': 'mediaEntertainment',
   'digital-creator': 'digitalCreator',
@@ -339,6 +343,26 @@ export const getTranslatedCommonTerm = (t: any, termKey: string, fallbackTerm?: 
   }
   
   return translated;
+};
+
+/**
+ * Gets translated trend direction.
+ * @param t The i18next translation function.
+ * @param direction The trend direction (e.g., 'rising', 'declining', 'stable').
+ * @returns The translated trend direction or the original if not found.
+ */
+export const getTranslatedTrendDirection = (t: TFunction, direction: string): string => {
+  return t(`jobDetails.trendDirections.${direction}`, direction);
+};
+
+/**
+ * Gets translated demand level.
+ * @param t The i18next translation function.
+ * @param level The demand level (e.g., 'high', 'medium', 'low').
+ * @returns The translated demand level or the original if not found.
+ */
+export const getTranslatedDemandLevel = (t: TFunction, level: string): string => {
+  return t(`jobDetails.demandLevels.${level}`, level);
 };
 
 // Export all mapping objects for reference

@@ -4,7 +4,7 @@ import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { ICareerNode } from "@/types/career";
-import { getTranslatedCareerTitle, getTranslatedCareerDescription } from "@/utils/translationHelpers";
+// Removed complex translation helpers - now using direct language-specific data
 
 interface CareerBlockProps {
   career: ICareerNode;
@@ -46,12 +46,12 @@ const CareerBlock: React.FC<CareerBlockProps> = ({
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <h3 className="font-medium text-base mb-1">
-              {getTranslatedCareerTitle(t, career.id, career.t || 'Unknown Career')}
+              {career.t || 'Unknown Career'}
             </h3>
             
             {career.d && (
               <p className="text-muted-foreground text-sm line-clamp-2">
-                {getTranslatedCareerDescription(t, career.id, career.d)}
+                {career.d}
               </p>
             )}
           </div>

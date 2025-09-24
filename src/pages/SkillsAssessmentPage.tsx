@@ -725,7 +725,7 @@ const SkillsAssessmentPage = () => {
 
   return (
     <motion.div 
-      className="min-h-screen bg-background pb-20"
+      className="min-h-screen bg-background page-with-bottom-nav"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -781,7 +781,7 @@ const SkillsAssessmentPage = () => {
        </motion.div>
 
              {/* Main Content */}
-       <main className="container mx-auto px-4 py-6 md:py-8">
+       <main className="container mx-auto px-4 py-6 md:py-8 pb-20">
          <div className="max-w-2xl mx-auto">
            
            

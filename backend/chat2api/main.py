@@ -12,6 +12,10 @@ from contextlib import asynccontextmanager
 from supabase_career_service import supabase_career_service
 from supabase_trending_service import supabase_trending_service
 from scheduler import monthly_scheduler
+from scheduler_language_specific import TrendUpdateScheduler
+
+# Initialize language-specific scheduler
+trend_scheduler = TrendUpdateScheduler()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -376,6 +380,54 @@ async def get_trending_update_status():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to check trending update status: {str(e)}")
+
+# Language-specific trend update endpoints
+@app.post("/api/trends/language-specific/update")
+async def force_language_specific_trend_update():
+    """Force an immediate language-specific trend update (admin endpoint)"""
+    try:
+        await trend_scheduler.run_immediate_update()
+        return {
+            "message": "Language-specific trend update initiated", 
+            "timestamp": datetime.utcnow().isoformat()
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update language-specific trends: {str(e)}")
+
+@app.get("/api/trends/language-specific/status")
+async def get_language_specific_trend_status():
+    """Get status of language-specific trend updates"""
+    try:
+        import json
+        try:
+            with open('last_update_status.json', 'r') as f:
+                status = json.load(f)
+        except FileNotFoundError:
+            status = {
+                "last_run": None,
+                "successful": 0,
+                "failed": 0,
+                "status": "never_run"
+            }
+        
+        return {
+            "status": status,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get trend update status: {str(e)}")
+
+@app.post("/api/trends/language-specific/schedule")
+async def schedule_language_specific_updates():
+    """Schedule language-specific trend updates"""
+    try:
+        trend_scheduler.schedule_monthly_updates()
+        return {
+            "message": "Language-specific trend updates scheduled",
+            "timestamp": datetime.utcnow().isoformat()
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to schedule updates: {str(e)}")
 
 @app.post("/v1/chat/completions")
 async def chat_completions(request: ChatRequest):

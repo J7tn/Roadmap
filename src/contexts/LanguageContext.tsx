@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useCa
 import { useTranslation } from 'react-i18next';
 import { setCareerLanguage } from '@/services/careerService';
 import { setCareerTrendLanguage } from '@/services/careerTrendService';
+import { simpleLanguageService } from '@/services/simpleLanguageService';
 import dynamicI18n from '@/lib/dynamicI18n';
 import { translationService } from '@/services/translationService';
 
@@ -106,8 +107,9 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       localStorage.setItem('app-language', language);
       
       // Update career data language
-      setCareerLanguage(language);
-      setCareerTrendLanguage(language);
+             setCareerLanguage(language);
+             setCareerTrendLanguage(language);
+             simpleLanguageService.setLanguage(language);
       
       // Update document direction for RTL languages
       const isRTL = rtlLanguages.includes(language);

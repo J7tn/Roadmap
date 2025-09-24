@@ -593,7 +593,19 @@
     "topLocations": "Top Locations",
     "salaryTrend": "Salary Trend",
     "futureOutlook": "Future Outlook",
-    "industryImpact": "Industry Impact"
+    "industryImpact": "Industry Impact",
+    "trendDirections": {
+      "rising": "Rising",
+      "declining": "Declining",
+      "stable": "Stable"
+    },
+    "demandLevels": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "risingCareers": "Rising Careers",
+    "decliningCareers": "Declining Careers"
   },
   "regions": {
     "northAmerica": "North America",

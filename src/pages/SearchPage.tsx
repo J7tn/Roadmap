@@ -18,8 +18,7 @@ interface ICareerNodeWithCategory extends ICareerNode {
   industry?: string;
 }
 import { getAllCareerNodesArray, getCareerNodesByIndustry, careerService } from "@/services/careerService";
-import { INDUSTRY_CATEGORIES } from "@/data/industries";
-import { getTranslatedIndustryNameFromId } from "@/utils/translationHelpers";
+import { organizedCareerService } from "@/services/organizedCareerService";
 import CareerBlock from "@/components/CareerBlock";
 import BottomNavigation from "@/components/BottomNavigation";
 import SearchInput from "@/components/SearchInput";
@@ -33,6 +32,7 @@ const SearchPage: React.FC = React.memo(() => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [allCareers, setAllCareers] = useState<ICareerNodeWithCategory[]>([]);
+  const [industries, setIndustries] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
@@ -43,6 +43,26 @@ const SearchPage: React.FC = React.memo(() => {
   // Get search query and industry from URL
   const urlSearchQuery = searchParams.get('search') || "";
   const urlIndustry = searchParams.get('industry') || "";
+
+  // Load industries from organized career service
+  useEffect(() => {
+    const loadIndustries = async () => {
+      try {
+        // Make sure the organized career service has the current language
+        const currentLang = localStorage.getItem('app-language') || 'en';
+        organizedCareerService.setLanguage(currentLang);
+        
+        const industriesData = await organizedCareerService.getIndustries();
+        setIndustries(industriesData);
+      } catch (error) {
+        console.error('Error loading industries:', error);
+        // Fallback to empty array
+        setIndustries([]);
+      }
+    };
+
+    loadIndustries();
+  }, []);
 
   // Load career data based on industry selection (lazy loading)
   useEffect(() => {
@@ -432,9 +452,9 @@ const SearchPage: React.FC = React.memo(() => {
                   className="w-full p-2 border border-border bg-background text-foreground rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary"
                 >
                   <option value="all">{t('pages.search.filters.allIndustries')}</option>
-                  {INDUSTRY_CATEGORIES.map(industry => (
+                  {industries.map(industry => (
                     <option key={industry.id} value={industry.id}>
-                      {getTranslatedIndustryNameFromId(t, industry.id)}
+                      {industry.industry_translations?.[0]?.industry_name || industry.name_en}
                     </option>
                   ))}
                 </select>

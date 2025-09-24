@@ -1,21 +1,12 @@
 #!/bin/bash
 
-# Start script for chat2api backend
-echo "Starting chat2api backend..."
+# Startup script for Railway deployment
+# This ensures the language-specific scheduler starts properly
 
-# Check if required environment variables are set
-if [ -z "$SUPABASE_URL" ]; then
-    echo "WARNING: SUPABASE_URL not set"
-fi
+echo "Starting Chat2API with language-specific trend updates..."
 
-if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
-    echo "WARNING: SUPABASE_SERVICE_ROLE_KEY not set"
-fi
+# Set environment variables if not already set
+export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 
-if [ -z "$OPENAI_API_KEY" ]; then
-    echo "WARNING: OPENAI_API_KEY not set"
-fi
-
-# Start the FastAPI application
-echo "Starting FastAPI server on port ${PORT:-8000}..."
-exec uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Start the FastAPI application with uvicorn
+exec uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1

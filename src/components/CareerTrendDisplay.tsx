@@ -20,6 +20,7 @@ import { careerTrendService, CareerTrendData, IndustryTrendData } from '@/servic
 import { regionalTrendService } from '@/services/regionalTrendService';
 import { ICareerNode } from '@/types/career';
 import { useRegion } from '@/contexts/RegionContext';
+// Removed complex translation helpers - now using direct language-specific data
 
 interface CareerTrendDisplayProps {
   career: ICareerNode;
@@ -382,7 +383,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
                 <div className="text-lg font-semibold text-green-600 dark:text-green-400">
                   {industryTrend.rising_careers}
                 </div>
-                <div className="text-xs text-muted-foreground">Rising Careers</div>
+                <div className="text-xs text-muted-foreground">{t('jobDetails.risingCareers')}</div>
               </div>
               <div className="text-center p-3 bg-muted/50 rounded-lg">
                 <div className="text-lg font-semibold text-muted-foreground">
@@ -394,7 +395,7 @@ const CareerTrendDisplay: React.FC<CareerTrendDisplayProps> = ({
                 <div className="text-lg font-semibold text-red-600 dark:text-red-400">
                   {industryTrend.declining_careers}
                 </div>
-                <div className="text-xs text-muted-foreground">Declining Careers</div>
+                <div className="text-xs text-muted-foreground">{t('jobDetails.decliningCareers')}</div>
               </div>
             </div>
 

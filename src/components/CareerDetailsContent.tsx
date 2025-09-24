@@ -12,7 +12,7 @@ import { bookmarkService } from "@/services/bookmarkService";
 import { getAllCareerNodes } from "@/services/careerService";
 import { careerPathProgressService } from "@/services/careerPathProgressService";
 import { formatSalary } from "@/utils/currencyUtils";
-import { getTranslatedCareerTitle, getTranslatedCareerDescription, getTranslatedSkills } from "@/utils/translationHelpers";
+// Removed complex translation helpers - now using direct language-specific data
 
 interface CareerDetailsContentProps {
   career: ICareerNode;
@@ -164,7 +164,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
       <div className="mb-6 pt-4">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 className="text-2xl font-bold mb-2">{getTranslatedCareerTitle(t, career.id, career.t)}</h2>
+            <h2 className="text-2xl font-bold mb-2">{career.t || 'Unknown Career'}</h2>
             <Badge variant="outline" className={getLevelColor(career.l)}>
               {getLevelDisplayName(career.l)}
             </Badge>
@@ -193,7 +193,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
           </Button>
         </div>
         
-        <p className="text-muted-foreground text-base leading-relaxed">{getTranslatedCareerDescription(t, career.id, career.d)}</p>
+        <p className="text-muted-foreground text-base leading-relaxed">{career.d || 'No description available'}</p>
       </div>
 
       {/* Key Information Cards */}
@@ -222,7 +222,7 @@ const CareerDetailsContent: React.FC<CareerDetailsContentProps> = memo(({
           {t('jobDetails.requiredSkills')}
         </h3>
         <div className="flex flex-wrap gap-2">
-          {career.s && career.s.length > 0 ? getTranslatedSkills(t, career.s).map((skill, index) => (
+          {career.s && career.s.length > 0 ? career.s.map((skill, index) => (
             <Badge key={index} variant="secondary">
               {skill}
             </Badge>

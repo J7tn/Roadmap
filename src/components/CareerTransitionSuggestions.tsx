@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { formatSalary } from "@/utils/currencyUtils";
-import { getTranslatedCareerTitle, getTranslatedSkills } from "@/utils/translationHelpers";
+// Removed complex translation helpers - now using direct language-specific data
 
 interface CareerTransitionSuggestionsProps {
   currentCareer: ICareerNode;
@@ -224,7 +224,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
         description: t('pages.roadmap.exploreSimilarRoles'),
         careers: sameLevelCareers.map(career => ({
           id: career.id,
-          title: getTranslatedCareerTitle(t, career.id, career.t),
+          title: career.t || 'Unknown Career',
           industry: t('common.various'),
           level: career.l,
           salary: career.sr || t('common.salaryNotSpecified'),
@@ -257,7 +257,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
           description: t('pages.roadmap.advanceToNextLevel'),
           careers: nextLevelCareers.map(career => ({
             id: career.id,
-            title: getTranslatedCareerTitle(t, career.id, career.t),
+            title: career.t || 'Unknown Career',
             industry: 'Various',
             level: career.l,
             salary: career.sr || 'Salary not specified',
@@ -292,7 +292,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
         description: t('pages.roadmap.leverageCurrentSkills'),
         careers: skillBasedCareers.map(career => ({
           id: career.id,
-          title: getTranslatedCareerTitle(t, career.id, career.t),
+          title: career.t || 'Unknown Career',
           industry: t('common.various'),
           level: career.l,
           salary: career.sr || t('common.salaryNotSpecified'),
@@ -537,7 +537,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
               description: t('pages.roadmap.exploreSimilarRoles'),
               careers: lateralCareers.slice(0, 6).map(career => ({
                 id: career.id,
-                title: getTranslatedCareerTitle(t, career.id, career.t),
+                title: career.t || 'Unknown Career',
                 industry: 'Various',
                 level: career.l,
                 salary: career.sr || 'Salary not specified',
@@ -563,7 +563,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
               description: 'Advance to the next career level',
               careers: levelUpCareers.slice(0, 6).map(career => ({
                 id: career.id,
-                title: getTranslatedCareerTitle(t, career.id, career.t),
+                title: career.t || 'Unknown Career',
                 industry: 'Various',
                 level: career.l,
                 salary: career.sr || 'Salary not specified',
@@ -589,7 +589,7 @@ const CareerTransitionSuggestions: React.FC<CareerTransitionSuggestionsProps> = 
               description: 'Leverage your current skills in new areas',
               careers: skillBasedCareers.slice(0, 6).map(career => ({
                 id: career.id,
-                title: getTranslatedCareerTitle(t, career.id, career.t),
+                title: career.t || 'Unknown Career',
                 industry: 'Various',
                 level: career.l,
                 salary: career.sr || 'Salary not specified',

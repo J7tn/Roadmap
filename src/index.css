@@ -30,6 +30,18 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 
+  /* Ensure proper spacing for pages with bottom navigation */
+  .page-with-bottom-nav {
+    padding-bottom: 80px; /* Space for bottom navigation */
+  }
+
+  /* Additional mobile-specific spacing for bottom nav */
+  @media screen and (max-width: 768px) {
+    .page-with-bottom-nav {
+      padding-bottom: 88px; /* More space on mobile */
+    }
+  }
+
   /* Ensure proper viewport handling with more spacing */
   @supports (padding: max(0px)) {
     .safe-area-top {
